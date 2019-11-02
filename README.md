@@ -1,2 +1,0 @@
-# MarioPizzaOriginal
-Pizzeria management application
