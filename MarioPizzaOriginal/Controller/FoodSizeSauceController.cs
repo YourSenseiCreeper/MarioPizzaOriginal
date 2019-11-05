@@ -16,6 +16,22 @@ namespace MarioPizzaOriginal.Controller
             _marioPizzaRepository = marioPizzaRepository;
         }
 
+        public FoodSizeSauce GetFood(int foodId, FoodType foodType)
+        {
+            //Why is this here? Move this fat ass to Repository
+            if(foodType == FoodType.DRINK) { return _marioPizzaRepository.GetDrink(foodId); }
+            if(foodType == FoodType.KEBAB) { return _marioPizzaRepository.GetKebab(foodId); }
+            if(foodType == FoodType.PIZZA) { return _marioPizzaRepository.GetPizza(foodId); }
+            if(foodType == FoodType.TORTILLA) { return _marioPizzaRepository.GetTortilla(foodId); }
+            return new FoodSizeSauce { FoodName = "NULL" };
+        }
+
+        public void GetAllFood()
+        {
+            var allFood = _marioPizzaRepository.GetAllFood();
+
+        }
+
         public List<string> GetIngredients(int foodId)
         {
             Pizza singlePizza = _marioPizzaRepository.GetPizza(foodId);

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MarioPizzaOriginal.Model
 {
-    public class Drink : Food
+    public class Drink : FoodSizeSauce
     {
 
     }
