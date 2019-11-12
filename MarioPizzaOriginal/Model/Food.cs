@@ -12,6 +12,6 @@ namespace MarioPizzaOriginal.Model
         public double NettPrice { get; set; }
         public double Price { get; set; }
         public double Weight { get; set; }
-        public double ProductionTime { get; set; }
+        public int ProductionTime { get; set; }
     }
 }

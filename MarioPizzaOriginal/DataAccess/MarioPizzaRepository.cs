@@ -256,5 +256,20 @@ namespace MarioPizzaOriginal.DataAccess
         {
             _marioPizzaData.OrderList.First(x => x.OrderId == orderId).Status = newOrderStatus;
         }
+
+        public OrderStatus GetOrderStatus(int orderId)
+        {
+            return _marioPizzaData.OrderList.First(x => x.OrderId == orderId).Status;
+        }
+
+        public List<FoodSizeSauce> GetFilteredFood()
+        {
+            throw new NotImplementedException();
+        }
+
+        public FoodSizeSauce GetFood(int foodId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

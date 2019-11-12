@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MarioPizzaOriginal.Controller
 {
-    public class FoodSizeSauceController : IFoodDisposable, IPreparable
+    public class FoodSizeSauceController : IFoodDisposable
     {
         private readonly IMarioPizzaRepository _marioPizzaRepository;
         public FoodSizeSauceController(IMarioPizzaRepository marioPizzaRepository)
@@ -16,45 +16,232 @@ namespace MarioPizzaOriginal.Controller
             _marioPizzaRepository = marioPizzaRepository;
         }
 
-        public FoodSizeSauce GetFood(int foodId, FoodType foodType)
+        private List<string> ShowIngredients(List<Ingredient> ingredients)
         {
-            //Why is this here? Move this fat ass to Repository
-            if(foodType == FoodType.DRINK) { return _marioPizzaRepository.GetDrink(foodId); }
-            if(foodType == FoodType.KEBAB) { return _marioPizzaRepository.GetKebab(foodId); }
-            if(foodType == FoodType.PIZZA) { return _marioPizzaRepository.GetPizza(foodId); }
-            if(foodType == FoodType.TORTILLA) { return _marioPizzaRepository.GetTortilla(foodId); }
-            return new FoodSizeSauce { FoodName = "NULL" };
+            var formatted = new List<string> { "Składniki: " };
+            ingredients.ForEach(x => {
+                formatted.Add($"* {x.AmountOfUOM} {x.UnitOfMeasureType.ToString()} {x.IngredientName}");
+            });
+            return formatted;
+        }
+
+        private string ConvertProductionTime(double time)
+        {
+            return $"{time/60}min {time}s";
+        }
+
+        public MarioResult GetFood()
+        {
+            Console.WriteLine("Podaj id produktu:");
+            var foodId = Convert.ToInt32(Console.ReadLine());
+            var pickedFood = _marioPizzaRepository.GetFood(foodId);
+            var message = pickedFood != null ? "" : "Nie znaleziono produktu";
+            List<string> entries = new List<string> {
+                $"=== {pickedFood.FoodName} ===",
+                $"Id produktu: {pickedFood.FoodId}",
+                $"Typ: {pickedFood.FoodSizeType.ToString()}",
+                $"Cena: {pickedFood.Price}zł ({pickedFood.NettPrice}zł netto)",
+                $"Czas produkcji: {ConvertProductionTime(pickedFood.ProductionTime)}",
+                $"Waga: {pickedFood.Weight}kg"
+            };
+            entries.AddRange(ShowIngredients(pickedFood.Ingredients));
+            entries.ForEach(x => Console.WriteLine(x));
+            return new MarioResult { Message = message, Success = pickedFood != null };
+        }
+
+        private void ShowFood(List<FoodSizeSauce> foodList)
+        {
+            Console.WriteLine("Wszystkie dostępne produkty:");
+            Console.Write("Id".PadLeft(10));
+            Console.Write("Nazwa".PadLeft(30));
+            Console.Write("Cena".PadLeft(20));
+            foodList.ForEach(x => {
+                Console.Write($"{x.FoodId}".PadLeft(10));
+                Console.Write($"{x.FoodName}".PadLeft(30));
+                Console.Write($"{x.Price} zł".PadLeft(20));
+            });
         }
 
         public void GetAllFood()
         {
             var allFood = _marioPizzaRepository.GetAllFood();
-
+            ShowFood(allFood);
         }
 
-        public List<string> GetIngredients(int foodId)
+        public void GetFilteredFood()
         {
-            Pizza singlePizza = _marioPizzaRepository.GetPizza(foodId);
-            List<string> formatted = new List<string>();
-            var index = 1;
+            Console.WriteLine("Wybierz numer filtra by go dostosować. Wpisz -1 by anulować zmiany");
+            List<string> filterList = new List<string> { "1. Minimalne Id produktu", "2. Maksymalne Id produktu",
+            "3. Nazwa produktu zawiera", "4. Minmalna cena netto", "5. Maksymalna cena netto", "6. Minimalna cena",
+            "7. Maksymalna cena", "8. Minimalna waga", "9. Maksymalna waga", "10. Minimalny czas produkcji",
+            "11. Maksymalny czas produkcji", "12. Filtruj po składnikach", "13. WYŚWIETL WYNIKI"};
+            int foodIdMin = -1, foodIdMax = -1;
+            string productName = "";
+            double netPriceMin = -1, netPriceMax = -1;
+            double priceMin = -1, priceMax = -1;
+            double weightMin = -1, weightMax = -1;
+            double productionTimeMin = -1, productionTimeMax = -1;
 
-            singlePizza.Ingredients.ForEach(ing => formatted.Add($"{index++}. {ing.AmoutOfUOM} {ing.UnitOfMeasureType.ToString()}"));
-            return formatted;
+            Dictionary<string, object> ingredientFilter = null;
+            int ingredientIdMin = -1, ingredientIdMax = -1;
+            string ingredientName = "";
+            UnitOfMeasure unitOfMeasure = UnitOfMeasure.NONE;
+            double amountOfUOMmin = -1, amountOfUOMmax = -1;
+            var option = Console.ReadLine();
+            while (!option.Equals("-1"))
+            {
+                if (option.Equals("1"))
+                {
+                    Console.WriteLine("Podaj wartość dla Minimalne Id produktu:");
+                    // Not a number exception!!!
+                    var input = Convert.ToInt32(Console.ReadLine());
+                    if (input > 0) { foodIdMin = input; }
+                    else { foodIdMin = -1; }
+                }
+                else if (option.Equals("2"))
+                {
+                    Console.WriteLine("Podaj wartość dla Maksymalne Id produktu:");
+                    // Not a number exception!!!
+                    var input = Convert.ToInt32(Console.ReadLine());
+                    if (input > 0) { foodIdMax = input; }
+                    else { foodIdMax = -1; }
+                }
+                else if (option.Equals("3"))
+                {
+                    Console.WriteLine("Podaj ciąg który znajduje się w Nazwie produktu:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { productName = input; }
+                    else { productName = ""; }
+                }
+                else if (option.Equals("4"))
+                {
+                    Console.WriteLine("Podaj minimalną cenę netto produktu: ");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { netPriceMin = Convert.ToDouble(input); }
+                    else { netPriceMin = -1; }
+                }
+                else if (option.Equals("5"))
+                {
+                    Console.WriteLine("Podaj maksymalną cenę netto produktu: ");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { netPriceMax = Convert.ToDouble(input); }
+                    else { netPriceMax = -1; }
+                }
+                else if (option.Equals("6"))
+                {
+                    Console.WriteLine("Podaj minimalną cenę (brutto) produktu:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { priceMin = Convert.ToDouble(input); }
+                    else { priceMin = -1; }
+                }
+                else if (option.Equals("7"))
+                {
+                    Console.WriteLine("Podaj maksymalną cenę (brutto) produktu:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { priceMax = Convert.ToDouble(input); }
+                    else { priceMax = -1; }
+                }
+                else if (option.Equals("8"))
+                {
+                    Console.WriteLine("Podaj minimalną wagę produktu w kg:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { weightMin = Convert.ToDouble(input); }
+                    else { weightMin = -1; }
+                }
+                else if (option.Equals("9"))
+                {
+                    Console.WriteLine("Podaj maksymalną wagę produktu w kg:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { weightMax = Convert.ToDouble(input); }
+                    else { weightMax = -1; }
+                }
+                else if (option.Equals("10"))
+                {
+                    Console.WriteLine("Podaj minimalny czas produkcji w sekundach bez przecinka:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { productionTimeMin = Convert.ToInt32(input); }
+                    else { productionTimeMin = -1; }
+                }
+                else if (option.Equals("11"))
+                {
+                    Console.WriteLine("Podaj maksymalny czas produkcji w sekundach bez przecinka:");
+                    var input = Console.ReadLine();
+                    if ((Convert.ToInt32(input) != -1)) { productionTimeMax = Convert.ToInt32(input); }
+                    else { productionTimeMax = -1; }
+                }
+                else if (option.Equals("12"))
+                {
+                    IngredientController ingredient = new IngredientController(_marioPizzaRepository);
+                    ingredientFilter = ingredient.GetFilteredIngredientsDict();
+                    ingredientIdMin = (int)ingredientFilter["IngredientIdMin"];
+                    ingredientIdMax = (int)ingredientFilter["IngredientIdMax"];
+                    ingredientName = (string)ingredientFilter["IngredientName"];
+                    unitOfMeasure = (UnitOfMeasure)ingredientFilter["UnitOfMeasure"];
+                    amountOfUOMmin = (double)ingredientFilter["AmountOfUOMmin"];
+                    amountOfUOMmax = (double)ingredientFilter["AmountOfUOMmax"];
+                }
+                else if (option.Equals("13"))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Nie ma takiej opcji!");
+                }
+                option = Console.ReadLine();
+            }
+            //TODO If option value == -1 -> this shouldn't be executed
+            var filter = _marioPizzaRepository.GetAllFood().FindAll(x =>
+                (foodIdMin == -1 || x.FoodId >= foodIdMin) &&
+                (foodIdMax == -1 || x.FoodId <= foodIdMax) &&
+                (productName == "" || x.FoodName.Contains(productName)) &&
+                (netPriceMin == -1 || x.NettPrice >= netPriceMin) &&
+                (netPriceMax == -1 || x.NettPrice <= netPriceMax) &&
+                (priceMin == -1 || x.Price >= priceMin) &&
+                (priceMax == -1 || x.Price <= priceMax) &&
+                (weightMin == -1 || x.FoodId >= weightMin) &&
+                (weightMax == -1 || x.FoodId <= weightMax) &&
+                (productionTimeMin == -1 || x.ProductionTime >= productionTimeMin) &&
+                (productionTimeMax == -1 || x.ProductionTime <= productionTimeMax) &&
+                (ingredientFilter == null || x.Ingredients.Exists(y =>
+                    (ingredientIdMin == -1 || y.IngredientId >= ingredientIdMin) &&
+                    (ingredientIdMax == -1 || y.IngredientId <= ingredientIdMax) &&
+                    (ingredientName == "" || y.IngredientName.Contains(ingredientName)) &&
+                    (unitOfMeasure == UnitOfMeasure.NONE || y.UnitOfMeasureType == unitOfMeasure) &&
+                    (amountOfUOMmin == -1 || y.AmountOfUOM >= amountOfUOMmin) &&
+                    (amountOfUOMmax == -1 || y.AmountOfUOM <= amountOfUOMmax)
+                    ))
+            );
+            Console.WriteLine($"Znaleziono {filter.Count} pasujących produktów:");
+            ShowFood(filter);
         }
 
-        public FoodSize FoodSizeType { get; set; }
-        public List<Ingredient> SauceList { get; set; }
-        public int FoodId { get; set; }
-        public string FoodName { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
-        public double NettPrice { get; set; }
-        public double Price { get; set; }
-        public double Weight { get; set; }
-        public double ProductionTime { get; set; }
 
+        public MarioResult GetIngredients()
+        {
+            Console.WriteLine("Podaj id produktu dla którego chcesz sprawdzić składniki:");
+            var foodId = Convert.ToInt32(Console.ReadLine());
+            var food = _marioPizzaRepository.GetFood(foodId);
+            if (food == null)
+            {
+                return new MarioResult { Message = $"Nie znaleziono produktu o id {foodId}", Success = false };
+            }
+            ShowIngredients(food.Ingredients);
+            return new MarioResult { Success = true };
+        }
+        
         public void ChangeStatus(OrderStatus orderStatus)
         {
             throw new NotImplementedException();
+        }
+        public OrderStatus GetStatus()
+        {
+            throw new NotImplementedException();
+        }
+        public MarioResult GetFoodWithParticularStatus()
+        {
+
+            return new MarioResult { Success = true; }
         }
 
         public void Dispose()
@@ -67,24 +254,6 @@ namespace MarioPizzaOriginal.Controller
             throw new NotImplementedException();
         }
 
-        public OrderStatus GetStatus()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Prepare()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TakeOrder()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Ingredient> GetIngredients()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

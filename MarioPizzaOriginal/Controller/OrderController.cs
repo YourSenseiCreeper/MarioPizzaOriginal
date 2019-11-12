@@ -18,6 +18,7 @@ namespace MarioPizzaOriginal.Controller
 
         public void AddOrder()
         {
+            var orderId = _marioPizzaRepository.GetAllOrders().Count;
 
             //First i need to have a possibility to add a FoodSizeSauce (pick from a list) to my Dictionary
             //OrderList (required!)
@@ -29,14 +30,22 @@ namespace MarioPizzaOriginal.Controller
             //Priority (optional)
         }
 
-        public void DeleteOrder()
+        public MarioResult DeleteOrder()
         {
-            //By orderId
+            Console.WriteLine("Podaj id zamówienia które chcesz usunąć:");
+            var orderId = Convert.ToInt32(Console.ReadLine());
+            var order = _marioPizzaRepository.GetOrder(orderId);
+            if(order == null)
+            {
+                return new MarioResult { Message = $"Zamówienie o id = {orderId} nie istnieje!", Success = false };
+            }
+            _marioPizzaRepository.DeleteOrder(orderId);
+            return new MarioResult { Success = true };
         }
 
         public void EditOrder()
         {
-            //
+            //You can try to modify "Filter" to manage edited values and replace them when not DEFAULT
         }
 
         private void ShowOrders(List<MarioPizzaOrder> orderList)
@@ -123,7 +132,8 @@ namespace MarioPizzaOriginal.Controller
                 }
                 else if (option.Equals("7") || option.Equals("8"))
                 {
-                    Console.WriteLine("Wybierz dolny zakres czasu zamówienia. Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda");
+                    var lowerUpper = option.Equals("7") ? "dolny" : "górny";
+                    Console.WriteLine($"Wybierz {lowerUpper} zakres czasu zamówienia. Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda");
                     var input = Console.ReadLine();
                     var someTimestamp = new DateTime();
                     if (input.Equals("-1")) { someTimestamp = new DateTime(1, 1, 1970); }
@@ -162,18 +172,35 @@ namespace MarioPizzaOriginal.Controller
                 option = Console.ReadLine();
             }
             var filter = _marioPizzaRepository.GetAllOrders().FindAll(x =>
-                (orderIdMin != -1 && x.OrderId >= orderIdMin) &&
-                (orderIdMax != -1 && x.OrderId <= orderIdMax) &&
-                (clientPhoneNumber != "" && x.ClientPhoneNumber.Contains(clientPhoneNumber)) &&
-                (deliveryAddress != "" && x.DeliveryAddress.Contains(deliveryAddress)) &&
-                (priority != OrderPriority.NONE && x.Priority == priority) &&
-                (status != OrderStatus.NONE && x.Status == status) &&
-                (lowerTimestamp != new DateTime(1,1,1970) && x.OrderTime >= lowerTimestamp) &&
-                (higherTimestamp != new DateTime(1,1,2170) && x.OrderTime <= higherTimestamp)
+                (orderIdMin == -1 || x.OrderId >= orderIdMin) &&
+                (orderIdMax == -1 || x.OrderId <= orderIdMax) &&
+                (clientPhoneNumber == "" || x.ClientPhoneNumber.Contains(clientPhoneNumber)) &&
+                (deliveryAddress == "" || x.DeliveryAddress.Contains(deliveryAddress)) &&
+                (priority == OrderPriority.NONE || x.Priority == priority) &&
+                (status == OrderStatus.NONE || x.Status == status) &&
+                (lowerTimestamp == new DateTime(1,1,1970) || x.OrderTime >= lowerTimestamp) &&
+                (higherTimestamp == new DateTime(1,1,2170) || x.OrderTime <= higherTimestamp)
             );
             Console.WriteLine("Historia wszystkich zamówień:");
             ShowOrders(filter);
+        }
 
+        public MarioResult MoveToNextStatus()
+        {
+            Console.WriteLine("Podaj id zamówienia dla którego chcesz zmienić status:");
+            var orderId = Convert.ToInt32(Console.ReadLine());
+            var order = _marioPizzaRepository.GetOrder(orderId);
+            if (order == null)
+            {
+                return new MarioResult { Message = $"Nie znaleziono zamówienia o id {orderId}", Success = false };
+            }
+            OrderStatus currentStatus = order.Status;
+            if(currentStatus != OrderStatus.DONE)
+            {
+                var newIntStatus = (int)currentStatus + 1;
+                _marioPizzaRepository.ChangeOrderStatus(orderId, (OrderStatus)newIntStatus);
+            }
+            return new MarioResult { Success = true };
         }
     }
 }

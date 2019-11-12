@@ -42,14 +42,14 @@ namespace MarioPizzaOriginal.DataAccess
         void AddElementToOrder(int orderId, FoodSizeSauce element, double quantity);
         void ChangeOrderPriority(int orderId, OrderPriority newOrderPriority);
         void ChangeOrderStatus(int orderId, OrderStatus newOrderStatus);
+        OrderStatus GetOrderStatus(int orderId);
         void DeleteOrder(int orderId);
         void DeleteElementFromOrder(int orderId, string elementName);
         void DeleteElementFromOrder(int orderId, int foodId);
         //All pizza, kebab, tortilla and drink
         List<FoodSizeSauce> GetAllFood();
+        List<FoodSizeSauce> GetFilteredFood();
         FoodSizeSauce GetFood(int foodId);
-        FoodSizeSauce GetFood(string foodName);
-        FoodSizeSauce GetFood(string foodName, FoodType foodType);
         void SaveData();
     }
 }
