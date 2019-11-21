@@ -15,6 +15,7 @@ namespace MarioPizzaOriginal.DataAccess
         private readonly bool _StaticData;
         private readonly MarioPizzaData _marioPizzaData;
         private List<FoodSizeSauce> allFood;
+        
 
         public MarioPizzaRepository(bool staticOrDynamic)
         {
@@ -27,7 +28,8 @@ namespace MarioPizzaOriginal.DataAccess
                     KebabList = new List<Kebab>(),
                     TortillaList = new List<Tortilla>(),
                     DrinkList = new List<Drink>(),
-                    OrderList = new List<MarioPizzaOrder>()
+                    OrderList = new List<MarioPizzaOrder>(),
+                    IngredientList = new List<Ingredient>()
                 };
             }
             else
@@ -38,17 +40,23 @@ namespace MarioPizzaOriginal.DataAccess
         }
         public void DeleteKebab(int foodId)
         {
-            _marioPizzaData.KebabList.RemoveAll(x => x.FoodId != foodId);
+            var tortilla = _marioPizzaData.TortillaList.Find(x => x.FoodId == foodId);
+            _marioPizzaData.TortillaList.Remove(tortilla);
+            DeleteFood(tortilla);
         }
 
         public void DeletePizza(int foodId)
         {
-            _marioPizzaData.PizzaList.RemoveAll(x => x.FoodId != foodId);
+            var pizza = _marioPizzaData.PizzaList.Find(x => x.FoodId == foodId);
+            _marioPizzaData.PizzaList.Remove(pizza);
+            DeleteFood(pizza);
         }
 
         public void DeleteTortilla(int foodId)
         {
-            _marioPizzaData.TortillaList.RemoveAll(x => x.FoodId != foodId);
+            var tortilla = _marioPizzaData.TortillaList.Find(x => x.FoodId == foodId);
+            _marioPizzaData.TortillaList.Remove(tortilla);
+            DeleteFood(tortilla);
         }
 
         public void EditKebab(Kebab editedKebab)
@@ -56,6 +64,7 @@ namespace MarioPizzaOriginal.DataAccess
             var actualKebab = _marioPizzaData.KebabList.First(x => x.FoodId == editedKebab.FoodId);
             var editIndex = _marioPizzaData.KebabList.IndexOf(actualKebab);
             _marioPizzaData.KebabList[editIndex] = editedKebab;
+            EditFood(editedKebab, editIndex);
         }
 
         public void EditPizza(Pizza editedPizza)
@@ -63,6 +72,7 @@ namespace MarioPizzaOriginal.DataAccess
             var actualpizza = _marioPizzaData.PizzaList.First(x => x.FoodId == editedPizza.FoodId);
             var editIndex = _marioPizzaData.PizzaList.IndexOf(actualpizza);
             _marioPizzaData.PizzaList[editIndex] = editedPizza;
+            EditFood(editedPizza, editIndex);
         }
 
         public void EditTortilla(Tortilla editedTortilla)
@@ -70,6 +80,7 @@ namespace MarioPizzaOriginal.DataAccess
             var actualtortilla = _marioPizzaData.TortillaList.First(x => x.FoodId == editedTortilla.FoodId);
             var editIndex = _marioPizzaData.TortillaList.IndexOf(actualtortilla);
             _marioPizzaData.TortillaList[editIndex] = editedTortilla;
+            EditFood(editedTortilla, editIndex);
         }
 
         public Kebab GetKebab(int foodId)
@@ -104,17 +115,6 @@ namespace MarioPizzaOriginal.DataAccess
 
         public void AddIngredient(Ingredient ingredient)
         {
-            /*
-            if(_marioPizzaData.IngredientList.First(x => x.IngredientName.Equals(ingredientName)) == null){
-                var ingredient = new Ingredient
-                {
-                    IngredientId = _marioPizzaData.IngredientList.Count,
-                    IngredientName = ingredientName,
-                    UnitOfMeasureType = unitOfMeasure,
-                    AmoutOfUOM = amoutOfUOM
-                };
-            }
-            */
             _marioPizzaData.IngredientList.Add(ingredient);
         }
 
@@ -211,7 +211,9 @@ namespace MarioPizzaOriginal.DataAccess
 
         public void DeleteDrink(int foodId)
         {
-            _marioPizzaData.DrinkList.RemoveAll(x => x.FoodId == foodId);
+            var drink = _marioPizzaData.DrinkList.Find(x => x.FoodId == foodId);
+            _marioPizzaData.DrinkList.Remove(drink);
+            DeleteFood(drink);
         }
 
         public List<FoodSizeSauce> GetAllFood()
@@ -232,6 +234,14 @@ namespace MarioPizzaOriginal.DataAccess
         private void AddNewFood(FoodSizeSauce foodSizeSauce)
         {
             allFood.Add(foodSizeSauce);
+        }
+        private void EditFood(FoodSizeSauce foodSizeSauce, int foodIndex)
+        {
+            allFood[foodIndex] = foodSizeSauce;
+        }
+        private void DeleteFood(FoodSizeSauce foodSizeSauce)
+        {
+            allFood.Remove(foodSizeSauce);
         }
 
         public void AddKebab(Kebab kebab)
@@ -254,7 +264,9 @@ namespace MarioPizzaOriginal.DataAccess
 
         public void ChangeOrderStatus(int orderId, OrderStatus newOrderStatus)
         {
-            _marioPizzaData.OrderList.First(x => x.OrderId == orderId).Status = newOrderStatus;
+            var actualOrder = _marioPizzaData.OrderList.First(x => x.OrderId == orderId);
+            var index = _marioPizzaData.OrderList.IndexOf(actualOrder);
+            _marioPizzaData.OrderList[index].Status = newOrderStatus;
         }
 
         public OrderStatus GetOrderStatus(int orderId)
@@ -269,7 +281,7 @@ namespace MarioPizzaOriginal.DataAccess
 
         public FoodSizeSauce GetFood(int foodId)
         {
-            throw new NotImplementedException();
+            return allFood.FirstOrDefault(x => x.FoodId == foodId);
         }
     }
 }

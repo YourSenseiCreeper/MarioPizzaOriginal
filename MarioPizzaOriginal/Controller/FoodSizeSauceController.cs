@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MarioPizzaOriginal.Controller
 {
-    public class FoodSizeSauceController : IFoodDisposable
+    public class FoodSizeSauceController
     {
         private readonly IMarioPizzaRepository _marioPizzaRepository;
         public FoodSizeSauceController(IMarioPizzaRepository marioPizzaRepository)
@@ -241,7 +241,7 @@ namespace MarioPizzaOriginal.Controller
         public MarioResult GetFoodWithParticularStatus()
         {
 
-            return new MarioResult { Success = true; }
+            return new MarioResult { Success = true };
         }
 
         public void Dispose()

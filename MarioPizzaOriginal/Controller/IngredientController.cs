@@ -50,13 +50,13 @@ namespace MarioPizzaOriginal.Controller
             Console.Write("Id".PadLeft(5));
             Console.Write("Nazwa składnika".PadLeft(30));
             Console.Write("Jednostka miary".PadLeft(30));
-            Console.Write("Ilość składnika".PadLeft(30));
-
+            Console.Write("Ilość składnika\n".PadLeft(30));
             ingredients.ForEach(x => {
                 Console.Write(x.IngredientId.ToString().PadLeft(5));
-                Console.Write(x.IngredientName.PadLeft(30));
+                Console.Write(x.IngredientName.PadLeft(20));
                 Console.Write(x.UnitOfMeasureType.ToString().PadLeft(30));
-                Console.Write(x.AmountOfUOM.ToString().PadLeft(30));
+                Console.Write(x.AmountOfUOM.ToString().PadLeft(25));
+                Console.Write("\n");
             });
         }
         public void AllIngredients()

@@ -3,7 +3,6 @@ using MarioPizzaOriginal.Model;
 using MarioPizzaOriginal.Model.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MarioPizzaOriginal.Controller
 {
@@ -200,6 +199,14 @@ namespace MarioPizzaOriginal.Controller
                 var newIntStatus = (int)currentStatus + 1;
                 _marioPizzaRepository.ChangeOrderStatus(orderId, (OrderStatus)newIntStatus);
             }
+            return new MarioResult { Success = true };
+        }
+
+        public MarioResult GetOrder()
+        {
+            Console.WriteLine("Podaj id zamówienia: ");
+            var orderId = Convert.ToInt32(Console.ReadLine());
+            _marioPizzaRepository.GetOrder(orderId);
             return new MarioResult { Success = true };
         }
     }
