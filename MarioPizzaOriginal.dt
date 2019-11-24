@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-16"?>
+<DevTrackerData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SolutionTotalEditTime="PT1H22M19.1994193S" SolutionTotalViewTime="PT1H7M11.4603288S" SolutionTotalDebugTime="PT1.0517435S">
+  <FileVersion>
+    <Major>1</Major>
+    <Minor>0</Minor>
+  </FileVersion>
+  <SolutionFolder>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal</SolutionFolder>
+  <SolutionCreattionDate>2019-11-08T15:04:06.969907+01:00</SolutionCreattionDate>
+  <ProjectsCreatedDateList>
+    <ProjectCreated>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-10-18T14:21:39.7212839+02:00</CreatedDate>
+    </ProjectCreated>
+  </ProjectsCreatedDateList>
+  <SessionTimeList />
+  <LastSessionTimeList>
+    <DevTrackerDataItem ViewActiveTime="PT2M3.0549657S" EditActiveTime="PT9M3.2652774S">
+      <ModifiedDate>2019-11-18T01:31:20.6207722+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\AzureDatabase.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-18T01:17:46.7032482+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1.0517435S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-11-17T22:55:35.006315+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M14.7728324S" EditActiveTime="PT13.4945293S">
+      <ModifiedDate>2019-11-17T22:50:48.094575+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\FoodSizeSauceController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:50:31.6289415+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT7.8732694S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Interfaces\IFoodDisposable.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:58:20.27608+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M7.3825378S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\IMarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:42:45.3657413+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT2.6158461S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Ingredient.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:43:56.6560518+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT6M36.1860976S" EditActiveTime="PT37.4584651S">
+      <ModifiedDate>2019-11-17T22:57:40.5199915+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\IngredientController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:43:59.2728994+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT22.990244S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\MarioPizzaData.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:54:44.9082339+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT6M45.5675637S" EditActiveTime="PT8M2.2337332S">
+      <ModifiedDate>2019-11-18T01:32:11.3876525+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\MarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:46:07.9518185+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT4M17.1219681S" EditActiveTime="PT2.7809644S">
+      <ModifiedDate>2019-11-17T22:58:41.3912935+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\OrderController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:42:34.7422342+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT5.4698646S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Pizza.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-18T01:15:27.6219754+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT58.0356911S" EditActiveTime="PT1M26.88038S">
+      <ModifiedDate>2019-11-17T22:50:11.2265333+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Program.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:45:01.2616954+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+  </LastSessionTimeList>
+  <TotalTimeList>
+    <DevTrackerDataItem ViewActiveTime="PT2M3.0549657S" EditActiveTime="PT9M3.2652774S">
+      <ModifiedDate>2019-11-18T01:31:20.6207722+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\AzureDatabase.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-18T01:17:46.7032482+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1.0517435S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-11-17T22:55:35.006315+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT3.1930854S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Food.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:53:12.9751521+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT24M7.1641275S" EditActiveTime="PT23M47.9972751S">
+      <ModifiedDate>2019-11-17T22:50:48.094575+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>2</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\FoodSizeSauceController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:04:07.2741211+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT7.8732694S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Interfaces\IFoodDisposable.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:58:20.27608+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M17.689897S" EditActiveTime="PT7.2575972S">
+      <ModifiedDate>2019-11-08T18:22:35.2458562+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\IMarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:43:38.3040085+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT42.1911018S" EditActiveTime="PT7.8004432S">
+      <ModifiedDate>2019-11-08T17:26:50.4960882+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Ingredient.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T16:02:38.1084594+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT17M54.0284043S" EditActiveTime="PT29M47.6510241S">
+      <ModifiedDate>2019-11-17T22:57:40.5199915+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>2</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\IngredientController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:58:31.7759247+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT22.990244S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\MarioPizzaData.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:54:44.9082339+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT7M40.9876614S" EditActiveTime="PT9M20.8211426S">
+      <ModifiedDate>2019-11-18T01:32:11.3876525+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>2</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\MarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:53:24.5057358+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT11M48.8100352S" EditActiveTime="PT8M37.5252787S">
+      <ModifiedDate>2019-11-17T22:58:41.3912935+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>2</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\OrderController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:42:43.8072498+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT5.4698646S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Pizza.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-18T01:15:27.6219754+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT58.0356911S" EditActiveTime="PT1M26.88038S">
+      <ModifiedDate>2019-11-17T22:50:11.2265333+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Program.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:45:01.2616954+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+  </TotalTimeList>
+  <HistoryTimeList>
+    <DevTrackerDataItem ViewActiveTime="PT2M3.0549657S" EditActiveTime="PT9M3.2652774S">
+      <ModifiedDate>2019-11-18T01:31:20.6207722+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\AzureDatabase.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-18T01:17:46.7032482+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT5.4698646S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Pizza.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-18T01:15:27.6219754+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT7.8732694S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Interfaces\IFoodDisposable.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:58:20.27608+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1.0517435S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-11-17T22:55:35.006315+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT22.990244S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\MarioPizzaData.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:54:44.9082339+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M14.7728324S" EditActiveTime="PT13.4945293S">
+      <ModifiedDate>2019-11-17T22:50:48.094575+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\FoodSizeSauceController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:50:31.6289415+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT6M45.5305376S" EditActiveTime="PT8M2.2337332S">
+      <ModifiedDate>2019-11-18T01:32:11.3876525+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\MarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:46:07.9518185+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT58.0356911S" EditActiveTime="PT1M26.88038S">
+      <ModifiedDate>2019-11-17T22:50:11.2265333+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Program.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:45:01.2616954+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT6M36.1860976S" EditActiveTime="PT37.4584651S">
+      <ModifiedDate>2019-11-17T22:57:40.5199915+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\IngredientController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:43:59.2728994+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT2.6158461S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Ingredient.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:43:56.6560518+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M7.3825378S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\IMarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:42:45.3657413+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT4M17.1219681S" EditActiveTime="PT2.7809644S">
+      <ModifiedDate>2019-11-17T22:58:41.3912935+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\OrderController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-17T22:42:34.7422342+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT39.5752557S" EditActiveTime="PT7.8004432S">
+      <ModifiedDate>2019-11-08T17:26:50.4960882+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Ingredient.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T16:02:38.1084594+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT11M17.8423067S" EditActiveTime="PT29M10.192559S">
+      <ModifiedDate>2019-11-08T17:29:52.9965414+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\IngredientController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:58:31.7759247+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT55.4581245S" EditActiveTime="PT1M18.5874094S">
+      <ModifiedDate>2019-11-08T18:21:00.5423414+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\MarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:53:24.5057358+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT3.1930854S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Model\Food.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:53:12.9751521+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT10.3073592S" EditActiveTime="PT7.2575972S">
+      <ModifiedDate>2019-11-08T18:22:35.2458562+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\DataAccess\IMarioPizzaRepository.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:43:38.3040085+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT7M31.6880671S" EditActiveTime="PT8M34.7443143S">
+      <ModifiedDate>2019-11-08T21:33:42.6141383+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\OrderController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:42:43.8072498+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT22M52.4173155S" EditActiveTime="PT23M34.5027458S">
+      <ModifiedDate>2019-11-08T22:13:01.1020863+01:00</ModifiedDate>
+      <ModifiedBy>ARKADIUSZ</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\Controller\FoodSizeSauceController.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\MarioPizzaOriginal.csproj</ProjectName>
+      <CreatedDate>2019-11-08T15:04:07.2741211+01:00</CreatedDate>
+      <ViewedBy>ARKADIUSZ</ViewedBy>
+    </DevTrackerDataItem>
+  </HistoryTimeList>
+</DevTrackerData>
