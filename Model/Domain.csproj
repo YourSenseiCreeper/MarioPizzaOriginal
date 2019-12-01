@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="DataAccess\IMarioPizzaRepository.cs" />
     <Compile Include="DataAccess\MySQLDatabase.cs" />
+    <Compile Include="DataAccess\OrderSqlRepository.cs" />
     <Compile Include="DataAccess\SqlLiteDatabase.cs" />
     <Compile Include="Enums\FoodSize.cs" />
     <Compile Include="Enums\FoodType.cs" />

@@ -22,10 +22,6 @@ namespace MarioPizzaOriginal.DataAccess
             {
                 _marioPizzaData = new MarioPizzaData
                 {
-                    PizzaList = new List<Pizza>(),
-                    KebabList = new List<Kebab>(),
-                    TortillaList = new List<Tortilla>(),
-                    DrinkList = new List<Drink>(),
                     OrderList = new List<MarioPizzaOrder>(),
                     IngredientList = new List<Ingredient>()
                 };
@@ -221,11 +217,7 @@ namespace MarioPizzaOriginal.DataAccess
             //Now it's about to be OK
             if (allFood == null)
             {
-                var drinks = _marioPizzaData.DrinkList;
-                var pizzas = _marioPizzaData.PizzaList;
-                var kebabs = _marioPizzaData.KebabList;
-                var tortillas = _marioPizzaData.TortillaList;
-                allFood = new List<Food>().Concat(drinks).Concat(pizzas).Concat(kebabs).Concat(tortillas).ToList();
+                allFood = new List<Food>();
             }
             return allFood;
         }

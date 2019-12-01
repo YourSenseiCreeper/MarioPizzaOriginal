@@ -194,6 +194,13 @@ namespace MarioPizzaOriginal.Controller
             ShowOrders(filter);
         }
 
+        public MarioResult GetWaiting()
+        {
+            var waitingOrders = _marioPizzaRepository.GetWaitingOrders();
+            ShowOrders(waitingOrders);
+            return new MarioResult { Success = true; }
+        }
+
         public MarioResult MoveToNextStatus()
         {
             Console.WriteLine("Podaj id zamówienia dla którego chcesz zmienić status:");

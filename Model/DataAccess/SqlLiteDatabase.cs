@@ -100,6 +100,43 @@ namespace MarioPizzaOriginal.DataAccess
                 return (List<MarioPizzaOrder>) con.Query<MarioPizzaOrder>(query);
             }
         }
+
+        public List<MarioPizzaOrder> GetOrdersWaiting()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT " +
+                    "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
+                    "M.Priority,M.Status,M.OrderTime " +
+                    "FROM MarioPizzaOrder AS M WHERE M.Status = 0";
+                return (List<MarioPizzaOrder>)con.Query<MarioPizzaOrder>(query);
+            }
+        }
+
+        public List<MarioPizzaOrder> GetOrdersInProgress()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT " +
+                    "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
+                    "M.Priority,M.Status,M.OrderTime " +
+                    "FROM MarioPizzaOrder AS M WHERE M.Status = 1";
+                return (List<MarioPizzaOrder>)con.Query<MarioPizzaOrder>(query);
+            }
+        }
+
+        public List<MarioPizzaOrder> GetOrdersReadyForDelivery()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT " +
+                    "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
+                    "M.Priority,M.Status,M.OrderTime " +
+                    "FROM MarioPizzaOrder AS M WHERE M.Status = 2";
+                return (List<MarioPizzaOrder>)con.Query<MarioPizzaOrder>(query);
+            }
+        }
+
         public Dictionary<Food, double> GetOrderElements(int orderId)
         {
             var result = new Dictionary<Food, double>();

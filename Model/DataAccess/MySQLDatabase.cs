@@ -14,11 +14,6 @@ namespace MarioPizzaOriginal.DataAccess
             return new List<MarioPizzaOrder>();
         }
 
-        public void AddDrink(Drink drink)
-        {
-            throw new NotImplementedException();
-        }
-
         public void AddElementToOrder(int orderId, FoodSizeSauce element, double quantity)
         {
             throw new NotImplementedException();
@@ -29,22 +24,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void AddKebab(Kebab kebab)
-        {
-            throw new NotImplementedException();
-        }
-
         public void AddOrder(MarioPizzaOrder order)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddPizza(Pizza pizza)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddTortilla(Tortilla tortilla)
         {
             throw new NotImplementedException();
         }
@@ -104,27 +84,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void EditDrink(Drink editedDrink)
-        {
-            throw new NotImplementedException();
-        }
-
         public void EditIngredient(Ingredient editedIngredient)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EditKebab(Kebab editedKebab)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EditPizza(Pizza editedPizza)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EditTortilla(Tortilla editedTortilla)
         {
             throw new NotImplementedException();
         }
@@ -145,11 +105,6 @@ namespace MarioPizzaOriginal.DataAccess
             }
             Console.WriteLine();
             return new List<MarioPizzaOrder>();
-        }
-
-        public Drink GetDrink(int foodId)
-        {
-            throw new NotImplementedException();
         }
 
         public List<FoodSizeSauce> GetFilteredFood()
@@ -204,10 +159,6 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public Kebab GetKebab(int foodId)
-        {
-            throw new NotImplementedException();
-        }
         public MarioPizzaOrder GetOrder(int orderId)
         {
             var sql = "SELECT TOP 1 * FROM mariopizza.ORDERS";
@@ -244,16 +195,6 @@ namespace MarioPizzaOriginal.DataAccess
         }
 
         public OrderStatus GetOrderStatus(int orderId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Pizza GetPizza(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Tortilla GetTortilla(int foodId)
         {
             throw new NotImplementedException();
         }
