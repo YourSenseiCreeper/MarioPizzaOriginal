@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarioPizzaOriginal.Model.Enums;
+using MarioPizzaOriginal.Domain.Enums;
 
-namespace MarioPizzaOriginal.Model
+namespace MarioPizzaOriginal.Domain
 {
     public class MarioPizzaOrder
     {
         public int OrderId { get; set; }
-        public Dictionary<FoodSizeSauce, double> OrderList { get; set; }
+        public Dictionary<Food, double> OrderList { get; set; }
         public string ClientPhoneNumber { get; set; }
         public string DeliveryAddress { get; set; }
         public OrderPriority Priority { get; set; }

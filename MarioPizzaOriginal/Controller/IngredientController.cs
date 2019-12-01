@@ -1,5 +1,5 @@
 ﻿using MarioPizzaOriginal.DataAccess;
-using MarioPizzaOriginal.Model;
+using MarioPizzaOriginal.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +35,7 @@ namespace MarioPizzaOriginal.Controller
             var amoutofUOM = Convert.ToDouble(Console.ReadLine());
             _marioPizzaRepository.AddIngredient(new Ingredient
             {
-                IngredientId = _marioPizzaRepository.GetIngredientList().Count(),
+                IngredientId = _marioPizzaRepository.GetIngredients().Count(),
                 IngredientName = ingredientName,
                 UnitOfMeasureType = unitofmeasure,
                 AmountOfUOM = amoutofUOM
@@ -47,36 +47,37 @@ namespace MarioPizzaOriginal.Controller
 
         private void ShowIngredients(List<Ingredient> ingredients)
         {
-            Console.Write("Id".PadLeft(5));
-            Console.Write("Nazwa składnika".PadLeft(30));
-            Console.Write("Jednostka miary".PadLeft(30));
-            Console.Write("Ilość składnika\n".PadLeft(30));
+            string header = $"{"Id".PadRight(5)}|" +
+                $"{"Nazwa składnika".PadRight(30)}|" +
+                $"{"Jednostka miary".PadRight(15)}|" +
+                $"{"Ilość składnika".PadRight(10)}";
+            Console.WriteLine(header);
+            for (int i = 0; i < header.Length; i++)
+            {
+                Console.Write("=");
+            }
+            Console.Write("\n");
             ingredients.ForEach(x => {
-                Console.Write(x.IngredientId.ToString().PadLeft(5));
-                Console.Write(x.IngredientName.PadLeft(20));
-                Console.Write(x.UnitOfMeasureType.ToString().PadLeft(30));
-                Console.Write(x.AmountOfUOM.ToString().PadLeft(25));
-                Console.Write("\n");
+                Console.WriteLine($"{x.IngredientId.ToString().PadRight(5)}|" +
+                    $"{x.IngredientName.PadRight(30)}|" +
+                    $"{x.UnitOfMeasureType.ToString().PadRight(15)}|" +
+                    $"{x.AmountOfUOM.ToString().PadRight(10)}");
             });
         }
         public void AllIngredients()
         {
             Console.WriteLine("Lista dostępnych składników:");
-            ShowIngredients(_marioPizzaRepository.GetIngredientList());
+            ShowIngredients(_marioPizzaRepository.GetIngredients());
         }
 
         public MarioResult DeleteIngredient()
         {
             Console.WriteLine("Podaj nazwę lub numer składnika który chcesz usunąć");
             var ingredient = Console.ReadLine();
-            bool success;
+            bool success = false;
             if (Int32.TryParse(ingredient, out int ingredientId))
             {
                 success = _marioPizzaRepository.DeleteIngredient(ingredientId);
-            }
-            else
-            {
-                success = _marioPizzaRepository.DeleteIngredient(ingredient);
             }
             var message = success ? $"Usunięto składnik {ingredient}" : "Podany składnik nie istnieje!";
             Console.WriteLine(message);
@@ -91,6 +92,7 @@ namespace MarioPizzaOriginal.Controller
             text.ForEach(x => Console.WriteLine(x));
         }
 
+        /*
         public MarioResult GetIngredient(string ingredientName)
         {
             var ingredient = _marioPizzaRepository.GetIngredient(ingredientName);
@@ -102,6 +104,7 @@ namespace MarioPizzaOriginal.Controller
             }
             return new MarioResult { Success = (ingredient != null), Message = message };
         }
+        */
 
         public MarioResult GetIngredient(int ingredientId)
         {
@@ -206,7 +209,7 @@ namespace MarioPizzaOriginal.Controller
             double amountOfUOMmin = (double)filter["AmountOfUOMmin"];
             double amountOfUOMmax = (double)filter["AmountOfUOMmax"];
 
-            var filteredValues = _marioPizzaRepository.GetIngredientList().FindAll(x =>
+            var filteredValues = _marioPizzaRepository.GetIngredients().FindAll(x =>
                 (ingredientIdMin != -1 || x.IngredientId >= ingredientIdMin) &&
                 (ingredientIdMax != -1 || x.IngredientId <= ingredientIdMax) &&
                 (ingredientName != "" || x.IngredientName.Contains(ingredientName)) &&

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MarioPizzaOriginal.Model.Interfaces
+namespace MarioPizzaOriginal.Domain.Interfaces
 {
     public interface IPreparable
     {

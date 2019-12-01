@@ -1,6 +1,6 @@
 ﻿using MarioPizzaOriginal.DataAccess;
-using MarioPizzaOriginal.Model;
-using MarioPizzaOriginal.Model.Enums;
+using MarioPizzaOriginal.Domain;
+using MarioPizzaOriginal.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +13,6 @@ namespace MarioPizzaOriginal.Controller
         {
             _marioPizzaRepository = marioPizzaRepository;
         }
-
 
         public void AddOrder()
         {
@@ -49,17 +48,28 @@ namespace MarioPizzaOriginal.Controller
 
         private void ShowOrders(List<MarioPizzaOrder> orderList)
         {
-            List<string> headerElements = new List<string> { "Numer zamówienia", "Data i czas", "Status", "Priorytet", "Numer tel. klienta", "Adres dostawy" };
-            headerElements.ForEach(x => Console.Write(x.PadLeft(20)));
+            
+            List<string> headerElements = new List<string> { "Nr zam.", "Data", "Status", "Priorytet", "Nr tel", "Adres" };
+            var header = $"{headerElements[0].PadRight(10)}|" +
+                    $"{headerElements[1].PadRight(20)}|" +
+                    $"{headerElements[2].PadRight(12)}|" +
+                    $"{headerElements[3].PadRight(10)}|" +
+                    $"{headerElements[4].PadRight(10)}|" +
+                    $"{headerElements[5].PadRight(15)}";
+            Console.WriteLine(header);
+            for(int i = 0; i<header.Length; i++)
+            {
+                Console.Write("=");
+            }
             Console.Write("\n");
             foreach (var order in orderList)
             {
-                Console.WriteLine($"{order.OrderId.ToString().PadLeft(5)} |" +
-                    $" {order.OrderTime.ToString().PadLeft(20)} |" +
-                    $" {order.Status.ToString().PadLeft(20)} |" +
-                    $" {order.Priority.ToString().PadLeft(20)} |" +
-                    $" {order.ClientPhoneNumber.PadLeft(20)} |" +
-                    $" {order.DeliveryAddress.PadLeft(20)}");
+                Console.WriteLine($"{order.OrderId.ToString().PadRight(10)}|" +
+                    $"{order.OrderTime.ToString().PadRight(20)}|" +
+                    $"{order.Status.ToString().PadRight(12)}|" +
+                    $"{order.Priority.ToString().PadRight(10)}|" +
+                    $"{order.ClientPhoneNumber.PadRight(10)}|" +
+                    $"{order.DeliveryAddress.PadRight(15)}");
             }
         }
         public void GetAllOrders()
@@ -194,11 +204,12 @@ namespace MarioPizzaOriginal.Controller
                 return new MarioResult { Message = $"Nie znaleziono zamówienia o id {orderId}", Success = false };
             }
             OrderStatus currentStatus = order.Status;
-            if(currentStatus != OrderStatus.DONE)
+            OrderStatus newStatus = (OrderStatus) ((int)currentStatus + 1);
+            if (currentStatus != OrderStatus.DONE)
             {
-                var newIntStatus = (int)currentStatus + 1;
-                _marioPizzaRepository.ChangeOrderStatus(orderId, (OrderStatus)newIntStatus);
+                _marioPizzaRepository.ChangeOrderStatus(orderId, newStatus);
             }
+            Console.WriteLine($"Obecny status zamówienia: {Enum.GetName(typeof(OrderStatus), newStatus)}");
             return new MarioResult { Success = true };
         }
 

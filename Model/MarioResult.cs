@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MarioPizzaOriginal.Model
+namespace MarioPizzaOriginal.Domain
 {
     public class MarioResult
     {

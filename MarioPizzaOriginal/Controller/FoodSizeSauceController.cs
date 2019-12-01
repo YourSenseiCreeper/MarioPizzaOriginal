@@ -1,7 +1,7 @@
 ﻿using MarioPizzaOriginal.DataAccess;
-using MarioPizzaOriginal.Model;
-using MarioPizzaOriginal.Model.Enums;
-using MarioPizzaOriginal.Model.Interfaces;
+using MarioPizzaOriginal.Domain;
+using MarioPizzaOriginal.Domain.Enums;
+using MarioPizzaOriginal.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,7 +39,6 @@ namespace MarioPizzaOriginal.Controller
             List<string> entries = new List<string> {
                 $"=== {pickedFood.FoodName} ===",
                 $"Id produktu: {pickedFood.FoodId}",
-                $"Typ: {pickedFood.FoodSizeType.ToString()}",
                 $"Cena: {pickedFood.Price}zł ({pickedFood.NettPrice}zł netto)",
                 $"Czas produkcji: {ConvertProductionTime(pickedFood.ProductionTime)}",
                 $"Waga: {pickedFood.Weight}kg"
@@ -49,16 +48,22 @@ namespace MarioPizzaOriginal.Controller
             return new MarioResult { Message = message, Success = pickedFood != null };
         }
 
-        private void ShowFood(List<FoodSizeSauce> foodList)
+        private void ShowFood(List<Food> foodList)
         {
             Console.WriteLine("Wszystkie dostępne produkty:");
-            Console.Write("Id".PadLeft(10));
-            Console.Write("Nazwa".PadLeft(30));
-            Console.Write("Cena".PadLeft(20));
+            var header = $"{"Id".PadRight(5)}|" +
+                $"{"Nazwa".PadRight(25)}|" +
+                $"{"Cena".PadLeft(5)}|";
+            Console.WriteLine(header);
+            for (int i = 0; i < header.Length; i++)
+            {
+                Console.Write("=");
+            }
+            Console.Write("\n");
             foodList.ForEach(x => {
-                Console.Write($"{x.FoodId}".PadLeft(10));
-                Console.Write($"{x.FoodName}".PadLeft(30));
-                Console.Write($"{x.Price} zł".PadLeft(20));
+                Console.WriteLine($"{x.FoodId.ToString().PadRight(5)}|" +
+                    $"{x.FoodName.PadRight(25)}|" +
+                    $"{x.Price.ToString().PadRight(5)} zł");
             });
         }
 
@@ -228,32 +233,6 @@ namespace MarioPizzaOriginal.Controller
             }
             ShowIngredients(food.Ingredients);
             return new MarioResult { Success = true };
-        }
-        
-        public void ChangeStatus(OrderStatus orderStatus)
-        {
-            throw new NotImplementedException();
-        }
-        public OrderStatus GetStatus()
-        {
-            throw new NotImplementedException();
-        }
-        public MarioResult GetFoodWithParticularStatus()
-        {
-
-            return new MarioResult { Success = true };
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<string> GetPreparationInstructions()
-        {
-            throw new NotImplementedException();
-        }
-
-        
+        }        
     }
 }

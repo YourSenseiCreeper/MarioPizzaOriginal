@@ -1,4 +1,4 @@
-﻿namespace MarioPizzaOriginal.Model.Enums
+﻿namespace MarioPizzaOriginal.Domain.Enums
 {
     public enum OrderStatus
     {
@@ -9,4 +9,5 @@
         DISPOSED,
         NONE
     }
+
 }

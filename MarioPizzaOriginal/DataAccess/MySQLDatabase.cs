@@ -2,27 +2,14 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
-using MarioPizzaOriginal.Model;
-using MarioPizzaOriginal.Model.Enums;
+using MarioPizzaOriginal.Domain;
+using MarioPizzaOriginal.Domain.Enums;
 
 namespace MarioPizzaOriginal.DataAccess
 {
-    public class AzureDatabase : IMarioPizzaRepository
+    public class MySQLDatabase : IMarioPizzaRepository 
     {
-        private readonly string azurePass = "3e79670283200091e81e365cd48edbee!@#";
-        private string ConnStr()
-        {
-            return $"Server=tcp:mariopizza.database.windows.net,1433;Initial Catalog=mariopizza;Persist Security Info=False;" +
-                $"User ID=gastherr;Password={azurePass};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;" +
-                $"Connection Timeout=30;";
-        }
-        
-        public void AddDrink(Drink drink)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddElementToOrder(int orderId, FoodSizeSauce element, double quantity)
+        public void AddElementToOrder(int orderId, Food element, double quantity)
         {
             throw new NotImplementedException();
         }
@@ -32,22 +19,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void AddKebab(Kebab kebab)
-        {
-            throw new NotImplementedException();
-        }
-
         public void AddOrder(MarioPizzaOrder order)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddPizza(Pizza pizza)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddTortilla(Tortilla tortilla)
         {
             throw new NotImplementedException();
         }
@@ -62,22 +34,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void DeleteDrink(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteElementFromOrder(int orderId, string elementName)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteElementFromOrder(int orderId, int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool DeleteIngredient(string ingredientName)
         {
             throw new NotImplementedException();
         }
@@ -87,27 +44,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void DeleteKebab(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteOrder(int orderId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeletePizza(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteTortilla(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EditDrink(Drink editedDrink)
         {
             throw new NotImplementedException();
         }
@@ -117,48 +54,35 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void EditKebab(Kebab editedKebab)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EditPizza(Pizza editedPizza)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EditTortilla(Tortilla editedTortilla)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<FoodSizeSauce> GetAllFood()
+        public List<Food> GetAllFood()
         {
             throw new NotImplementedException();
         }
 
         public List<MarioPizzaOrder> GetAllOrders()
         {
-            throw new NotImplementedException();
+            DbConnect db = new DbConnect();
+            List<string>[] results = db.Select();
+            Console.WriteLine("Database Results:");
+            foreach (var element in results)
+            {
+                Console.WriteLine(element.ToString());
+            }
+            Console.WriteLine();
+            return new List<MarioPizzaOrder>();
         }
 
-        public Drink GetDrink(int foodId)
+        public List<Food> GetFilteredFood()
         {
             throw new NotImplementedException();
         }
 
-        public List<FoodSizeSauce> GetFilteredFood()
+        public Food GetFood(int foodId)
         {
-            throw new NotImplementedException();
-        }
-
-        public FoodSizeSauce GetFood(int foodId)
-        {
-            var sql = "SELECT " +
-                "F.FOOD_ID FROM FOOD";
+            var sql = "SELECT F.FOOD_ID FROM FOOD";
             try
             {
-                using (var connection = new SqlConnection(ConnStr()))
+                using (var connection = new SqlConnection(""))
                 {
                     connection.Open();
                     using (var command = new SqlCommand(sql, connection))
@@ -185,31 +109,27 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public Ingredient GetIngredient(string ingredientName)
-        {
-            throw new NotImplementedException();
-        }
-
         public Ingredient GetIngredient(int ingredientId)
         {
             throw new NotImplementedException();
         }
 
-        public List<Ingredient> GetIngredientList()
+        public List<Ingredient> GetIngredients()
         {
             throw new NotImplementedException();
         }
 
-        public Kebab GetKebab(int foodId)
+        public List<Ingredient> GetIngredientsForFood(int foodId)
         {
             throw new NotImplementedException();
         }
+
         public MarioPizzaOrder GetOrder(int orderId)
         {
             var sql = "SELECT TOP 1 * FROM mariopizza.ORDERS";
             try
             {
-                using (var connection = new SqlConnection(ConnStr()))
+                using (var connection = new SqlConnection(""))
                 {
                     connection.Open();
                     using (var command = new SqlCommand(sql, connection))
@@ -239,17 +159,12 @@ namespace MarioPizzaOriginal.DataAccess
             return new MarioPizzaOrder();
         }
 
+        public Dictionary<Food, double> GetOrderElements(int orderId)
+        {
+            throw new NotImplementedException();
+        }
+
         public OrderStatus GetOrderStatus(int orderId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Pizza GetPizza(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Tortilla GetTortilla(int foodId)
         {
             throw new NotImplementedException();
         }

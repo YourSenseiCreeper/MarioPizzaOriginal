@@ -1,4 +1,4 @@
-﻿namespace MarioPizzaOriginal.Model
+﻿namespace MarioPizzaOriginal.Domain
 {
     public class Ingredient
     {

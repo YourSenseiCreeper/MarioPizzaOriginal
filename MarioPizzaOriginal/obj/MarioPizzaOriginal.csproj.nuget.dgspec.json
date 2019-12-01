@@ -29,7 +29,11 @@
         },
         "frameworks": {
           "netcoreapp2.1": {
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\ARKADIUSZ\\source\\repos\\MarioPizzaOriginal\\Model\\Domain.csproj": {
+                "projectPath": "C:\\Users\\ARKADIUSZ\\source\\repos\\MarioPizzaOriginal\\Model\\Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -41,14 +45,26 @@
       "frameworks": {
         "netcoreapp2.1": {
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.30, )"
+            },
             "Microsoft.NETCore.App": {
               "target": "Package",
               "version": "[2.1.0, )",
               "autoReferenced": true
             },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.0.18, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.2, )"
+            },
+            "System.Data.SQLite.Core": {
+              "target": "Package",
+              "version": "[1.0.112, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
@@ -61,6 +77,17 @@
           "assetTargetFallback": true,
           "warn": true
         }
+      }
+    },
+    "C:\\Users\\ARKADIUSZ\\source\\repos\\MarioPizzaOriginal\\Model\\Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\ARKADIUSZ\\source\\repos\\MarioPizzaOriginal\\Model\\Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "C:\\Users\\ARKADIUSZ\\source\\repos\\MarioPizzaOriginal\\Model\\Domain.csproj"
+      },
+      "frameworks": {
+        "net472": {}
       }
     }
   }

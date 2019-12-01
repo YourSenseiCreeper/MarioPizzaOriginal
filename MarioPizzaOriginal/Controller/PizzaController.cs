@@ -1,5 +1,5 @@
 ﻿using MarioPizzaOriginal.DataAccess;
-using MarioPizzaOriginal.Model;
+using MarioPizzaOriginal.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;

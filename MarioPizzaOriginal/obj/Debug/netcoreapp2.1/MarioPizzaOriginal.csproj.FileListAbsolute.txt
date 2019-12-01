@@ -11,3 +11,9 @@ C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\MarioPizzaOriginal.pdb
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.dll
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.pdb
+C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\MarioPizza.db
+C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\MarioPizzaOriginal.dll.config
+C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\Model.exe
+C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\Model.pdb
+C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\Model.exe.config
+C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.csproj.CopyComplete

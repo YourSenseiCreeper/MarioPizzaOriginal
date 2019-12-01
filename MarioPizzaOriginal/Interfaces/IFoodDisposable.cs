@@ -1,6 +1,6 @@
-﻿using MarioPizzaOriginal.Model.Enums;
+﻿using MarioPizzaOriginal.Domain.Enums;
 
-namespace MarioPizzaOriginal.Model
+namespace MarioPizzaOriginal.Domain
 {
     public interface IFoodDisposable
     {

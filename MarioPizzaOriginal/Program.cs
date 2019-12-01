@@ -8,9 +8,15 @@ namespace MarioPizzaOriginal
     {
         public static void Main(string[] args)
         {
-            IMarioPizzaRepository mpr = new AzureDatabase();
-            OrderController orderC = new OrderController(mpr);
-            orderC.GetOrder();
+            IMarioPizzaRepository dataAccess = new SqlLiteDatabase();
+            OrderController orderC = new OrderController(dataAccess);
+            IngredientController ingredientC = new IngredientController(dataAccess);
+            FoodSizeSauceController foodC = new FoodSizeSauceController(dataAccess);
+            //orderC.GetAllOrders();
+            //orderC.GetOrder();
+            //ingredientC.AllIngredients();
+            //foodC.GetAllFood();
+            foodC.GetFood();
             Console.WriteLine("Hello World!");
         }
     }
