@@ -114,7 +114,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public List<Ingredient> GetIngredients()
+        public List<Ingredient> GetAllIngredients()
         {
             throw new NotImplementedException();
         }

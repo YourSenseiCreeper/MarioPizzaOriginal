@@ -35,14 +35,36 @@ namespace MarioPizzaOriginal.Controller
             var amoutofUOM = Convert.ToDouble(Console.ReadLine());
             _marioPizzaRepository.AddIngredient(new Ingredient
             {
-                IngredientId = _marioPizzaRepository.GetIngredients().Count(),
+                IngredientId = _marioPizzaRepository.GetAllIngredients().Count(),
                 IngredientName = ingredientName,
-                UnitOfMeasureType = unitofmeasure,
-                AmountOfUOM = amoutofUOM
+                UnitOfMeasureType = unitofmeasure
             });
             var message = $"Dodano nowy składnik: {ingredientName}";
             Console.WriteLine(message);
             return new MarioResult { Success = true, Message = message };
+        }
+
+        public MarioResult GetAllIngredients()
+        {
+            var ingredients = _marioPizzaRepository.GetAllIngredients();
+            Console.WriteLine("Lista wszystkich składników:");
+            ShowIngredients(ingredients);
+            return new MarioResult { Success = true };
+        }
+
+        public MarioResult EditIngredient()
+        {
+            Console.WriteLine("Podaj id składnika którego chcesz modyfikować:");
+            var ingredientId = Convert.ToInt32(Console.ReadLine());
+            var ingredient = _marioPizzaRepository.GetIngredient(ingredientId);
+            if(ingredient == null)
+            {
+                var message = $"Nie znaleziono składnika o id: {ingredientId}";
+                Console.WriteLine(message);
+                return new MarioResult { Success = false, Message = message};
+            }
+
+            return new MarioResult { Success = true };
         }
 
         private void ShowIngredients(List<Ingredient> ingredients)
@@ -50,7 +72,9 @@ namespace MarioPizzaOriginal.Controller
             string header = $"{"Id".PadRight(5)}|" +
                 $"{"Nazwa składnika".PadRight(30)}|" +
                 $"{"Jednostka miary".PadRight(15)}|" +
-                $"{"Ilość składnika".PadRight(10)}";
+                $"{"Cena (Mała)".PadRight(10)}|"+
+                $"{"Cena (Średnia)".PadRight(10)}|"+
+                $"{"Cena (Duża)".PadRight(10)}";
             Console.WriteLine(header);
             for (int i = 0; i < header.Length; i++)
             {
@@ -61,13 +85,15 @@ namespace MarioPizzaOriginal.Controller
                 Console.WriteLine($"{x.IngredientId.ToString().PadRight(5)}|" +
                     $"{x.IngredientName.PadRight(30)}|" +
                     $"{x.UnitOfMeasureType.ToString().PadRight(15)}|" +
-                    $"{x.AmountOfUOM.ToString().PadRight(10)}");
+                    $"{x.PriceSmall.ToString().PadRight(10)}|" +
+                    $"{x.PriceMedium.ToString().PadRight(10)}|" +
+                    $"{x.PriceLarge.ToString().PadRight(10)}");
             });
         }
         public void AllIngredients()
         {
             Console.WriteLine("Lista dostępnych składników:");
-            ShowIngredients(_marioPizzaRepository.GetIngredients());
+            ShowIngredients(_marioPizzaRepository.GetAllIngredients());
         }
 
         public MarioResult DeleteIngredient()
@@ -88,8 +114,8 @@ namespace MarioPizzaOriginal.Controller
         {
             List<string> text = new List<string> { $"Nazwa składnika: {ingredient.IngredientName}",
             $"Numer porządkowy: {ingredient.IngredientId}", $"Jednostka miary: {ingredient.UnitOfMeasureType.ToString()}",
-            $"Ilość jednostki miary: {ingredient.AmountOfUOM}"};
-            text.ForEach(x => Console.WriteLine(x));
+            $"Cena (Mała): {ingredient.PriceSmall}", $"Cena (Średnia): {ingredient.PriceMedium}", $"Cena (Duża): {ingredient.PriceLarge}"};
+            text.ForEach(line => Console.WriteLine(line));
         }
 
         /*
@@ -199,6 +225,7 @@ namespace MarioPizzaOriginal.Controller
             return output;
         }
 
+        //Unused
         public MarioResult GetFilteredIngredients()
         {
             Dictionary<string, object> filter = GetFilteredIngredientsDict();
@@ -209,13 +236,13 @@ namespace MarioPizzaOriginal.Controller
             double amountOfUOMmin = (double)filter["AmountOfUOMmin"];
             double amountOfUOMmax = (double)filter["AmountOfUOMmax"];
 
-            var filteredValues = _marioPizzaRepository.GetIngredients().FindAll(x =>
+            var filteredValues = _marioPizzaRepository.GetAllIngredients().FindAll(x =>
                 (ingredientIdMin != -1 || x.IngredientId >= ingredientIdMin) &&
                 (ingredientIdMax != -1 || x.IngredientId <= ingredientIdMax) &&
                 (ingredientName != "" || x.IngredientName.Contains(ingredientName)) &&
                 (unitOfMeasure != UnitOfMeasure.NONE || x.UnitOfMeasureType == unitOfMeasure) &&
-                (amountOfUOMmin != -1 || x.AmountOfUOM >= amountOfUOMmin) &&
-                (amountOfUOMmax != -1 || x.AmountOfUOM <= amountOfUOMmax)
+                (amountOfUOMmin != -1 || x.PriceSmall >= amountOfUOMmin) &&
+                (amountOfUOMmax != -1 || x.PriceSmall <= amountOfUOMmax)
             );
             Console.WriteLine($"Znaleziono {filteredValues.Count()} pasujących do filtra:");
             ShowIngredients(filteredValues);

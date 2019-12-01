@@ -29,7 +29,7 @@ namespace MarioPizzaOriginal.DataAccess
         //Ingredient=======================
         void AddIngredient(Ingredient ingredient);
         Ingredient GetIngredient(int ingredientId);
-        List<Ingredient> GetIngredients();
+        List<Ingredient> GetAllIngredients();
         List<Ingredient> GetIngredientsForFood(int foodId);
         void EditIngredient(Ingredient editedIngredient);
         bool DeleteIngredient(int ingredientId);

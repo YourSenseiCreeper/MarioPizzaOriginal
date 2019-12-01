@@ -20,17 +20,51 @@ namespace MarioPizzaOriginal.DataAccess
 
         public void AddElementToOrder(int orderId, Food element, double quantity)
         {
-            throw new NotImplementedException();
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = con.Execute(
+                    "INSERT INTO MarioPizzaOrderElement (OrderId,FoodId,Amount) " +
+                    $"VALUES ({orderId},{element.FoodId},{quantity})");
+            }
         }
 
         public void AddIngredient(Ingredient ingredient)
         {
-            throw new NotImplementedException();
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = con.Execute(
+                    "INSERT INTO Ingredients (IngredientName,UnitOfMeasureType,PriceSmall,PriceMedium,PriceLarge) " +
+                    $"VALUES ('{ingredient.IngredientName}',{ingredient.PriceSmall},{ingredient.PriceMedium},{ingredient.PriceLarge})");
+            }
         }
 
         public void AddOrder(MarioPizzaOrder order)
         {
-            throw new NotImplementedException();
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = con.Execute(
+                    "INSERT INTO MarioPizzaOrder (ClientPhoneNumber,DeliveryAddress,Priority,Status,OrderTime) " +
+                    $"VALUES ('{order.ClientPhoneNumber}','{order.DeliveryAddress}',{order.Priority},{order.Status},'{order.OrderTime}')");
+                foreach(var orderElement in order.OrderList)
+                {
+                    AddElementToOrder(order.OrderId, orderElement.Key, orderElement.Value);
+                    foreach (var subOrderElement in orderElement)
+                    {
+
+                    }
+                }
+                
+            }
+        }
+
+        public void AddSubOrderElement(MarioPizzaOrder order)
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = con.Execute(
+                    "INSERT INTO Ingredients (IngredientName,UnitOfMeasureType,PriceSmall,PriceMedium,PriceLarge) " +
+                    $"VALUES ('{ingredient.IngredientName}',{ingredient.PriceSmall},{ingredient.PriceMedium},{ingredient.PriceLarge})");
+            }
         }
 
         public void ChangeOrderPriority(int orderId, OrderPriority newOrderPriority)
@@ -195,7 +229,7 @@ namespace MarioPizzaOriginal.DataAccess
             }
         }
 
-        public List<Ingredient> GetIngredients()
+        public List<Ingredient> GetAllIngredients()
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {

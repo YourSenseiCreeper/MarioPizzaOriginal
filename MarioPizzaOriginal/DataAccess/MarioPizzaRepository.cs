@@ -275,7 +275,7 @@ namespace MarioPizzaOriginal.DataAccess
             return allFood.FirstOrDefault(x => x.FoodId == foodId);
         }
 
-        public List<Ingredient> GetIngredients()
+        public List<Ingredient> GetAllIngredients()
         {
             throw new NotImplementedException();
         }

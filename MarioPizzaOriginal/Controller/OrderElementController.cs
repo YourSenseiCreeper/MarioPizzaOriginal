@@ -14,7 +14,7 @@ namespace MarioPizzaOriginal.Controller
             _marioPizzaRepository = marioPizzaRepository;
         }
 
-        public MarioResult GetAllElements()
+        public MarioResult GetAllElementsForOrder()
         {
 
         }

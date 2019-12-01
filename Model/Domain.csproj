@@ -74,7 +74,8 @@
     <Compile Include="Ingredient.cs" />
     <Compile Include="MarioPizzaData.cs" />
     <Compile Include="MarioPizzaOrder.cs" />
-    <Compile Include="MarioPizzaOrderElement.cs" />
+    <Compile Include="OrderElement.cs" />
+    <Compile Include="SubOrderElement.cs" />
     <Compile Include="MarioResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
