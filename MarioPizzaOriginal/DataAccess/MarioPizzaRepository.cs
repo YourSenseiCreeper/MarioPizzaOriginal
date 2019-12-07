@@ -1,6 +1,7 @@
 ﻿using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
 using MarioPizzaOriginal.Properties;
+using Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -157,9 +158,9 @@ namespace MarioPizzaOriginal.DataAccess
             _marioPizzaData.OrderList.Add(order);
         }
 
-        public void AddElementToOrder(int orderId, Food element, double quantity)
+        public void AddElementToOrder(int orderId, int foodId, double quantity)
         {
-            _marioPizzaData.OrderList.First(x => x.OrderId == orderId)?.OrderList.Add(element, quantity);
+            _marioPizzaData.OrderList.First(x => x.OrderId == orderId)?.OrderElements.Add(new OrderElement());
         }
 
         public void ChangeOrderPriority(int orderId, OrderPriority newOrderPriority)
@@ -181,8 +182,8 @@ namespace MarioPizzaOriginal.DataAccess
 
         public void DeleteElementFromOrder(int orderId, int foodId)
         {
-            var orders = _marioPizzaData.OrderList.First(x => x.OrderId == orderId).OrderList;
-            var elementToRemove = orders.Keys.First(x => x.FoodId == foodId);
+            var orders = _marioPizzaData.OrderList.First(x => x.OrderId == orderId).OrderElements;
+            var elementToRemove = orders.First(x => x.FoodId == foodId);
             orders.Remove(elementToRemove);
         }
         /*
@@ -286,6 +287,31 @@ namespace MarioPizzaOriginal.DataAccess
         }
 
         public Dictionary<Food, double> GetOrderElements(int orderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<MarioPizzaOrder> GetOrdersByStatus(OrderStatus status)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<OrderElement> IMarioPizzaRepository.GetOrderElements(int orderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool OrderElementExists(int orderElementId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int OrderCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int OrderElementsCount()
         {
             throw new NotImplementedException();
         }

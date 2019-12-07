@@ -18,13 +18,13 @@ namespace MarioPizzaOriginal.DataAccess
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
-        public void AddElementToOrder(int orderId, Food element, double quantity)
+        public void AddElementToOrder(int orderId, int foodId, double quantity)
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = con.Execute(
                     "INSERT INTO MarioPizzaOrderElement (OrderId,FoodId,Amount) " +
-                    $"VALUES ({orderId},{element.FoodId},{quantity})");
+                    $"VALUES ({orderId},{foodId},{quantity})");
             }
         }
 
@@ -42,28 +42,25 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = con.Execute(
-                    "INSERT INTO MarioPizzaOrder (ClientPhoneNumber,DeliveryAddress,Priority,Status,OrderTime) " +
-                    $"VALUES ('{order.ClientPhoneNumber}','{order.DeliveryAddress}',{order.Priority},{order.Status},'{order.OrderTime}')");
-                foreach(var orderElement in order.OrderList)
+                var query = "INSERT INTO MarioPizzaOrder (ClientPhoneNumber,DeliveryAddress,Priority,Status,OrderTime) " +
+                    $"VALUES ('{order.ClientPhoneNumber}','{order.DeliveryAddress}',{order.Priority},{order.Status},'{order.OrderTime.ToString("dd/MM/yyyy HH:MM:ss")}')";
+                var output = con.Execute(query);
+                //Adding OrderElements and SubOrderElements
+                order.OrderElements.ForEach(orderElement =>
                 {
-                    AddElementToOrder(order.OrderId, orderElement.Key, orderElement.Value);
-                    foreach (var subOrderElement in orderElement)
-                    {
-
-                    }
-                }
-                
+                    AddElementToOrder(order.OrderId, orderElement.FoodId, orderElement.Amount);
+                    orderElement.SubOrderElements.ForEach(subOrder => AddSubOrderElement(subOrder));
+                });
             }
         }
 
-        public void AddSubOrderElement(MarioPizzaOrder order)
+        public void AddSubOrderElement(SubOrderElement subOrder)
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = con.Execute(
-                    "INSERT INTO Ingredients (IngredientName,UnitOfMeasureType,PriceSmall,PriceMedium,PriceLarge) " +
-                    $"VALUES ('{ingredient.IngredientName}',{ingredient.PriceSmall},{ingredient.PriceMedium},{ingredient.PriceLarge})");
+                var query = "INSERT INTO MarioPizzaSubOrderElement (OrderId,OrderElementId,FoodId,Amount) " +
+                    $"VALUES ({subOrder.OrderId},'{subOrder.OrderElementId}','{subOrder.FoodId}',{subOrder.Amount})";
+                var output = con.Execute(query);
             }
         }
 
@@ -135,55 +132,41 @@ namespace MarioPizzaOriginal.DataAccess
             }
         }
 
-        public List<MarioPizzaOrder> GetOrdersWaiting()
+        public List<MarioPizzaOrder> GetOrdersByStatus(OrderStatus status)
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
                 var query = "SELECT " +
                     "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
                     "M.Priority,M.Status,M.OrderTime " +
-                    "FROM MarioPizzaOrder AS M WHERE M.Status = 0";
+                    $"FROM MarioPizzaOrder AS M WHERE M.Status = {(int) status}";
                 return (List<MarioPizzaOrder>)con.Query<MarioPizzaOrder>(query);
             }
         }
 
-        public List<MarioPizzaOrder> GetOrdersInProgress()
+        public List<OrderElement> GetOrderElements(int orderId)
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var query = "SELECT " +
-                    "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
-                    "M.Priority,M.Status,M.OrderTime " +
-                    "FROM MarioPizzaOrder AS M WHERE M.Status = 1";
-                return (List<MarioPizzaOrder>)con.Query<MarioPizzaOrder>(query);
-            }
-        }
-
-        public List<MarioPizzaOrder> GetOrdersReadyForDelivery()
-        {
-            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
-            {
-                var query = "SELECT " +
-                    "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
-                    "M.Priority,M.Status,M.OrderTime " +
-                    "FROM MarioPizzaOrder AS M WHERE M.Status = 2";
-                return (List<MarioPizzaOrder>)con.Query<MarioPizzaOrder>(query);
-            }
-        }
-
-        public Dictionary<Food, double> GetOrderElements(int orderId)
-        {
-            var result = new Dictionary<Food, double>();
-            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
-            {
-                var output = con.Query<(int, double)>(
-                    $"SELECT M.FoodId,M.Amount FROM MarioPizzaOrderElement AS M WHERE M.OrderId = {orderId}");
+                var output = con.Query<OrderElement>(
+                    $"SELECT M.OrderElementId,M.FoodId,M.Amount FROM MarioPizzaOrderElement AS M WHERE M.OrderId = {orderId}");
+                //SubOrderElements
                 foreach(var row in output)
                 {
-                    var food = GetFood(row.Item1);
-                    result.Add(food, row.Item2);
+                    row.SubOrderElements = GetSubOrderElements(row.OrderId, row.OrderElementId);
                 }
-                return result;
+                return (List<OrderElement>) output;
+            }
+        }
+
+        public List<SubOrderElement> GetSubOrderElements(int orderId, int orderElementId)
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = con.Query<SubOrderElement>(
+                    $"SELECT M.SubOrderElementId,M.OrderElementId,M.FoodId,M.Amount " +
+                    $"FROM MarioPizzaSubOrderElement AS M WHERE M.OrderId = {orderId} AND M.OrderElementId = {orderElementId}");
+                return (List<SubOrderElement>) output;
             }
         }
 
@@ -247,7 +230,7 @@ namespace MarioPizzaOriginal.DataAccess
                     "M.OrderId,M.ClientPhoneNumber,M.DeliveryAddress," +
                     "M.Priority,M.Status,M.OrderTime " +
                     "FROM MarioPizzaOrder AS M", new DynamicParameters());
-                output.OrderList = GetOrderElements(orderId);
+                output.OrderElements = GetOrderElements(orderId);
                 return output;
             }
         }
@@ -268,6 +251,34 @@ namespace MarioPizzaOriginal.DataAccess
                 var query = $"SELECT COUNT(*) MarioPizzaOrder AS O WHERE O.OrderId = {orderId}";
                 bool exists = con.ExecuteScalar<int>(query) > 0;
                 return exists;
+            }
+        }
+
+        public bool OrderElementExists(int orderElementId)
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = $"SELECT COUNT(*) MarioPizzaOrderElement AS O WHERE O.OrderId = {orderElementId}";
+                bool exists = con.ExecuteScalar<int>(query) > 0;
+                return exists;
+            }
+        }
+
+        public int OrderCount()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT COUNT(*) MarioPizzaOrder";
+                return con.ExecuteScalar<int>(query);
+            }
+        }
+
+        public int OrderElementsCount()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT COUNT(*) MarioPizzaOrderElement";
+                return con.ExecuteScalar<int>(query);
             }
         }
 

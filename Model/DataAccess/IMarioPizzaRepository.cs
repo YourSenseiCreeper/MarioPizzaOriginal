@@ -1,32 +1,12 @@
 ﻿using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
+using Model;
 using System.Collections.Generic;
 
 namespace MarioPizzaOriginal.DataAccess
 {
     public interface IMarioPizzaRepository
     {
-        //Pizza============================
-        //void AddPizza(Pizza pizza);
-        //Pizza GetPizza(int foodId);
-        //void EditPizza(Pizza editedPizza);
-        //void DeletePizza(int foodId);
-        //Kebab=============================
-        //void AddKebab(Kebab kebab);
-        //Kebab GetKebab(int foodId);
-        //void EditKebab(Kebab editedKebab);
-        //void DeleteKebab(int foodId);
-        //Tortilla==========================
-        //void AddTortilla(Tortilla tortilla);
-        //Tortilla GetTortilla(int foodId);
-        //void EditTortilla(Tortilla editedTortilla);
-        //void DeleteTortilla(int foodId);
-        //Drink============================
-        //void AddDrink(Drink drink);
-        //Drink GetDrink(int foodId);
-        //void EditDrink(Drink editedDrink);
-        //void DeleteDrink(int foodId);
-        //Ingredient=======================
         void AddIngredient(Ingredient ingredient);
         Ingredient GetIngredient(int ingredientId);
         List<Ingredient> GetAllIngredients();
@@ -36,10 +16,12 @@ namespace MarioPizzaOriginal.DataAccess
         //Order============================
         MarioPizzaOrder GetOrder(int orderId);
         List<MarioPizzaOrder> GetAllOrders();
-        Dictionary<Food, double> GetOrderElements(int orderId);
+        List<MarioPizzaOrder> GetOrdersByStatus(OrderStatus status);
+        List<OrderElement> GetOrderElements(int orderId);
         bool OrderExists(int orderId);
+        bool OrderElementExists(int orderElementId);
         void AddOrder(MarioPizzaOrder order);
-        void AddElementToOrder(int orderId, Food element, double quantity);
+        void AddElementToOrder(int orderId, int foodId, double quantity);
         void ChangeOrderPriority(int orderId, OrderPriority newOrderPriority);
         void ChangeOrderStatus(int orderId, OrderStatus newOrderStatus);
         OrderStatus GetOrderStatus(int orderId);
@@ -50,6 +32,8 @@ namespace MarioPizzaOriginal.DataAccess
         List<Food> GetAllFood();
         List<Food> GetFilteredFood();
         Food GetFood(int foodId);
+        int OrderCount();
+        int OrderElementsCount();
         void SaveData();
     }
 }

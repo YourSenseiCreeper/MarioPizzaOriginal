@@ -3,7 +3,6 @@ C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\MarioPizzaOriginal.runtimeconfig.dev.json
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\bin\Debug\netcoreapp2.1\MarioPizzaOriginal.dll
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.csprojAssemblyReference.cache
-C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.csproj.CoreCompileInputs.cache
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.AssemblyInfoInputs.cache
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.AssemblyInfo.cs
 C:\Users\ARKADIUSZ\source\repos\MarioPizzaOriginal\MarioPizzaOriginal\obj\Debug\netcoreapp2.1\MarioPizzaOriginal.Properties.Resources.resources

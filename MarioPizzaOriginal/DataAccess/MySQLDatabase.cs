@@ -4,10 +4,11 @@ using System.Data.SqlClient;
 using System.Text;
 using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
+using Model;
 
 namespace MarioPizzaOriginal.DataAccess
 {
-    public class MySQLDatabase : IMarioPizzaRepository 
+    public class MySQLDatabase : IMarioPizzaRepository
     {
         public void AddElementToOrder(int orderId, Food element, double quantity)
         {
@@ -175,6 +176,36 @@ namespace MarioPizzaOriginal.DataAccess
         }
 
         public void SaveData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<MarioPizzaOrder> GetOrdersByStatus(OrderStatus status)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<OrderElement> IMarioPizzaRepository.GetOrderElements(int orderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool OrderElementExists(int orderElementId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddElementToOrder(int orderId, int foodId, double quantity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int OrderCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int OrderElementsCount()
         {
             throw new NotImplementedException();
         }

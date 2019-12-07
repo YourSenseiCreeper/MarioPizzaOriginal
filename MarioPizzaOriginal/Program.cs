@@ -42,12 +42,6 @@ namespace MarioPizzaOriginal
                         break;
                 }
             }
-            //orderC.GetAllOrders();
-            //orderC.GetOrder();
-            //ingredientC.AllIngredients();
-            foodC.GetAllFood();
-            //foodC.GetFood();
-            Console.WriteLine("Hello World!");
         }
 
         private static void Ingredients()
@@ -101,12 +95,12 @@ namespace MarioPizzaOriginal
                 switch (input)
                 {
                     case "1": orderC.GetAllOrders(); break;
-                    case "2": orderC.GetWaiting(); break;
-                    case "3": orderC.GetInProgress(); break;
-                    case "4": orderC.GetReadyForDelivery(); break;
+                    case "2": orderC.GetOrdersWaiting(); break;
+                    case "3": orderC.GetOrdersInProgress(); break;
+                    case "4": orderC.GetOrdersReadyForDelivery(); break;
                     case "5": orderC.AddOrder(); break;
                     case "6": OrderElements(); break;
-                    case "7": orderC.DeleteOrder() break;
+                    case "7": orderC.DeleteOrder(); break;
                     case "8": orderC.ChangeOrderStatus(); break;
                     case "9": orderC.MoveToNextStatus(); break;
                     case "10": orderC.ChangeOrderPriority(); break;

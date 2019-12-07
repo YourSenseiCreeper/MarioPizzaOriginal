@@ -5,7 +5,7 @@
         WAITING,
         IN_PROGRESS,
         DONE,
-        TRANSPORTED,
+        DELIVERY,
         DISPOSED,
         NONE
     }

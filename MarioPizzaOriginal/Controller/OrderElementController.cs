@@ -16,22 +16,22 @@ namespace MarioPizzaOriginal.Controller
 
         public MarioResult GetAllElementsForOrder()
         {
-
+            return new MarioResult { Success = true };
         }
 
-        public MarioResult AddElement()
+        public MarioResult AddOrderElement()
         {
-
+            return new MarioResult { Success = true };
         }
 
         public MarioResult ChangeAmount()
         {
-
+            return new MarioResult { Success = true };
         }
 
-        public MarioResult DeleteElement()
+        public MarioResult DeleteOrderElement()
         {
-
+            return new MarioResult { Success = true };
         }
 
     }

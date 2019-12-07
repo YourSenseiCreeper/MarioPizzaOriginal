@@ -20,7 +20,7 @@ namespace MarioPizzaOriginal.Controller
         {
             var formatted = new List<string> { "Składniki: " };
             ingredients.ForEach(x => {
-                formatted.Add($"* {x.AmountOfUOM} {x.UnitOfMeasureType.ToString()} {x.IngredientName}");
+                formatted.Add($"* {x.UnitOfMeasureType.ToString()} {x.IngredientName}");
             });
             return formatted;
         }
@@ -212,9 +212,7 @@ namespace MarioPizzaOriginal.Controller
                     (ingredientIdMin == -1 || y.IngredientId >= ingredientIdMin) &&
                     (ingredientIdMax == -1 || y.IngredientId <= ingredientIdMax) &&
                     (ingredientName == "" || y.IngredientName.Contains(ingredientName)) &&
-                    (unitOfMeasure == UnitOfMeasure.NONE || y.UnitOfMeasureType == unitOfMeasure) &&
-                    (amountOfUOMmin == -1 || y.AmountOfUOM >= amountOfUOMmin) &&
-                    (amountOfUOMmax == -1 || y.AmountOfUOM <= amountOfUOMmax)
+                    (unitOfMeasure == UnitOfMeasure.NONE || y.UnitOfMeasureType == unitOfMeasure)
                     ))
             );
             Console.WriteLine($"Znaleziono {filter.Count} pasujących produktów:");
