@@ -17,7 +17,9 @@ namespace MarioPizzaOriginal.DataAccess
         MarioPizzaOrder GetOrder(int orderId);
         List<MarioPizzaOrder> GetAllOrders();
         List<MarioPizzaOrder> GetOrdersByStatus(OrderStatus status);
+        List<OrderElement> GetAllOrderElements();
         List<OrderElement> GetOrderElements(int orderId);
+        List<SubOrderElement> GetSubOrderElements(int orderId, int orderElementId);
         bool OrderExists(int orderId);
         bool OrderElementExists(int orderElementId);
         void AddOrder(MarioPizzaOrder order);
@@ -32,6 +34,7 @@ namespace MarioPizzaOriginal.DataAccess
         List<Food> GetAllFood();
         List<Food> GetFilteredFood();
         Food GetFood(int foodId);
+        string GetFoodNameById(int foodId);
         int OrderCount();
         int OrderElementsCount();
         void SaveData();

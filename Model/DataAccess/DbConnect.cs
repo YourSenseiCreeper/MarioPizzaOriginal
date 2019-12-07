@@ -66,8 +66,8 @@ namespace MarioPizzaOriginal.DataAccess
         //Insert statement
         public void Insert(string tableName, List<string> args, List<string> values)
         {
-            var argsOneLine = String.Join(',', args);
-            var valuesOneLine = String.Join(',', values);
+            string argsOneLine = String.Join(",", args.ToArray());
+            string valuesOneLine = String.Join(",", values.ToArray());
             string query = $"INSERT INTO {tableName} ({argsOneLine}) VALUES({valuesOneLine})";
 
             //open connection

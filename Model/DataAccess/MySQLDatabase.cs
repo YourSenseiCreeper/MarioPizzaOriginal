@@ -8,14 +8,14 @@ using Model;
 
 namespace MarioPizzaOriginal.DataAccess
 {
-    public class MySQLDatabase : IMarioPizzaRepository 
+    public class MySQLDatabase
     {
         public List<MarioPizzaOrder> SelectOrders()
         {
             return new List<MarioPizzaOrder>();
         }
 
-        public void AddElementToOrder(int orderId, FoodSizeSauce element, double quantity)
+        public void AddElementToOrder(int orderId, Food element, double quantity)
         {
             throw new NotImplementedException();
         }
@@ -90,7 +90,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public List<FoodSizeSauce> GetAllFood()
+        public List<Food> GetAllFood()
         {
             throw new NotImplementedException();
         }
@@ -108,12 +108,12 @@ namespace MarioPizzaOriginal.DataAccess
             return new List<MarioPizzaOrder>();
         }
 
-        public List<FoodSizeSauce> GetFilteredFood()
+        public List<Food> GetFilteredFood()
         {
             throw new NotImplementedException();
         }
 
-        public FoodSizeSauce GetFood(int foodId)
+        public Food GetFood(int foodId)
         {
             var sql = "SELECT F.FOOD_ID FROM FOOD";
             try
@@ -225,32 +225,7 @@ namespace MarioPizzaOriginal.DataAccess
             throw new NotImplementedException();
         }
 
-        public void AddElementToOrder(int orderId, Food element, double quantity)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<Food> IMarioPizzaRepository.GetAllFood()
-        {
-            throw new NotImplementedException();
-        }
-
-        List<Food> IMarioPizzaRepository.GetFilteredFood()
-        {
-            throw new NotImplementedException();
-        }
-
-        Food IMarioPizzaRepository.GetFood(int foodId)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<MarioPizzaOrder> GetOrdersByStatus(OrderStatus status)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<OrderElement> IMarioPizzaRepository.GetOrderElements(int orderId)
         {
             throw new NotImplementedException();
         }
@@ -271,6 +246,21 @@ namespace MarioPizzaOriginal.DataAccess
         }
 
         public int OrderElementsCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<SubOrderElement> GetSubOrderElements(int orderId, int orderElementId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetFoodNameById(int foodId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<OrderElement> GetAllOrderElements()
         {
             throw new NotImplementedException();
         }

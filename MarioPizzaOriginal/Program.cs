@@ -25,18 +25,21 @@ namespace MarioPizzaOriginal
             List<string> options = new List<string> {
                 "1. Składniki",
                 "2. Zamówienia",
-                "3. Produkty",
-                "4. Wyjdź"};
+                "3. Elementy zamówienia",
+                "4. Produkty",
+                "5. Wyjdź"};
             while (!exit)
             {
+                Console.Clear();
                 options.ForEach(line => Console.WriteLine(line));
                 var input = Console.ReadLine();
                 switch (input)
                 {
                     case "1": Ingredients(); break;
                     case "2": Orders(); break;
-                    case "3": Food(); break;
-                    case "4": exit = true; break;
+                    case "3": OrderElements(); break;
+                    case "4": Food(); break;
+                    case "5": exit = true; break;
                     default:
                         Console.WriteLine($"Nie ma opcji: {input}!");
                         break;
@@ -56,6 +59,7 @@ namespace MarioPizzaOriginal
             bool exit = false;
             while (!exit)
             {
+                Console.Clear();
                 options.ForEach(line => Console.WriteLine(line));
                 var input = Console.ReadLine();
                 switch (input)
@@ -77,38 +81,42 @@ namespace MarioPizzaOriginal
             Console.WriteLine("Dostępne opcje - Zamówienia:");
             List<string> options = new List<string> {
                 "1. Lista wszystkich zamówień",
-                "2. Oczekujące",
-                "3. W trakcie",
-                "4. Gotowe do dostarczenia",
-                "5. Dodaj zamówienie",
-                "6. Zmień zawartość zamówienia",
-                "7. Usuń zamówienie",
-                "8. Zmień status zamówienia",
-                "9. Przenieś zamówienia do kolejnego etapu",
-                "10. Zmień priorytet zamówienia",
-                "11. Powrót"};
-            options.ForEach(line => Console.WriteLine(line));
+                "2. Zawartość zamówienia",
+                "3. Oczekujące",
+                "4. W trakcie",
+                "5. Gotowe do dostarczenia",
+                "6. Dodaj zamówienie",
+                "7. Zmień zawartość zamówienia",
+                "8. Usuń zamówienie",
+                "9. Zmień status zamówienia",
+                "10. Przenieś zamówienia do kolejnego etapu",
+                "11. Zmień priorytet zamówienia",
+                "12. Powrót"};
             var input = Console.ReadLine();
             bool exit = false;
             while (!exit)
             {
+                Console.Clear();
+                options.ForEach(line => Console.WriteLine(line));
                 switch (input)
                 {
                     case "1": orderC.GetAllOrders(); break;
-                    case "2": orderC.GetOrdersWaiting(); break;
-                    case "3": orderC.GetOrdersInProgress(); break;
-                    case "4": orderC.GetOrdersReadyForDelivery(); break;
-                    case "5": orderC.AddOrder(); break;
-                    case "6": OrderElements(); break;
-                    case "7": orderC.DeleteOrder(); break;
-                    case "8": orderC.ChangeOrderStatus(); break;
-                    case "9": orderC.MoveToNextStatus(); break;
-                    case "10": orderC.ChangeOrderPriority(); break;
-                    case "11": exit = true; break;
+                    case "2": orderC.GetOrder(); break;
+                    case "3": orderC.GetOrdersWaiting(); break;
+                    case "4": orderC.GetOrdersInProgress(); break;
+                    case "5": orderC.GetOrdersReadyForDelivery(); break;
+                    case "6": orderC.AddOrder(); break;
+                    case "7": OrderElements(); break;
+                    case "8": orderC.DeleteOrder(); break;
+                    case "9": orderC.ChangeOrderStatus(); break;
+                    case "10": orderC.MoveToNextStatus(); break;
+                    case "11": orderC.ChangeOrderPriority(); break;
+                    case "12": exit = true; break;
                     default:
                         Console.WriteLine($"Nie ma opcji: {input}!");
                         break;
                 }
+                input = Console.ReadLine();
             }
         }
 
@@ -119,11 +127,12 @@ namespace MarioPizzaOriginal
                 "1. Lista wszystkich produktów",
                 "2. Szczegóły produktu",
                 "3. Powrót"};
-            options.ForEach(line => Console.WriteLine(line));
             var input = Console.ReadLine();
             bool exit = false;
             while (!exit)
             {
+                Console.Clear();
+                options.ForEach(line => Console.WriteLine(line));
                 switch (input)
                 {
                     case "1": foodC.GetAllFood(); break;
@@ -140,21 +149,26 @@ namespace MarioPizzaOriginal
         {
             Console.WriteLine("Dostępne opcje - Elementy zamówienia:");
             List<string> options = new List<string> {
-                "1. Lista elementów zamówienia",
-                "2. Dodaj element do zamówienia",
-                "3. Zmień ilość",
-                "4. Usuń element",
-                "5. Powrót" };
-            options.ForEach(line => Console.WriteLine(line));
+                "1. Lista wszystkich elementów zamówień",
+                "2. Lista elementów zamówienia",
+                "3. Dodaj element do zamówienia",
+                "4. Zmień ilość",
+                "5. Usuń element",
+                "6. Powrót" };
             var input = Console.ReadLine();
             bool exit = false;
             while (!exit)
             {
+                Console.Clear();
+                options.ForEach(line => Console.WriteLine(line));
                 switch (input)
                 {
-                    case "1": foodC.GetAllFood(); break;
-                    case "2": foodC.GetFood(); break;
-                    case "3": exit = true; break;
+                    case "1": orderElemC.GetAllOrderElements(); break;
+                    case "2": orderElemC.GetAllOrderElements(); break;
+                    case "3": orderElemC.AddOrderElement(); break;
+                    case "4": orderElemC.ChangeAmount(); break;
+                    case "5": orderElemC.DeleteOrderElement(); break;
+                    case "6": exit = true; break;
                     default:
                         Console.WriteLine($"Nie ma opcji: {input}!");
                         break;

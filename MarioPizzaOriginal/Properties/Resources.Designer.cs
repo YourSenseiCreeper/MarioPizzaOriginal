@@ -59,15 +59,5 @@ namespace MarioPizzaOriginal.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Byte[].
-        /// </summary>
-        internal static byte[] sampledata {
-            get {
-                object obj = ResourceManager.GetObject("sampledata", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

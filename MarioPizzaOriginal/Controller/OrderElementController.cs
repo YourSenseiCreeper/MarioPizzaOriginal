@@ -14,6 +14,15 @@ namespace MarioPizzaOriginal.Controller
             _marioPizzaRepository = marioPizzaRepository;
         }
 
+        public MarioResult GetAllOrderElements()
+        {
+            foreach(var element in _marioPizzaRepository.GetAllOrderElements())
+            {
+                Console.WriteLine($"{element.OrderElementId},{element.OrderId},{element.FoodId},{element.Amount}");
+            }
+            return new MarioResult { Success = true };
+        }
+
         public MarioResult GetAllElementsForOrder()
         {
             return new MarioResult { Success = true };

@@ -21,18 +21,19 @@ namespace MarioPizzaOriginal.Controller
             //I still can add an order and group them by add timestamp and check if the first one has correct data - that's it
             var newOrder = new MarioPizzaOrder();
             newOrder.OrderId = 69;
-
+            int step = 1;
+            int maxStep = 7;
             //First i need to have a possibility to add a FoodSizeSauce (pick from a list) to my Dictionary
             //OrderList (required!)
             //ClientPhoneNumber (required!)
-            Console.WriteLine("Numer telefonu klienta:");
+            Console.Write($"(krok {step++} z {maxStep}) Numer telefonu klienta: ");
             newOrder.ClientPhoneNumber = Console.ReadLine();
             if (newOrder.ClientPhoneNumber.Length > 9)
             {
                 Console.WriteLine("UWAGA! Numer klienta przekracza 9 znaków!");
             }
 
-            Console.WriteLine("Adres dostawy:");
+            Console.Write($"(krok {step++} z {maxStep}) Adres dostawy: ");
             newOrder.DeliveryAddress = Console.ReadLine();
             if (newOrder.DeliveryAddress.Equals(""))
             {
@@ -41,7 +42,7 @@ namespace MarioPizzaOriginal.Controller
 
             var allPriorities = String.Join(',', Enum.GetNames(typeof(OrderPriority)));
             Console.WriteLine($"Dostępne priorytety: {allPriorities}");
-            Console.WriteLine("Priorytet zamówienia (domyślnie NORMAL):");
+            Console.Write($"(krok {step++} z {maxStep}) Priorytet zamówienia (domyślnie NORMAL): ");
             var orderPriority = Console.ReadLine();
             OrderPriority priority = orderPriority.Equals("") ? OrderPriority.NORMAL : (OrderPriority)Enum.Parse(typeof(OrderPriority), orderPriority.ToUpper());
             newOrder.Priority = priority;
@@ -52,63 +53,88 @@ namespace MarioPizzaOriginal.Controller
             newOrder.OrderElements = new List<OrderElement>();
             OrderElement tempOrderElement;
             SubOrderElement tempSubOrderElement;
+            Console.WriteLine($"(krok {step++} z {maxStep}) Wybierz elementy zamówienia:");
             while (addAnother)
             {
+                Console.WriteLine("Możliwe opcje:");
+                Console.WriteLine("1. Dodaj element do zamówienia");
+                Console.WriteLine("2. Zakończ dodawanie");
                 input = Console.ReadLine();
                 if (input.Equals("1"))
                 {
                     tempOrderElement = new OrderElement();
-                    Console.WriteLine("Podaj id produktu który chcesz dodać:");
+                    Console.Write("Podaj id produktu który chcesz dodać: ");
                     tempOrderElement.FoodId = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Podaj ilość:");
+                    Console.Write("Podaj ilość: ");
                     tempOrderElement.Amount = Convert.ToInt32(Console.ReadLine());
 
-                    //Optional things????
                     //SubOrder
-                    bool addAnotherSub = true;
-                    string subInput;
-                    tempOrderElement.SubOrderElements = new List<SubOrderElement>();
-                    while (addAnotherSub)
+                    Console.Write("Czy chcesz dodać dodatki do tego elementu? (y/n): ");
+                    string addOrderSubElement = Console.ReadLine();
+
+                    if(addOrderSubElement.ToLower().Equals("y") || 
+                        addOrderSubElement.ToLower().Equals("yes") || 
+                        addOrderSubElement.ToLower().Equals("tak"))
                     {
-                        subInput = Console.ReadLine();
-                        if (subInput.Equals("1"))
+                        bool addAnotherSub = true;
+                        string subInput;
+                        tempOrderElement.SubOrderElements = new List<SubOrderElement>();
+                        while (addAnotherSub)
                         {
-                            tempSubOrderElement = new SubOrderElement();
-                            Console.WriteLine("Podaj id produktu który chcesz dodać:");
-                            tempSubOrderElement.FoodId = Convert.ToInt32(Console.ReadLine());
-                            Console.WriteLine("Podaj ilość:");
-                            tempSubOrderElement.Amount = Convert.ToInt32(Console.ReadLine());
-                            tempOrderElement.SubOrderElements.Add(tempSubOrderElement);
+                            Console.WriteLine("Możliwe opcje:");
+                            Console.WriteLine("1. Dodaj dodatek do do elementu zamówienia");
+                            Console.WriteLine("2. Zakończ dodawanie");
+                            subInput = Console.ReadLine();
+                            if (subInput.Equals("1"))
+                            {
+                                tempSubOrderElement = new SubOrderElement();
+                                Console.Write("Podaj id produktu który chcesz dodać: ");
+                                tempSubOrderElement.FoodId = Convert.ToInt32(Console.ReadLine());
+                                Console.Write("Podaj ilość: ");
+                                tempSubOrderElement.Amount = Convert.ToInt32(Console.ReadLine());
+                                tempOrderElement.SubOrderElements.Add(tempSubOrderElement);
+                            }
+                            else if (subInput.Equals("2"))
+                            {
+                                addAnotherSub = false;
+                                Console.WriteLine("Dodawanie dodatków zakończone!");
+                            }
+                            else Console.WriteLine($"Nie ma opcji: {subInput}!");
                         }
-                        else if (subInput.Equals("2"))
-                        {
-                            addAnotherSub = false;
-                        }
-                        else Console.WriteLine($"Nie ma opcji: {subInput}!");
                     }
                     newOrder.OrderElements.Add(tempOrderElement);
                 }
                 else if (input.Equals("2"))
                 {
                     addAnother = false;
+                    Console.WriteLine("Dodawanie elementów zamówienia zakończone!");
                 }
                 else
                 {
                     Console.WriteLine($"Nie ma opcji: {input}!");
                 }
             }
+            Console.Write("Czy chcesz dodać to zamówienie? (y/n): ");
+            string addThisOrder = Console.ReadLine();
 
-            //Edit all ids to the latest I hope
-            newOrder.OrderId = _marioPizzaRepository.OrderCount();
-            foreach(var orderElement in newOrder.OrderElements)
+            if (addThisOrder.ToLower().Equals("y") || addThisOrder.ToLower().Equals("yes") || addThisOrder.ToLower().Equals("tak"))
             {
-                orderElement.OrderElementId = _marioPizzaRepository.OrderElementsCount();
-                foreach(var subOrderElement in orderElement.SubOrderElements)
+                //Edit all ids to the latest I hope
+                newOrder.OrderId = _marioPizzaRepository.OrderCount();
+                var orderElementId = _marioPizzaRepository.OrderElementsCount();
+                foreach (var orderElement in newOrder.OrderElements)
                 {
-                    subOrderElement.OrderElementId = orderElement.OrderElementId;
+                    orderElement.OrderElementId = orderElementId++;
+                    if (orderElement.SubOrderElements != null)
+                    {
+                        foreach (var subOrderElement in orderElement.SubOrderElements)
+                        {
+                            subOrderElement.OrderElementId = orderElement.OrderElementId;
+                        }
+                    }
                 }
+                _marioPizzaRepository.AddOrder(newOrder);
             }
-            _marioPizzaRepository.AddOrder(newOrder);
         }
 
         public MarioResult AddOrderElement()
@@ -212,6 +238,10 @@ namespace MarioPizzaOriginal.Controller
                     $"{order.Priority.ToString().PadRight(10)}|" +
                     $"{order.ClientPhoneNumber.PadRight(10)}|" +
                     $"{order.DeliveryAddress.PadRight(15)}");
+            }
+            if (orderList.Count > 1)
+            {
+                Console.WriteLine($"Znaleziono {orderList.Count} wyników");
             }
         }
         public void GetAllOrders()
@@ -338,29 +368,25 @@ namespace MarioPizzaOriginal.Controller
 
         public MarioResult GetOrdersWaiting()
         {
-            var waitingOrders = _marioPizzaRepository.GetOrdersByStatus(OrderStatus.WAITING);
-            ShowOrders(waitingOrders);
+            ShowOrders(_marioPizzaRepository.GetOrdersByStatus(OrderStatus.WAITING));
             return new MarioResult { Success = true };
         }
 
         public MarioResult GetOrdersInProgress()
         {
-            var waitingOrders = _marioPizzaRepository.GetOrdersByStatus(OrderStatus.IN_PROGRESS);
-            ShowOrders(waitingOrders);
+            ShowOrders(_marioPizzaRepository.GetOrdersByStatus(OrderStatus.IN_PROGRESS));
             return new MarioResult { Success = true };
         }
 
         public MarioResult GetOrdersReadyForDelivery()
         {
-            var waitingOrders = _marioPizzaRepository.GetOrdersByStatus(OrderStatus.DELIVERY);
-            ShowOrders(waitingOrders);
+            ShowOrders(_marioPizzaRepository.GetOrdersByStatus(OrderStatus.DELIVERY));
             return new MarioResult { Success = true };
         }
 
         public MarioResult GetOrdersDone()
         {
-            var waitingOrders = _marioPizzaRepository.GetOrdersByStatus(OrderStatus.DISPOSED);
-            ShowOrders(waitingOrders);
+            ShowOrders(_marioPizzaRepository.GetOrdersByStatus(OrderStatus.DISPOSED));
             return new MarioResult { Success = true };
         }
 
@@ -379,15 +405,62 @@ namespace MarioPizzaOriginal.Controller
             {
                 _marioPizzaRepository.ChangeOrderStatus(orderId, newStatus);
             }
-            Console.WriteLine($"Obecny status zamówienia: {Enum.GetName(typeof(OrderStatus), newStatus)}");
+            Console.WriteLine($"Nowy status zamówienia: {Enum.GetName(typeof(OrderStatus), newStatus)}");
             return new MarioResult { Success = true };
+        }
+
+        private void ShowOrderElements(List<OrderElement> orderElements)
+        {
+            Console.WriteLine("Elementy zamówienia:");
+            string orderSpace = " * ";
+            string subOrderSpace = "    * ";
+            foreach(var orderElement in orderElements)
+            {
+                string foodName = _marioPizzaRepository.GetFoodNameById(orderElement.FoodId);
+                Console.WriteLine($"{orderSpace}{foodName} (x{orderElement.Amount})");
+
+                var subOrderElements = _marioPizzaRepository.GetSubOrderElements(orderElement.OrderId, orderElement.OrderElementId);
+                if(subOrderElements != null)
+                {
+                    foreach(var subOrderElement in subOrderElements)
+                    {
+                        foodName = _marioPizzaRepository.GetFoodNameById(subOrderElement.FoodId);
+                        Console.WriteLine($"{subOrderSpace}{foodName} (x{subOrderElement.Amount})");
+                    }
+                }
+            }
+        }
+
+        private void ShowSubOrderElements(List<SubOrderElement> subOrderElements)
+        {
+            Console.WriteLine("Elementy dodatkowe dla elementu zamówienia:");
+            string subOrderSpace = " * ";
+            foreach (var subOrderElement in subOrderElements)
+            {
+                string foodName = _marioPizzaRepository.GetFoodNameById(subOrderElement.FoodId);
+                Console.WriteLine($"{subOrderSpace}{foodName} (x{subOrderElement.Amount})");
+            }
         }
 
         public MarioResult GetOrder()
         {
-            Console.WriteLine("Podaj id zamówienia: ");
+            Console.Write("Podaj id zamówienia: ");
             var orderId = Convert.ToInt32(Console.ReadLine());
-            _marioPizzaRepository.GetOrder(orderId);
+            if (!_marioPizzaRepository.OrderExists(orderId))
+            {
+                var message = $"Zamówienie o id {orderId} nie istnieje!";
+                Console.WriteLine(message);
+                return new MarioResult { Success = false, Message = message};
+            }
+            var selectedOrder = _marioPizzaRepository.GetOrder(orderId);
+            Console.WriteLine($"=== Informacje dla zamówienia id = {orderId} ===");
+            Console.WriteLine($"Data złożenia: {selectedOrder.OrderTime.ToString("dd/MM/yyyy HH:MM:ss")}");
+            Console.WriteLine($"Adres dostawy: {selectedOrder.DeliveryAddress}");
+            Console.WriteLine($"Numer tel. klienta: {selectedOrder.ClientPhoneNumber}");
+            Console.WriteLine($"Priorytet: {selectedOrder.Priority}");
+            Console.WriteLine($"Status: {selectedOrder.Status}");
+            //And SubOrder Elements
+            ShowOrderElements(_marioPizzaRepository.GetOrderElements(orderId));
             return new MarioResult { Success = true };
         }
     }
