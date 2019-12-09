@@ -46,9 +46,9 @@ namespace MarioPizzaOriginal.Controller
 
         public MarioResult GetAllIngredients()
         {
-            var ingredients = _marioPizzaRepository.GetAllIngredients();
+            Console.Clear();
             Console.WriteLine("Lista wszystkich składników:");
-            ShowIngredients(ingredients);
+            ShowIngredients(_marioPizzaRepository.GetAllIngredients());
             return new MarioResult { Success = true };
         }
 
@@ -89,6 +89,7 @@ namespace MarioPizzaOriginal.Controller
                     $"{x.PriceMedium.ToString().PadRight(10)}|" +
                     $"{x.PriceLarge.ToString().PadRight(10)}");
             });
+            Console.ReadLine();
         }
         public void AllIngredients()
         {
@@ -103,7 +104,8 @@ namespace MarioPizzaOriginal.Controller
             bool success = false;
             if (Int32.TryParse(ingredient, out int ingredientId))
             {
-                success = _marioPizzaRepository.DeleteIngredient(ingredientId);
+                _marioPizzaRepository.DeleteIngredient(ingredientId);
+                success = true;
             }
             var message = success ? $"Usunięto składnik {ingredient}" : "Podany składnik nie istnieje!";
             Console.WriteLine(message);
@@ -112,9 +114,13 @@ namespace MarioPizzaOriginal.Controller
 
         private void DescribeIngredient(Ingredient ingredient)
         {
-            List<string> text = new List<string> { $"Nazwa składnika: {ingredient.IngredientName}",
-            $"Numer porządkowy: {ingredient.IngredientId}", $"Jednostka miary: {ingredient.UnitOfMeasureType.ToString()}",
-            $"Cena (Mała): {ingredient.PriceSmall}", $"Cena (Średnia): {ingredient.PriceMedium}", $"Cena (Duża): {ingredient.PriceLarge}"};
+            List<string> text = new List<string> { 
+                $"Nazwa składnika: {ingredient.IngredientName}",
+                $"Numer porządkowy: {ingredient.IngredientId}",
+                $"Jednostka miary: {ingredient.UnitOfMeasureType.ToString()}",
+                $"Cena (Mała): {ingredient.PriceSmall}",
+                $"Cena (Średnia): {ingredient.PriceMedium}",
+                $"Cena (Duża): {ingredient.PriceLarge}"};
             text.ForEach(line => Console.WriteLine(line));
         }
 

@@ -42,14 +42,17 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var query = "INSERT INTO MarioPizzaOrder (ClientPhoneNumber,DeliveryAddress,Priority,Status,OrderTime) " +
-                    $"VALUES ('{order.ClientPhoneNumber}','{order.DeliveryAddress}',{(int) order.Priority},{(int) order.Status},'{order.OrderTime.ToString("dd/MM/yyyy HH:MM:ss")}')";
+                var query = "INSERT INTO MarioPizzaOrder (OrderId,ClientPhoneNumber,DeliveryAddress,Priority,Status,OrderTime) " +
+                    $"VALUES ({order.OrderId},'{order.ClientPhoneNumber}','{order.DeliveryAddress}',{(int) order.Priority},{(int) order.Status},'{order.OrderTime.ToString("dd/MM/yyyy HH:MM:ss")}')";
                 var output = con.Execute(query);
                 //Adding OrderElements and SubOrderElements
                 order.OrderElements.ForEach(orderElement =>
                 {
                     AddElementToOrder(order.OrderId, orderElement.FoodId, orderElement.Amount);
-                    orderElement.SubOrderElements.ForEach(subOrder => AddSubOrderElement(subOrder));
+                    if(orderElement.SubOrderElements != null)
+                    {
+                        orderElement.SubOrderElements.ForEach(subOrder => AddSubOrderElement(subOrder));
+                    }
                 });
             }
         }
@@ -69,8 +72,7 @@ namespace MarioPizzaOriginal.DataAccess
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = con.Execute(
-                    "UPDATE MarioPizzaOrder M SET" +
-                    $"M.Priority = {(int)newOrderPriority} WHERE M.OrderId = {orderId}");
+                    $"UPDATE MarioPizzaOrder SET Priority = {(int)newOrderPriority} WHERE OrderId = {orderId}");
             }
         }
 
@@ -83,24 +85,88 @@ namespace MarioPizzaOriginal.DataAccess
             }
         }
 
-        public void DeleteElementFromOrder(int orderId, int foodId)
+        public double CalculatePriceForFood(int foodId)
         {
-            throw new NotImplementedException();
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = $"SELECT F.FoodId,F.FoodName,F.Price,I.IngredientId,FI.IngredientAmount,I.PriceSmall,I.PriceMedium,I.PriceLarge " +
+                            "FROM Food AS F " +
+                            "JOIN FoodIngredient AS FI ON FI.FoodId = F.FoodId " +
+                            "JOIN Ingredients AS I ON I.IngredientId = FI.IngredientId" +
+                            $"WHERE F.FoodId = {foodId}";
+                //Define type and return values for the query
+                var output = con.Query(query);
+            }
+            return 0;
         }
 
-        public bool DeleteIngredient(int ingredientId)
+        public double CalculatePriceForOrder(int orderId)
         {
-            throw new NotImplementedException();
+            return 0;
+        }
+
+        public void DeleteElementFromOrder(int orderId, int foodId)
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = $"DELETE FROM MarioPizzaOrderElement AS EL WHERE EL.OrderId = {orderId} AND EL.FoodId = {foodId}";
+                con.Execute(query);
+            }
+        }
+
+        public void DeleteIngredient(int ingredientId)
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = $"DELETE FROM Ingredients AS I WHERE I.IngredientId = {ingredientId}";
+                con.Execute(query);
+            }
         }
 
         public void DeleteOrder(int orderId)
         {
-            throw new NotImplementedException();
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = $"DELETE FROM MarioPizzaOrder AS M WHERE M.OrderId = {orderId}";
+                con.Execute(query);
+            }
+        }
+
+        public void EditFood(Food editedFood)
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                List<string> updateQuery = new List<string> {
+                    "UPDATE Food ",
+                    editedFood.FoodName != "" ? $"SET FoodName = {editedFood.FoodName}" : "",
+                    editedFood.NettPrice != null ? $"SET NettPrice = {editedFood.NettPrice}" : "",
+                    editedFood.Price != null ? $"SET Price = {editedFood.Price}" : "",
+                    editedFood.Weight != null ? $"SET Weight = {editedFood.Weight}" : "",
+                    editedFood.ProductionTime != null ? $"SET ProductionTime = {editedFood.ProductionTime}" : "",
+                    $"WHERE FoodId = {editedFood.FoodId}" };
+                con.Execute(String.Join("", updateQuery));
+                if(editedFood.Ingredients != null)
+                {
+                    // It doesnt' check if the ingredient was removed or added!
+                    // Need to fix that
+                    editedFood.Ingredients.ForEach(ing => EditIngredient(ing));
+                }
+            }
         }
 
         public void EditIngredient(Ingredient editedIngredient)
         {
-            throw new NotImplementedException();
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                List<string> updateQuery = new List<string> { 
+                    "UPDATE Ingredients ",
+                    editedIngredient.IngredientName != null ? $"SET IngredientName = {editedIngredient.IngredientName}" : "",
+                    editedIngredient.PriceSmall != null ? $"SET PriceSmall = {editedIngredient.PriceSmall}" : "",
+                    editedIngredient.PriceMedium != null ? $"SET PriceMedium = {editedIngredient.PriceMedium}" : "",
+                    editedIngredient.PriceLarge != null ? $"SET PriceLarge = {editedIngredient.PriceLarge}" : "",
+                    $"WHERE IngredientId = {editedIngredient.IngredientId}" };
+                con.Execute(String.Join("", updateQuery));
+            }
         }
 
         public List<Food> GetAllFood()
@@ -110,12 +176,8 @@ namespace MarioPizzaOriginal.DataAccess
                 var query = "SELECT " +
                     "F.FoodId,F.FoodName,F.NettPrice," +
                     "F.Price,F.Weight,F.ProductionTime " +
-                    "FROM Food F";
+                    "FROM Food AS F";
                 var output = con.Query<Food>(query);
-                foreach (var row in output)
-                {
-                    row.Ingredients = GetIngredientsForFood(row.FoodId);
-                }
                 return (List<Food>) output;
             }
         }
@@ -202,10 +264,10 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var query = "SELECT I.IngredientId, I.IngredientName, I.UnitOfMeasureType, I.AmountOfUOM " +
+                var query = "SELECT I.IngredientId, I.IngredientName, I.UnitOfMeasureType " +
                     "FROM Ingredients AS I " +
                     "JOIN FoodIngredient AS FI " +
-                    "ON I.IngredientId = FI.IngredientId " +
+                    "ON FI.IngredientId = I.IngredientId " +
                     $"WHERE FI.FoodId = {foodId}";
                 return (List<Ingredient>) con.Query<Ingredient>(query);
             }
@@ -215,7 +277,8 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var query = "SELECT I.IngredientId, I.IngredientName, I.UnitOfMeasureType, I.AmountOfUOM " +
+                var query = "SELECT I.IngredientId, I.IngredientName, I.UnitOfMeasureType, " +
+                    "I.PriceSmall,I.PriceMedium,I.PriceLarge " +
                     "FROM Ingredients AS I " +
                     $"WHERE I.IngredientId = {ingredientId}";
                 return con.QueryFirst<Ingredient>(query);
@@ -226,7 +289,8 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var query = "SELECT I.IngredientId, I.IngredientName, I.UnitOfMeasureType, I.AmountOfUOM FROM Ingredients AS I ";
+                var query = "SELECT I.IngredientId,I.IngredientName,I.UnitOfMeasureType," +
+                    "I.PriceSmall,I.PriceMedium,I.PriceLarge FROM Ingredients AS I ";
                 return (List<Ingredient>) con.Query<Ingredient>(query);
             }
         }
@@ -284,6 +348,24 @@ namespace MarioPizzaOriginal.DataAccess
             {
                 var query = "SELECT COUNT(*) MarioPizzaOrder";
                 return con.ExecuteScalar<int>(query);
+            }
+        }
+
+        public int OrderNextId()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT OrderId FROM MarioPizzaOrder ORDER BY OrderId DESC LIMIT 1";
+                return con.ExecuteScalar<int>(query) + 1;
+            }
+        }
+
+        public int OrderElementNextId()
+        {
+            using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = "SELECT OrderElementId FROM MarioPizzaOrderElement ORDER BY OrderElementId DESC LIMIT 1";
+                return con.ExecuteScalar<int>(query) + 1;
             }
         }
 

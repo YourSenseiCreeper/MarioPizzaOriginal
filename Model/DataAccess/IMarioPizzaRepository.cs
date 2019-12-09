@@ -12,7 +12,7 @@ namespace MarioPizzaOriginal.DataAccess
         List<Ingredient> GetAllIngredients();
         List<Ingredient> GetIngredientsForFood(int foodId);
         void EditIngredient(Ingredient editedIngredient);
-        bool DeleteIngredient(int ingredientId);
+        void DeleteIngredient(int ingredientId);
         //Order============================
         MarioPizzaOrder GetOrder(int orderId);
         List<MarioPizzaOrder> GetAllOrders();
@@ -31,11 +31,15 @@ namespace MarioPizzaOriginal.DataAccess
         //void DeleteElementFromOrder(int orderId, string elementName);
         void DeleteElementFromOrder(int orderId, int foodId);
         //All pizza, kebab, tortilla and drink
+        double CalculatePriceForFood(int foodId);
+        double CalculatePriceForOrder(int orderId);
         List<Food> GetAllFood();
         List<Food> GetFilteredFood();
         Food GetFood(int foodId);
         string GetFoodNameById(int foodId);
         int OrderCount();
+        int OrderNextId();
+        int OrderElementNextId();
         int OrderElementsCount();
         void SaveData();
     }

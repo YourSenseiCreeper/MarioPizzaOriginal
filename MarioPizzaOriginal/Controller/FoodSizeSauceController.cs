@@ -24,14 +24,15 @@ namespace MarioPizzaOriginal.Controller
             return formatted;
         }
 
-        private string ConvertProductionTime(double time)
+        private string ConvertProductionTime(int time)
         {
             return $"{time/60}min {time}s";
         }
 
         public MarioResult GetFood()
         {
-            Console.WriteLine("Podaj id produktu:");
+            Console.Clear();
+            Console.Write("Podaj id produktu: ");
             var foodId = Convert.ToInt32(Console.ReadLine());
             var pickedFood = _marioPizzaRepository.GetFood(foodId);
             var message = pickedFood != null ? "" : "Nie znaleziono produktu";
@@ -39,17 +40,17 @@ namespace MarioPizzaOriginal.Controller
                 $"=== {pickedFood.FoodName} ===",
                 $"Id produktu: {pickedFood.FoodId}",
                 $"Cena: {pickedFood.Price}zł ({pickedFood.NettPrice}zł netto)",
-                $"Czas produkcji: {ConvertProductionTime(pickedFood.ProductionTime)}",
+                $"Czas produkcji: {ConvertProductionTime((int) pickedFood.ProductionTime)}",
                 $"Waga: {pickedFood.Weight}kg"
             };
             entries.AddRange(ShowIngredients(pickedFood.Ingredients));
             entries.ForEach(x => Console.WriteLine(x));
+            Console.ReadLine();
             return new MarioResult { Message = message, Success = pickedFood != null };
         }
 
         private void ShowFood(List<Food> foodList)
         {
-            Console.WriteLine("Wszystkie dostępne produkty:");
             var header = $"{"Id".PadRight(5)}|" +
                 $"{"Nazwa".PadRight(25)}|" +
                 $"{"Cena".PadLeft(5)}|";
@@ -64,12 +65,13 @@ namespace MarioPizzaOriginal.Controller
                     $"{x.FoodName.PadRight(25)}|" +
                     $"{x.Price.ToString().PadRight(5)} zł");
             });
+            Console.ReadLine();
         }
 
         public void GetAllFood()
         {
-            var allFood = _marioPizzaRepository.GetAllFood();
-            ShowFood(allFood);
+            Console.Clear();
+            ShowFood(_marioPizzaRepository.GetAllFood());
         }
 
         public void GetFilteredFood()

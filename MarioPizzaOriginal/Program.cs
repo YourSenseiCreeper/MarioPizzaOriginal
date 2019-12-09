@@ -20,19 +20,20 @@ namespace MarioPizzaOriginal
             foodC = new FoodSizeSauceController(dataAccess);
             orderElemC = new OrderElementController(dataAccess);
 
-            bool exit = false;
-            Console.WriteLine("Dostępne opcje:");
             List<string> options = new List<string> {
                 "1. Składniki",
                 "2. Zamówienia",
                 "3. Elementy zamówienia",
                 "4. Produkty",
                 "5. Wyjdź"};
+            bool exit = false;
+            string input;
             while (!exit)
             {
                 Console.Clear();
+                Console.WriteLine("Dostępne opcje:");
                 options.ForEach(line => Console.WriteLine(line));
-                var input = Console.ReadLine();
+                input = Console.ReadLine();
                 switch (input)
                 {
                     case "1": Ingredients(); break;
@@ -56,12 +57,13 @@ namespace MarioPizzaOriginal
                 "3. Edytuj składnik",
                 "4. Usuń składnik",
                 "5. Powrót"};
+            string input;
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
                 options.ForEach(line => Console.WriteLine(line));
-                var input = Console.ReadLine();
+                input = Console.ReadLine();
                 switch (input)
                 {
                     case "1": ingredientC.GetAllIngredients(); break;
@@ -92,12 +94,13 @@ namespace MarioPizzaOriginal
                 "10. Przenieś zamówienia do kolejnego etapu",
                 "11. Zmień priorytet zamówienia",
                 "12. Powrót"};
-            var input = Console.ReadLine();
+            string input;
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
                 options.ForEach(line => Console.WriteLine(line));
+                input = Console.ReadLine();
                 switch (input)
                 {
                     case "1": orderC.GetAllOrders(); break;
@@ -116,7 +119,6 @@ namespace MarioPizzaOriginal
                         Console.WriteLine($"Nie ma opcji: {input}!");
                         break;
                 }
-                input = Console.ReadLine();
             }
         }
 
@@ -127,12 +129,13 @@ namespace MarioPizzaOriginal
                 "1. Lista wszystkich produktów",
                 "2. Szczegóły produktu",
                 "3. Powrót"};
-            var input = Console.ReadLine();
+            string input;
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
                 options.ForEach(line => Console.WriteLine(line));
+                input = Console.ReadLine();
                 switch (input)
                 {
                     case "1": foodC.GetAllFood(); break;
@@ -155,16 +158,17 @@ namespace MarioPizzaOriginal
                 "4. Zmień ilość",
                 "5. Usuń element",
                 "6. Powrót" };
-            var input = Console.ReadLine();
+            string input;
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
                 options.ForEach(line => Console.WriteLine(line));
+                input = Console.ReadLine();
                 switch (input)
                 {
                     case "1": orderElemC.GetAllOrderElements(); break;
-                    case "2": orderElemC.GetAllOrderElements(); break;
+                    case "2": orderElemC.GetAllElementsForOrder(); break;
                     case "3": orderElemC.AddOrderElement(); break;
                     case "4": orderElemC.ChangeAmount(); break;
                     case "5": orderElemC.DeleteOrderElement(); break;

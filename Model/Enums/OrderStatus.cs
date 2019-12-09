@@ -4,9 +4,8 @@
     {
         WAITING,
         IN_PROGRESS,
-        DONE,
         DELIVERY,
-        DISPOSED,
+        DONE,
         NONE
     }
 
