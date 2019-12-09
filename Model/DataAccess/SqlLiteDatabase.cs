@@ -32,9 +32,9 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = con.Execute(
-                    "INSERT INTO Ingredients (IngredientName,UnitOfMeasureType,PriceSmall,PriceMedium,PriceLarge) " +
-                    $"VALUES ('{ingredient.IngredientName}',{ingredient.PriceSmall},{ingredient.PriceMedium},{ingredient.PriceLarge})");
+                var query = "INSERT INTO Ingredients (IngredientName,UnitOfMeasureType,PriceSmall,PriceMedium,PriceLarge) " +
+                    $"VALUES ('{ingredient.IngredientName}',{ingredient.UnitOfMeasureType},{ingredient.PriceSmall},{ingredient.PriceMedium},{ingredient.PriceLarge})";
+                var output = con.Execute(query);
             }
         }
 
@@ -89,7 +89,7 @@ namespace MarioPizzaOriginal.DataAccess
         {
             using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
             {
-                var query = $"SELECT F.FoodId,F.FoodName,F.Price,I.IngredientId,FI.IngredientAmount,I.PriceSmall,I.PriceMedium,I.PriceLarge " +
+                var query = $"SELECT F.FoodId,F.Price,I.IngredientId,FI.IngredientAmount,I.PriceSmall,I.PriceMedium,I.PriceLarge " +
                             "FROM Food AS F " +
                             "JOIN FoodIngredient AS FI ON FI.FoodId = F.FoodId " +
                             "JOIN Ingredients AS I ON I.IngredientId = FI.IngredientId" +

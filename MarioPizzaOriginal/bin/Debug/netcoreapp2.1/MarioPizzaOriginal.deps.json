@@ -826,7 +826,7 @@
       },
       "Domain/1.0.0": {
         "runtime": {
-          "Model.exe": {}
+          "Model.dll": {}
         }
       }
     }
