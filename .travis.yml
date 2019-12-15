@@ -1,5 +1,22 @@
 language: csharp
-mono: latest
-dotnet: 2.2.8
+solution: MarioPizzaOriginal.sln
+
+mono: none
+sudo: required
+dist: xenial
+addons:
+    snaps:
+      - name: dotnet-sdk
+        confinement: classic
+        channel: 3.1/stable
+install:
+    - export PATH="$PATH:/home/travis/.dotnet/tools"
+    - export PATH="$PATH:$HOME/.local/bin"
+    - sudo snap alias dotnet-sdk.dotnet dotnet
 script:
- - dotnet restore
+    - dotnet --version
+    - dotnet restore
+    - dotnet build
+global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+    - DOTNET_CLI_TELEMETRY_OPTOUT=1
