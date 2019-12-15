@@ -1,22 +1,11 @@
 language: csharp
 solution: MarioPizzaOriginal.sln
-
-mono: none
-sudo: required
-dist: xenial
-addons:
-    snaps:
-      - name: dotnet-sdk
-        confinement: classic
-        channel: 3.1/stable
+dotnet: 2.0.0
 install:
-    - export PATH="$PATH:/home/travis/.dotnet/tools"
-    - export PATH="$PATH:$HOME/.local/bin"
-    - sudo snap alias dotnet-sdk.dotnet dotnet
+  - nuget restore MarioPizzaOriginal.sln
 script:
-    - dotnet --version
-    - dotnet restore
-    - dotnet build
-global:
-    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
-    - DOTNET_CLI_TELEMETRY_OPTOUT=1
+ - dotnet restore Model/Domain.csproj 
+ - dotnet restore MarioPizzaOriginalF/MarioPizzaOriginal.csproj 
+ - dotnet build Model/Domain.csproj --configuration Release
+ - dotnet build MarioPizzaOriginalF/SimplePipeline.csproj --configuration Release
+ - msbuild MarioPizzaOriginal.sln /p:Configuration="Release" /p:Platform="Any CPU"
