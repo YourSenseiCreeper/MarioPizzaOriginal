@@ -16,6 +16,5 @@ namespace MarioPizzaOriginal.Domain
         public double? PriceSmall { get; set; }
         public double? PriceMedium { get; set; }
         public double? PriceLarge { get; set; }
-
     }
 }

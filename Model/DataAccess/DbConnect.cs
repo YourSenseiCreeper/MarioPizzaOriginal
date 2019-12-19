@@ -1,7 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Funq;
+using MarioPizzaOriginal.Domain;
 using MySql.Data.MySqlClient;
+using ServiceStack;
+using ServiceStack.Data;
+using ServiceStack.OrmLite;
+using ServiceStack.OrmLite.Sqlite;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Text;
 
 namespace MarioPizzaOriginal.DataAccess
 {
@@ -18,6 +25,7 @@ namespace MarioPizzaOriginal.DataAccess
         {
             connection = new MySqlConnection($"Server={host};Database={database};Uid={user};Pwd={password};");
         }
+
 
         //open connection to database
         private bool OpenConnection()

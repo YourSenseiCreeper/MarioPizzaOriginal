@@ -1,6 +1,7 @@
 ﻿using MarioPizzaOriginal.DataAccess;
 using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
+using Model.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,10 +10,10 @@ namespace MarioPizzaOriginal.Controller
 {
     public class FoodSizeSauceController
     {
-        private readonly IMarioPizzaRepository _marioPizzaRepository;
-        public FoodSizeSauceController(IMarioPizzaRepository marioPizzaRepository)
+        private readonly IFoodRepository _foodRepository;
+        public FoodSizeSauceController(IFoodRepository foodRepository)
         {
-            _marioPizzaRepository = marioPizzaRepository;
+            _foodRepository = foodRepository;
         }
 
         private List<string> ShowIngredients(List<Ingredient> ingredients)
@@ -34,7 +35,7 @@ namespace MarioPizzaOriginal.Controller
             Console.Clear();
             Console.Write("Podaj id produktu: ");
             var foodId = Convert.ToInt32(Console.ReadLine());
-            var pickedFood = _marioPizzaRepository.GetFood(foodId);
+            var pickedFood = _foodRepository.Get(foodId);
             var message = pickedFood != null ? "" : "Nie znaleziono produktu";
             List<string> entries = new List<string> {
                 $"=== {pickedFood.FoodName} ===",
@@ -71,7 +72,7 @@ namespace MarioPizzaOriginal.Controller
         public void GetAllFood()
         {
             Console.Clear();
-            ShowFood(_marioPizzaRepository.GetAllFood());
+            ShowFood(_foodRepository.GetAll());
         }
 
         public void GetFilteredFood()
@@ -177,7 +178,8 @@ namespace MarioPizzaOriginal.Controller
                 }
                 else if (option.Equals("12"))
                 {
-                    IngredientController ingredient = new IngredientController(_marioPizzaRepository);
+                    //LEGACY CODE
+                    IngredientController ingredient = new IngredientController(null);
                     ingredientFilter = ingredient.GetFilteredIngredientsDict();
                     ingredientIdMin = (int)ingredientFilter["IngredientIdMin"];
                     ingredientIdMax = (int)ingredientFilter["IngredientIdMax"];
@@ -197,7 +199,7 @@ namespace MarioPizzaOriginal.Controller
                 option = Console.ReadLine();
             }
             //TODO If option value == -1 -> this shouldn't be executed
-            var filter = _marioPizzaRepository.GetAllFood().FindAll(x =>
+            var filter = _foodRepository.GetAll().FindAll(x =>
                 (foodIdMin == -1 || x.FoodId >= foodIdMin) &&
                 (foodIdMax == -1 || x.FoodId <= foodIdMax) &&
                 (productName == "" || x.FoodName.Contains(productName)) &&
@@ -225,7 +227,7 @@ namespace MarioPizzaOriginal.Controller
         {
             Console.WriteLine("Podaj id produktu dla którego chcesz sprawdzić składniki:");
             var foodId = Convert.ToInt32(Console.ReadLine());
-            var food = _marioPizzaRepository.GetFood(foodId);
+            var food = _foodRepository.Get(foodId);
             if (food == null)
             {
                 return new MarioResult { Message = $"Nie znaleziono produktu o id {foodId}", Success = false };

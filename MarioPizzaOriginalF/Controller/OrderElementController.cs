@@ -1,5 +1,6 @@
 ﻿using MarioPizzaOriginal.DataAccess;
 using MarioPizzaOriginal.Domain;
+using Model.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,16 +9,16 @@ namespace MarioPizzaOriginal.Controller
 {
     public class OrderElementController
     {
-        private readonly IMarioPizzaRepository _marioPizzaRepository;
-        public OrderElementController(IMarioPizzaRepository marioPizzaRepository)
+        private readonly IOrderElementRepository _orderElementRepository;
+        public OrderElementController(IOrderElementRepository orderElementRepository)
         {
-            _marioPizzaRepository = marioPizzaRepository;
+            _orderElementRepository = orderElementRepository;
         }
 
         public MarioResult GetAllOrderElements()
         {
             Console.Clear();
-            var orderElements = _marioPizzaRepository.GetAllOrderElements();
+            var orderElements = _orderElementRepository.GetAll();
             foreach (var element in orderElements)
             {
                 Console.WriteLine($"{element.OrderElementId},{element.OrderId},{element.FoodId},{element.Amount}");

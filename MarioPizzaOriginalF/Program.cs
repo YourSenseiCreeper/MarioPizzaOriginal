@@ -1,5 +1,6 @@
 ﻿using MarioPizzaOriginal.Controller;
 using MarioPizzaOriginal.DataAccess;
+using Model.DataAccess;
 using System;
 using System.Collections.Generic;
 
@@ -14,11 +15,12 @@ namespace MarioPizzaOriginal
 
         public static void Main(string[] args)
         {
-            IMarioPizzaRepository dataAccess = new SqlLiteDatabase();
-            orderC = new OrderController(dataAccess);
-            ingredientC = new IngredientController(dataAccess);
-            foodC = new FoodSizeSauceController(dataAccess);
-            orderElemC = new OrderElementController(dataAccess);
+            //IMarioPizzaRepository dataAccess = new SqlLiteDatabase();
+            IMarioPizzaNewRepository repository = new MarioPizzaRepository();
+            orderC = new OrderController(repository.FoodRepository, repository.OrderRepository, repository.OrderElementRepository, repository.OrderSubElementRepository);
+            ingredientC = new IngredientController(repository.IngredientRepository);
+            foodC = new FoodSizeSauceController(repository.FoodRepository);
+            orderElemC = new OrderElementController(repository.OrderElementRepository);
 
             List<string> options = new List<string> {
                 "1. Składniki",
@@ -53,10 +55,11 @@ namespace MarioPizzaOriginal
             Console.WriteLine("Dostępne opcje - Składniki:");
             List<string> options = new List<string> {
                 "1. Wszystkie dostępne składniki",
-                "2. Dodaj składnik",
-                "3. Edytuj składnik",
-                "4. Usuń składnik",
-                "5. Powrót"};
+                "2. Szczegóły składnika",
+                "3. Dodaj składnik",
+                "4. Edytuj składnik",
+                "5. Usuń składnik",
+                "6. Powrót"};
             string input;
             bool exit = false;
             while (!exit)
@@ -67,10 +70,11 @@ namespace MarioPizzaOriginal
                 switch (input)
                 {
                     case "1": ingredientC.GetAllIngredients(); break;
-                    case "2": ingredientC.AddIngredient(); break;
-                    case "3": ingredientC.EditIngredient(); break;
-                    case "4": ingredientC.DeleteIngredient(); break;
-                    case "5": exit = true; break;
+                    case "2": ingredientC.GetIngredient(); break;
+                    case "3": ingredientC.AddIngredient(); break;
+                    case "4": ingredientC.EditIngredient(); break;
+                    case "5": ingredientC.DeleteIngredient(); break;
+                    case "6": exit = true; break;
                     default:
                         Console.WriteLine($"Nie ma opcji: {input}!");
                         break;
