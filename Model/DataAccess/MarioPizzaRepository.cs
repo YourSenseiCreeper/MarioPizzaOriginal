@@ -1,32 +1,30 @@
-﻿using System;
+﻿using ServiceStack.OrmLite;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Model.DataAccess
 {
-    public class MarioPizzaRepository : IMarioPizzaNewRepository
+    public class MarioPizzaRepository : IMarioPizzaRepository
     {
-        private readonly IFoodRepository _foodRepository;
-        private readonly IIngredientRepository _ingredientRepository;
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderElementRepository _orderElementRepository;
-        private readonly IOrderSubElementRepository _orderSubElementRepository;
-
-        public IFoodRepository FoodRepository => _foodRepository;
-        public IIngredientRepository IngredientRepository => _ingredientRepository;
-        public IOrderRepository OrderRepository => _orderRepository;
-        public IOrderElementRepository OrderElementRepository => _orderElementRepository;
-        public IOrderSubElementRepository OrderSubElementRepository => _orderSubElementRepository;
-
+        public IFoodRepository FoodRepository { get; }
+        public IIngredientRepository IngredientRepository { get; }
+        public IOrderRepository OrderRepository { get; }
+        public IOrderElementRepository OrderElementRepository { get; }
+        public IOrderSubElementRepository OrderSubElementRepository { get; }
         public MarioPizzaRepository()
         {
-            _foodRepository = new FoodRepository();
-            _ingredientRepository = new IngredientRepository();
-            _orderElementRepository = new OrderElementRepository(_orderSubElementRepository);
-            _orderSubElementRepository = new OrderSubElementRepository();
-            _orderRepository = new OrderRepository(_orderElementRepository, _orderSubElementRepository);
+            var db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);
+
+            FoodRepository = new FoodRepository(db);
+            IngredientRepository = new IngredientRepository(db);
+            OrderElementRepository = new OrderElementRepository(db);
+            OrderSubElementRepository = new OrderSubElementRepository(db);
+            OrderRepository = new OrderRepository(db);
         }
     }
 }

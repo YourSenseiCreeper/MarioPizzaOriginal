@@ -12,6 +12,6 @@ namespace Model
         public int OrderId { get; set; }
         public int FoodId { get; set; }
         public double Amount { get; set; }
-        public List<SubOrderElement> SubOrderElements { get; set; }
+        public List<OrderSubElement> SubOrderElements { get; set; }
     }
 }

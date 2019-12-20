@@ -1,5 +1,4 @@
-﻿using MarioPizzaOriginal.DataAccess;
-using MarioPizzaOriginal.Domain;
+﻿using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
 using Model;
 using Model.DataAccess;
@@ -62,7 +61,7 @@ namespace MarioPizzaOriginal.Controller
             string input;
             List<OrderElement> orderElements = new List<OrderElement>();
             OrderElement tempOrderElement;
-            SubOrderElement tempSubOrderElement;
+            OrderSubElement tempSubOrderElement;
             Console.WriteLine($"(krok {step++} z {maxStep}) Wybierz elementy zamówienia:");
             while (addAnother)
             {
@@ -88,7 +87,7 @@ namespace MarioPizzaOriginal.Controller
                     {
                         bool addAnotherSub = true;
                         string subInput;
-                        tempOrderElement.SubOrderElements = new List<SubOrderElement>();
+                        tempOrderElement.SubOrderElements = new List<OrderSubElement>();
                         while (addAnotherSub)
                         {
                             Console.WriteLine("Możliwe opcje:");
@@ -97,7 +96,7 @@ namespace MarioPizzaOriginal.Controller
                             subInput = Console.ReadLine();
                             if (subInput.Equals("1"))
                             {
-                                tempSubOrderElement = new SubOrderElement();
+                                tempSubOrderElement = new OrderSubElement();
                                 Console.Write("Podaj id produktu który chcesz dodać: ");
                                 tempSubOrderElement.FoodId = Convert.ToInt32(Console.ReadLine());
                                 Console.Write("Podaj ilość: ");
@@ -505,7 +504,7 @@ namespace MarioPizzaOriginal.Controller
             }
         }
 
-        private void ShowSubOrderElements(List<SubOrderElement> subOrderElements)
+        private void ShowSubOrderElements(List<OrderSubElement> subOrderElements)
         {
             Console.WriteLine("Elementy dodatkowe dla elementu zamówienia:");
             string subOrderSpace = " * ";

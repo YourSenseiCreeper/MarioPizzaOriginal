@@ -40,8 +40,8 @@ namespace Model.DataAccess
         void RemoveFromOrder(int orderId, int foodId);
         List<OrderElement> GetElements(int orderId);
     }
-    public interface IOrderSubElementRepository : IRepository<SubOrderElement> 
+    public interface IOrderSubElementRepository : IRepository<OrderSubElement> 
     {
-        List<SubOrderElement> GetSubElements(int orderId, int orderElementId);
+        List<OrderSubElement> GetSubElements(int orderId, int orderElementId);
     }
 }

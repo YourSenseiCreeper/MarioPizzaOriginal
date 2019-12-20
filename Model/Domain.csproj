@@ -216,20 +216,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess\DbConnect.cs" />
+    <Compile Include="DataAccess\BaseRepository.cs" />
     <Compile Include="DataAccess\FoodRepository.cs" />
-    <Compile Include="DataAccess\IMarioPizzaNewRepository.cs" />
     <Compile Include="DataAccess\IMarioPizzaRepository.cs" />
     <Compile Include="DataAccess\IngredientRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
-    <Compile Include="DataAccess\MarioDBContext.cs" />
     <Compile Include="DataAccess\MarioPizzaRepository.cs" />
-    <Compile Include="DataAccess\MySQLDatabase.cs" />
     <Compile Include="DataAccess\OrderElementRepository.cs" />
     <Compile Include="DataAccess\OrderRepository.cs" />
-    <Compile Include="DataAccess\OrderSqlRepository.cs" />
     <Compile Include="DataAccess\OrderSubElementRepository.cs" />
-    <Compile Include="DataAccess\SqlLiteDatabase.cs" />
     <Compile Include="Enums\OrderPriority.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\UnitOfMeasure.cs" />
@@ -238,7 +233,7 @@
     <Compile Include="MarioPizzaData.cs" />
     <Compile Include="MarioPizzaOrder.cs" />
     <Compile Include="OrderElement.cs" />
-    <Compile Include="SubOrderElement.cs" />
+    <Compile Include="OrderSubElement.cs" />
     <Compile Include="MarioResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

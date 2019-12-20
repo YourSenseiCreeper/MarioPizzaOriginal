@@ -1,5 +1,4 @@
 ﻿using MarioPizzaOriginal.Controller;
-using MarioPizzaOriginal.DataAccess;
 using Model.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -15,8 +14,7 @@ namespace MarioPizzaOriginal
 
         public static void Main(string[] args)
         {
-            //IMarioPizzaRepository dataAccess = new SqlLiteDatabase();
-            IMarioPizzaNewRepository repository = new MarioPizzaRepository();
+            IMarioPizzaRepository repository = new MarioPizzaRepository();
             orderC = new OrderController(repository.FoodRepository, repository.OrderRepository, repository.OrderElementRepository, repository.OrderSubElementRepository);
             ingredientC = new IngredientController(repository.IngredientRepository);
             foodC = new FoodSizeSauceController(repository.FoodRepository);

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using MarioPizzaOriginal.Domain;
+using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,20 +12,15 @@ using System.Threading.Tasks;
 
 namespace Model.DataAccess
 {
-    public class FoodRepository : IFoodRepository
+    public class FoodRepository : BaseRepository<Food>, IFoodRepository
     {
-        public string ConnectionString => ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString;
+        private readonly OrmLiteConnectionFactory db;
 
-        public void Add(Food newOne)
+        public FoodRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
         {
-            throw new NotImplementedException();
+            db = dbConnection;
         }
-
-        public int Count()
-        {
-            throw new NotImplementedException();
-        }
-
+        /*
         public void Edit(Food editOne)
         {
             using (IDbConnection con = new SQLiteConnection(ConnectionString))
@@ -46,53 +42,15 @@ namespace Model.DataAccess
                 }
             }
         }
-
-        public bool Exists(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Food Get(int foodId)
-        {
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                var output = con.QueryFirst<Food>(
-                    "SELECT FoodId,FoodName,NettPrice,Price,Weight,ProductionTime " +
-                    $"FROM Food WHERE FoodId = {foodId}");
-                return output;
-            }
-
-        }
-
-        public List<Food> GetAll()
-        {
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                var query = "SELECT " +
-                    "FoodId,FoodName,NettPrice," +
-                    "Price,Weight,ProductionTime " +
-                    "FROM Food";
-                var output = con.Query<Food>(query);
-                return (List<Food>)output;
-            }
-        }
-
+        */
         public string GetName(int foodId)
         {
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                var query = $"SELECT FoodName FROM Food WHERE FoodId = {foodId}";
-                return con.QueryFirst<string>(query);
-            }
-        }
-
-        public void Remove(int id)
-        {
-            throw new NotImplementedException();
+            return db.Open().Single<Food>(x => x.FoodId == foodId).FoodName;
         }
 
         public double CalculatePriceForFood(int foodId)
         {
+            /*
             using (IDbConnection con = new SQLiteConnection(ConnectionString))
             {
                 var query = $"SELECT F.FoodId,F.Price,I.IngredientId,FI.IngredientAmount,I.PriceSmall,I.PriceMedium,I.PriceLarge " +
@@ -103,6 +61,7 @@ namespace Model.DataAccess
                 //Define type and return values for the query
                 var output = con.Query(query);
             }
+            */
             return 0;
         }
     }
