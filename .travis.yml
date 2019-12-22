@@ -1,9 +1,5 @@
-sudo: required
 language: csharp
 solution: MarioPizzaOriginal.sln
-dotnet: 3.0.100
-mono: none
-install:
-  - sudo apt-get install -qq dotnet-sdk-2.0.0
+
 script:
- - dotnet build -c Release -p:Version=1.0.${TRAVIS_BUILD_NUMBER} --force
+ - msbuild /p:Configuration=Debug MarioPizzaOriginal.sln
