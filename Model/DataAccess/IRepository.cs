@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 namespace Model.DataAccess
 {
-    public interface IRepository<T>
+    public interface IRepository { }
+    public interface IRepository<T> : IRepository
     {
         T Get(int id);
         void Add(T newOne);

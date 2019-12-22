@@ -30,10 +30,15 @@ namespace MarioPizzaOriginal.Controller
         public MarioResult GetFood()
         {
             Console.Clear();
-            Console.Write("Podaj id produktu: ");
-            var foodId = Convert.ToInt32(Console.ReadLine());
+            var foodId = ViewHelper.AskForInt("Podaj id produktu: ");
             var pickedFood = _foodRepository.Get(foodId);
             var message = pickedFood != null ? "" : "Nie znaleziono produktu";
+            if(pickedFood == null)
+            {
+                Console.WriteLine(message); 
+                Console.ReadLine();
+                return new MarioResult { Message = message, Success = false };
+            }
             List<string> entries = new List<string> {
                 $"=== {pickedFood.FoodName} ===",
                 $"Id produktu: {pickedFood.FoodId}",
@@ -222,14 +227,14 @@ namespace MarioPizzaOriginal.Controller
 
         public MarioResult GetIngredients()
         {
-            Console.WriteLine("Podaj id produktu dla którego chcesz sprawdzić składniki:");
-            var foodId = Convert.ToInt32(Console.ReadLine());
+            var foodId = ViewHelper.AskForInt("Podaj id produktu dla którego chcesz sprawdzić składniki:");
             var food = _foodRepository.Get(foodId);
             if (food == null)
             {
                 return new MarioResult { Message = $"Nie znaleziono produktu o id {foodId}", Success = false };
             }
             ShowIngredients(food.Ingredients);
+            Console.Read();
             return new MarioResult { Success = true };
         }        
     }

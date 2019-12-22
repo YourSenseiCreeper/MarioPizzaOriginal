@@ -17,53 +17,26 @@ namespace MarioPizzaOriginal.Controller
         public MarioResult AddIngredient()
         {
             Console.Clear();
-            Ingredient newIngredient = new Ingredient();
-            bool nameOk = false;
-            while (!nameOk)
+            Ingredient newIngredient = new Ingredient
             {
-                Console.Write("Podaj nazwę nowego składnika: ");
-                string ingredientName = Console.ReadLine();
-
-                if (!ingredientName.Equals(""))
-                {
-                    nameOk = true; 
-                    newIngredient.IngredientName = ingredientName;
-                }
-                else Console.WriteLine("Nazwa nie może być pusta!");
-            }
-            UnitOfMeasure unitofmeasure = UnitOfMeasure.NONE;
-            List<UnitOfMeasure> uoms = Enum.GetValues(typeof(UnitOfMeasure)).Cast<UnitOfMeasure>().ToList();
-            
-            while(unitofmeasure == UnitOfMeasure.NONE)
-            {
-                uoms.ForEach(uom => Console.WriteLine($"{(int)uom}. {uom}"));
-                Console.Write("Wybierz jednostkę miary spośród podanych: ");
-                var userUOM = Console.ReadLine();
-                try
-                {
-                    //Not working :(
-                    unitofmeasure = (UnitOfMeasure) Enum.Parse(typeof(UnitOfMeasure), userUOM);
-                }
-                catch(ArgumentException) { Console.WriteLine($"{userUOM} nie istnieje!");  }
-            }
-            newIngredient.UnitOfMeasureType = unitofmeasure;
+                IngredientName = ViewHelper.AskForStringNotBlank("Podaj nazwę nowego składnika: "),
+                UnitOfMeasureType = ViewHelper.AskForOption<UnitOfMeasure>("Dostępne jednostki miary:", "Podaj numer jednostki miary: ")
+            };
 
             Console.WriteLine("Wpisz -1 jeżeli chcesz pozostawić pole puste");
-            Console.Write($"Podaj cenę (mały rozmiar): ");
-            string priceSmall = Console.ReadLine();
+            string priceSmall = ViewHelper.AskForString($"Podaj cenę (mały rozmiar): ");
             if (!priceSmall.Equals("-1")) { newIngredient.PriceSmall = Convert.ToDouble(priceSmall.Replace(".", ",")); }
 
-            Console.Write($"Podaj cenę (średni rozmiar): ");
-            string priceMedium = Console.ReadLine();
+            string priceMedium = ViewHelper.AskForString($"Podaj cenę (średni rozmiar): ");
             if (!priceMedium.Equals("-1")) { newIngredient.PriceMedium = Convert.ToDouble(priceMedium.Replace(".", ",")); }
 
-            Console.Write($"Podaj cenę (duży rozmiar): ");
-            string priceLarge = Console.ReadLine();
+            string priceLarge = ViewHelper.AskForString($"Podaj cenę (duży rozmiar): ");
             if (!priceLarge.Equals("-1")) { newIngredient.PriceLarge = Convert.ToDouble(priceLarge.Replace(".", ",")); }
 
             _ingredientRepository.Add(newIngredient);
             var message = $"Dodano składnik: {newIngredient.IngredientName}";
             Console.WriteLine(message);
+            Console.ReadLine();
             return new MarioResult { Success = true, Message = message };
         }
 
@@ -72,53 +45,44 @@ namespace MarioPizzaOriginal.Controller
             Console.Clear();
             Console.WriteLine("Lista wszystkich składników:");
             ShowIngredients(_ingredientRepository.GetAll());
+            Console.ReadLine();
             return new MarioResult { Success = true };
         }
 
         public MarioResult EditIngredient()
         {
-            Console.Write("Podaj id składnika który chcesz modyfikować: ");
-            var ingredientId = Convert.ToInt32(Console.ReadLine());
+            Console.Clear();
+            var ingredientId = ViewHelper.AskForInt("Podaj id składnika który chcesz modyfikować: ");
             if(!_ingredientRepository.Exists(ingredientId))
             {
                 var message = $"Nie znaleziono składnika o id: {ingredientId}";
                 Console.WriteLine(message);
+                Console.ReadLine();
                 return new MarioResult { Success = false, Message = message};
             }
             Ingredient actual = _ingredientRepository.Get(ingredientId);
-            Ingredient edited = new Ingredient { IngredientId = actual.IngredientId };
-            Console.Write($"Podaj nazwę składnika ({actual.IngredientName}): ");
-            var ingredientName = Console.ReadLine();
+            string ingredientName = ViewHelper.AskForString($"Podaj nazwę składnika ({actual.IngredientName}): ");
             if (!ingredientName.Equals(""))
             {
-                edited.IngredientName = ingredientName;
+                actual.IngredientName = ingredientName;
             }
 
-            List<UnitOfMeasure> uoms = Enum.GetValues(typeof(UnitOfMeasure)).Cast<UnitOfMeasure>().ToList();
-            uoms.ForEach(uom => Console.WriteLine($"{(int)uom}. {uom}"));
-            Console.Write($"Jednostka miary ({actual.UnitOfMeasureType}): ");
-            var userUOM = Console.ReadLine();
-            if (!userUOM.Equals(""))
-            {
-                try
-                {
-                    edited.UnitOfMeasureType = (UnitOfMeasure)Enum.Parse(typeof(UnitOfMeasure), userUOM);
-                }
-                catch (ArgumentException) { Console.WriteLine($"{userUOM} nie istnieje!"); }
-            }
-            Console.Write($"Podaj cenę (mały rozmiar) ({actual.PriceSmall}): ");
-            string priceSmall = Console.ReadLine();
-            if (!priceSmall.Equals("")) { edited.PriceSmall = Convert.ToDouble(priceSmall.Replace(",", ".")); }
+            actual.UnitOfMeasureType = ViewHelper.AskForOption<UnitOfMeasure>("Dostępne jednostki miary: ", $"Jednostka miary ({actual.UnitOfMeasureType}): ", actual.UnitOfMeasureType.ToString());
 
-            Console.Write($"Podaj cenę (średni rozmiar) ({actual.PriceMedium}): ");
-            string priceMedium = Console.ReadLine();
-            if (!priceMedium.Equals("")) { edited.PriceMedium = Convert.ToDouble(priceMedium.Replace(",", ".")); }
+            Console.WriteLine("Wpisz -1 by ustawić wartość NULL");
+            string priceSmall = ViewHelper.AskForString($"Podaj cenę (mały rozmiar) ({actual.PriceSmall}): ");
+            if (priceSmall.Equals("-1")) { actual.PriceSmall = null; }
+            else if (!priceSmall.Equals("")) { actual.PriceSmall = Convert.ToDouble(priceSmall.Replace(",", ".")); }
 
-            Console.Write($"Podaj cenę (duży rozmiar) ({actual.PriceLarge}): ");
-            string priceLarge = Console.ReadLine();
-            if (!priceLarge.Equals("")) { edited.PriceLarge = Convert.ToDouble(priceLarge.Replace(",", ".")); }
+            string priceMedium = ViewHelper.AskForString($"Podaj cenę (średni rozmiar) ({actual.PriceMedium}): ");
+            if (priceMedium.Equals("-1")) { actual.PriceMedium = null; }
+            else if (!priceMedium.Equals("")) { actual.PriceMedium = Convert.ToDouble(priceMedium.Replace(",", ".")); }
 
-            _ingredientRepository.Edit(edited);
+            string priceLarge = ViewHelper.AskForString($"Podaj cenę (duży rozmiar) ({actual.PriceLarge}): ");
+            if (priceLarge.Equals("-1")) { actual.PriceLarge = null; }
+            else if (!priceLarge.Equals("")) { actual.PriceLarge = Convert.ToDouble(priceLarge.Replace(",", ".")); }
+
+            _ingredientRepository.Edit(actual);
             return new MarioResult { Success = true };
         }
 
@@ -144,27 +108,24 @@ namespace MarioPizzaOriginal.Controller
                     $"{x.PriceMedium.ToString().PadRight(10)}|" +
                     $"{x.PriceLarge.ToString().PadRight(10)}");
             });
-            Console.ReadLine();
         }
         public void AllIngredients()
         {
+            Console.Clear();
             Console.WriteLine("Lista dostępnych składników:");
             ShowIngredients(_ingredientRepository.GetAll());
+            Console.ReadLine();
         }
 
         public MarioResult DeleteIngredient()
         {
-            Console.WriteLine("Podaj nazwę lub numer składnika który chcesz usunąć");
-            var ingredient = Console.ReadLine();
-            bool success = false;
-            if (Int32.TryParse(ingredient, out int ingredientId))
-            {
-                _ingredientRepository.Remove(ingredientId);
-                success = true;
-            }
-            var message = success ? $"Usunięto składnik {ingredient}" : "Podany składnik nie istnieje!";
+            Console.Clear();
+            var ingredientId = ViewHelper.AskForInt("Podaj id składnika który chcesz usunąć");
+            _ingredientRepository.Remove(ingredientId);
+            string message = $"Usunięto składnik nr {ingredientId}";
             Console.WriteLine(message);
-            return new MarioResult { Success = success, Message = message };
+            Console.ReadLine();
+            return new MarioResult { Success = true, Message = message };
         }
 
         private void DescribeIngredient(Ingredient ingredient)
@@ -179,31 +140,19 @@ namespace MarioPizzaOriginal.Controller
             text.ForEach(line => Console.WriteLine(line));
         }
 
-        /*
-        public MarioResult GetIngredient(string ingredientName)
-        {
-            var ingredient = _marioPizzaRepository.GetIngredient(ingredientName);
-            var message = $"Składnik {ingredientName} nie istnieje!";
-            if(ingredient != null)
-            {
-                message = "";
-                DescribeIngredient(ingredient);
-            }
-            return new MarioResult { Success = (ingredient != null), Message = message };
-        }
-        */
-
         public MarioResult GetIngredient()
         {
-            Console.Write("Podaj id składnika: ");
-            int ingredientId = Convert.ToInt32(Console.ReadLine());
+            Console.Clear();
+            int ingredientId = ViewHelper.AskForInt("Podaj id składnika: ");
             var ingredient = _ingredientRepository.Get(ingredientId);
             var message = $"Składnik o numerze {ingredientId} nie istnieje!";
             if (ingredient != null)
             {
+                Console.Clear();
                 message = "";
                 DescribeIngredient(ingredient);
             }
+            Console.ReadLine();
             return new MarioResult { Success = (ingredient != null), Message = message };
         }
 
@@ -222,24 +171,19 @@ namespace MarioPizzaOriginal.Controller
             {
                 if (option.Equals("1"))
                 {
-                    Console.WriteLine("Podaj minimlane Id składnika:");
-                    // Not a number exception!!!
-                    var input = Convert.ToInt32(Console.ReadLine());
+                    int input = ViewHelper.AskForInt("Podaj minimlane Id składnika:");
                     if (input > 0) { ingredientIdMin = input; }
                     else { ingredientIdMin = -1; }
                 }
                 else if (option.Equals("2"))
                 {
-                    Console.WriteLine("Podaj maksymalne Id składnika:");
-                    // Not a number exception!!!
-                    var input = Convert.ToInt32(Console.ReadLine());
+                    int input = ViewHelper.AskForInt("Podaj maksymalne Id składnika:");
                     if (input > 0) { ingredientIdMax = input; }
                     else { ingredientIdMax = -1; }
                 }
                 else if (option.Equals("3"))
                 {
-                    Console.WriteLine("Podaj ciąg który znajduje się w Nazwie składnika:");
-                    var input = Console.ReadLine();
+                    string input = ViewHelper.AskForString("Podaj ciąg który znajduje się w Nazwie składnika:");
                     if ((Convert.ToInt32(input) != -1)) { ingredientName = input; }
                     else { ingredientName = ""; }
                 }

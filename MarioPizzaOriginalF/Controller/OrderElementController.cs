@@ -22,8 +22,7 @@ namespace MarioPizzaOriginal.Controller
             {
                 Console.WriteLine($"{element.OrderElementId},{element.OrderId},{element.FoodId},{element.Amount}");
             }
-            Console.WriteLine("Wszystkie elementy zamówień");
-            Console.ReadLine();
+            ViewHelper.WriteAndWait("Wszystkie elementy zamówień");
             return new MarioResult { Success = true };
         }
 

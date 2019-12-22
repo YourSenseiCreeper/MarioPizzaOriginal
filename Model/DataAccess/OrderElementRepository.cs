@@ -23,14 +23,6 @@ namespace Model.DataAccess
                 FoodId = foodId,
                 Amount = amount
             });
-            /*
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                var output = con.Execute(
-                    "INSERT INTO MarioPizzaOrderElement (OrderId,FoodId,Amount) " +
-                    $"VALUES ({orderId},{foodId},{quantity})");
-            }
-            */
         }
 
         public List<OrderElement> GetElements(int orderId)
