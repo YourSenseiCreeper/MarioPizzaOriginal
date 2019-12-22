@@ -1,11 +1,14 @@
+sudo: required
 language: csharp
 solution: MarioPizzaOriginal.sln
-dotnet: 2.0.0
+dotnet: 3.0.100
+mono: none
 install:
   - nuget restore MarioPizzaOriginal.sln
+  - sudo apt-get install -qq dotnet-sdk-2.0.0
 script:
- - dotnet restore Model/Domain.csproj 
+ - dotnet restore Model/Domain.csproj
  - dotnet restore MarioPizzaOriginalF/MarioPizzaOriginal.csproj 
  - dotnet build Model/Domain.csproj --configuration Release
- - dotnet build MarioPizzaOriginalF/SimplePipeline.csproj --configuration Release
+ - dotnet build MarioPizzaOriginalF/MarioPizzaOriginal.csproj --configuration Release
  - msbuild MarioPizzaOriginal.sln /p:Configuration="Release" /p:Platform="Any CPU"
