@@ -24,6 +24,7 @@ namespace Model.DataAccess
     public interface IFoodRepository : IRepository<Food> 
     {
         string GetName(int foodId);
+        Dictionary<Ingredient, double> GetIngredients(int foodId);
         double CalculatePriceForFood(int foodId);
     }
     public interface IOrderRepository : IRepository<MarioPizzaOrder> 

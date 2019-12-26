@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceStack.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,10 @@ namespace MarioPizzaOriginal.Domain
 {
     public class Food
     {
+        [Index]
+        [AutoIncrement]
         public int FoodId { get; set; }
+        [Required]
         public string FoodName { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public double? NettPrice { get; set; }

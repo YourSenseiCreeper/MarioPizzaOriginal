@@ -80,7 +80,7 @@ namespace MarioPizzaOriginal
                 answer = Console.ReadLine();
                 try
                 {
-                    result = (T) Enum.Parse(typeof(T), string.IsNullOrEmpty(currentValue) ? currentValue.ToUpper() : answer.ToUpper());
+                    result = (T) Enum.Parse(typeof(T), !string.IsNullOrEmpty(currentValue) ? currentValue.ToUpper() : answer.ToUpper());
                     answerOk = true;
                     return result;
                 }

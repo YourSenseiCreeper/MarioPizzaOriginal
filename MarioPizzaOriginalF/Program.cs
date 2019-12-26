@@ -9,7 +9,7 @@ namespace MarioPizzaOriginal
     {
         private static OrderController orderC;
         private static IngredientController ingredientC;
-        private static FoodSizeSauceController foodC;
+        private static FoodController foodC;
         private static OrderElementController orderElemC;
 
         public static void Main(string[] args)
@@ -17,7 +17,7 @@ namespace MarioPizzaOriginal
             IMarioPizzaRepository repository = new MarioPizzaRepository();
             orderC = new OrderController(repository.FoodRepository, repository.OrderRepository, repository.OrderElementRepository, repository.OrderSubElementRepository);
             ingredientC = new IngredientController(repository.IngredientRepository);
-            foodC = new FoodSizeSauceController(repository.FoodRepository);
+            foodC = new FoodController(repository.FoodRepository);
             orderElemC = new OrderElementController(repository.OrderElementRepository);
 
             List<string> options = new List<string> {
@@ -130,7 +130,8 @@ namespace MarioPizzaOriginal
             List<string> options = new List<string> {
                 "1. Lista wszystkich produktów",
                 "2. Szczegóły produktu",
-                "3. Powrót"};
+                "3. Cena dla zamówienia",
+                "4. Powrót"};
             string input;
             bool exit = false;
             while (!exit)
@@ -142,7 +143,8 @@ namespace MarioPizzaOriginal
                 {
                     case "1": foodC.GetAllFood(); break;
                     case "2": foodC.GetFood(); break;
-                    case "3": exit = true; break;
+                    case "3": foodC.CalculatePriceForOrder(); break;
+                    case "4": exit = true; break;
                     default:
                         Console.WriteLine($"Nie ma opcji: {input}!");
                         break;

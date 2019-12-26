@@ -99,7 +99,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\FoodSizeSauceController.cs" />
+    <Compile Include="Controller\FoodController.cs" />
     <Compile Include="Controller\IngredientController.cs" />
     <Compile Include="Controller\OrderController.cs" />
     <Compile Include="Controller\OrderElementController.cs" />

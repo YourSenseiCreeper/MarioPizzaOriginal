@@ -50,6 +50,12 @@ namespace Model.DataAccess
 
         public double CalculatePriceForFood(int foodId)
         {
+            var q = db.Open().From<Food>().Join<Food, FoodIngredient>().Join<FoodIngredient, Ingredient>().Where(x => x.FoodId == foodId).Select("*");
+            var results = db.Open().SelectMulti<Food, FoodIngredient, Ingredient>(q);
+            foreach(var result in results)
+            {
+                Console.WriteLine($"{result.Item3.IngredientName} - {result.Item2.IngredientAmount} {result.Item3.UnitOfMeasureType}");
+            }
             /*
             using (IDbConnection con = new SQLiteConnection(ConnectionString))
             {
@@ -63,6 +69,19 @@ namespace Model.DataAccess
             }
             */
             return 0;
+        }
+
+        public Dictionary<Ingredient, double> GetIngredients(int foodId)
+        {
+            var q = db.Open().From<Food>().Join<Food, FoodIngredient>().Join<Food, Ingredient>().Where(x => x.FoodId == foodId).Select("*");
+            var results = db.Open().SelectMulti<Food, FoodIngredient, Ingredient>(q);
+            Dictionary<Ingredient, double> returnValues = new Dictionary<Ingredient, double>();
+            foreach (var result in results)
+            {
+                returnValues.Add(result.Item3, result.Item2.IngredientAmount);
+                Console.WriteLine($"{result.Item3.IngredientName} - {result.Item2.IngredientAmount} {result.Item3.UnitOfMeasureType}");
+            }
+            return returnValues;
         }
     }
 }
