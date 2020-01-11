@@ -228,13 +228,13 @@
     <Compile Include="Enums\OrderPriority.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\UnitOfMeasure.cs" />
+    <Compile Include="Filter\FoodFilter.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="FoodIngredient.cs" />
     <Compile Include="Ingredient.cs" />
     <Compile Include="MarioPizzaOrder.cs" />
     <Compile Include="OrderElement.cs" />
     <Compile Include="OrderSubElement.cs" />
-    <Compile Include="MarioResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

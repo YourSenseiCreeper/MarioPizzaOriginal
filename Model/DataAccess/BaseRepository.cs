@@ -18,7 +18,7 @@ namespace Model.DataAccess
 
         public void Add(T element)
         {
-            db.Open().Insert<T>(element);
+            db.Open().Insert(element);
         }
 
         public int Count()
@@ -28,12 +28,13 @@ namespace Model.DataAccess
 
         public void Edit(T editedElement)
         {
-            db.Open().Save<T>(editedElement);
+            db.Open().Save(editedElement);
+            //db.Open().Save<T>(editedElement);
         }
 
         public bool Exists(int elementId)
         {
-            return db.Open().SingleById<T>(elementId) != null;
+            return Get(elementId) != null;
         }
 
         public T Get(int elementId)

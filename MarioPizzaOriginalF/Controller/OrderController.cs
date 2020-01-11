@@ -24,35 +24,33 @@ namespace MarioPizzaOriginal.Controller
 
         public void AddOrder()
         {
-            Console.Clear();
             //DB check
             //I still can add an order and group them by add timestamp and check if the first one has correct data - that's it
             var newOrder = new MarioPizzaOrder
             {
                 OrderId = 404,  //OrderId will be replaced
                 Status = OrderStatus.WAITING,
+                Priority = OrderPriority.NORMAL,
                 OrderTime = DateTime.Now,
             };
             int step = 1;
             int maxStep = 5;
 
-            newOrder.ClientPhoneNumber = ViewHelper.AskForString($"(krok {step++} z {maxStep}) Numer telefonu klienta: ");
+            newOrder.ClientPhoneNumber = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Numer telefonu klienta: ");
             if (newOrder.ClientPhoneNumber.Length > 9)
             {
                 Console.WriteLine("UWAGA! Numer klienta przekracza 9 znaków!");
             }
 
-            newOrder.DeliveryAddress = ViewHelper.AskForString($"(krok {step++} z {maxStep}) Adres dostawy: ");
-            if (newOrder.DeliveryAddress.Equals(""))
-            {
-                Console.WriteLine("Adres nie może być pusty!");
-            }
+            newOrder.DeliveryAddress = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Adres dostawy: ");
             newOrder.Priority = ViewHelper.AskForOption<OrderPriority>("Dostępne priorytety:", $"(krok {step++} z {maxStep}) Priorytet zamówienia (domyślnie NORMAL): ", "NORMAL");
 
             bool addAnother = true;
             string input;
             List<OrderElement> orderElements = new List<OrderElement>();
             OrderElement tempOrderElement;
+
+            Console.Clear();
             Console.WriteLine($"(krok {step++} z {maxStep}) Wybierz elementy zamówienia:");
             while (addAnother)
             {
@@ -75,6 +73,7 @@ namespace MarioPizzaOriginal.Controller
                         tempOrderElement.SubOrderElements = new List<OrderSubElement>();
                         while (addAnotherSub)
                         {
+                            Console.Clear();
                             Console.WriteLine("Możliwe opcje:");
                             Console.WriteLine("1. Dodaj dodatek do do elementu zamówienia");
                             Console.WriteLine("2. Zakończ dodawanie");
@@ -90,7 +89,7 @@ namespace MarioPizzaOriginal.Controller
                             else if (subInput.Equals("2"))
                             {
                                 addAnotherSub = false;
-                                Console.WriteLine("Dodawanie dodatków zakończone!");
+                                ViewHelper.WriteAndWait("Dodawanie dodatków zakończone!");
                             }
                             else Console.WriteLine($"Nie ma opcji: {subInput}!");
                         }
@@ -100,14 +99,11 @@ namespace MarioPizzaOriginal.Controller
                 else if (input.Equals("2"))
                 {
                     addAnother = false;
-                    Console.WriteLine("Dodawanie elementów zamówienia zakończone!");
+                    ViewHelper.WriteAndWait("Dodawanie elementów zamówienia zakończone!");
                 }
-                else
-                {
-                    Console.WriteLine($"Nie ma opcji: {input}!");
-                }
+                else Console.WriteLine($"Nie ma opcji: {input}!");
             }
-            if (ViewHelper.AskForYesNo("Czy chcesz dodać to zamówienie?"))
+            if (ViewHelper.AskForYesNo($"({step} z {maxStep}) Czy chcesz dodać to zamówienie?"))
             {
                 //Edit all ids to the latest I hope
                 newOrder.OrderId = _orderRepository.OrderNextId();
@@ -116,11 +112,13 @@ namespace MarioPizzaOriginal.Controller
                 {
                     orderElement.OrderId = newOrder.OrderId;
                     orderElement.OrderElementId = orderElementId++;
+                    _orderElementRepository.Add(orderElement);
                     if (orderElement.SubOrderElements != null)
                     {
                         foreach (var subOrderElement in orderElement.SubOrderElements)
                         {
                             subOrderElement.OrderElementId = orderElement.OrderElementId;
+                            _orderSubElementRepository.Add(subOrderElement);
                         }
                     }
                 }
@@ -128,84 +126,96 @@ namespace MarioPizzaOriginal.Controller
             }
         }
 
-        public MarioResult AddOrderElement()
+        public void AddOrderElement()
         {
             int orderId = ViewHelper.AskForInt("Podaj id zamówienia: ");
             if (!_orderRepository.Exists(orderId))
             {
-                var message = $"Zamówienie o id {orderId} nie istnieje!";
-                Console.WriteLine(message);
-                return new MarioResult { Success = false, Message = message };
+                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+                return;
             }
             int foodId = ViewHelper.AskForInt("Podaj id produktu który chcesz dodać: ");
             int amount = ViewHelper.AskForInt("Podaj ilość: ");
             _orderElementRepository.AddToOrder(orderId, foodId, amount);
-
-            return new MarioResult { Success = true };
+            string foodName = _foodRepository.GetName(foodId);
+            ViewHelper.WriteAndWait($"Dodano {foodName} x {amount} do zamówienia o id {orderId}");
         }
 
-        public MarioResult AddSubOrderElement()
+        public void AddSubOrderElement()
         {
-            Console.Clear();
             int orderId = ViewHelper.AskForInt("Podaj id zamówienia: ");
             if (!_orderRepository.Exists(orderId))
             {
-                var message = $"Zamówienie o id {orderId} nie istnieje!";
-                Console.WriteLine(message);
-                return new MarioResult { Success = false, Message = message };
+                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+                return;
             }
             int orderElementId = ViewHelper.AskForInt("Podaj id zamówienia: ");
             if (!_orderElementRepository.Exists(orderElementId))
             {
-                var message = $"Element zamówienia o id {orderElementId} nie istnieje!";
-                Console.WriteLine(message);
-                return new MarioResult { Success = false, Message = message };
+                ViewHelper.WriteAndWait($"Element zamówienia o id {orderElementId} nie istnieje!");
+                return;
             }
             int foodId = ViewHelper.AskForInt("Podaj id produktu który chcesz dodać: ");
             int amount = ViewHelper.AskForInt("Podaj ilość: ");
 
             _orderElementRepository.AddToOrder(orderId, foodId, amount);
-            Console.WriteLine("Dodano dodatek do elementu zamówienia!");
-
-            return new MarioResult { Success = true };
+            ViewHelper.WriteAndWait($"Dodano dodatek do elementu zamówienia nr {orderId}!");
         }
 
-        public MarioResult ChangeOrderStatus()
+        public void ChangeOrderStatus()
         {
-            return new MarioResult { Success = true };
+            var orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz zmienić status: ");
+            var order = _orderRepository.Get(orderId);
+            if (order == null)
+            {
+                ViewHelper.WriteAndWait($"Zamówienie o id = {orderId} nie istnieje!");
+                return;
+            }
+            Console.WriteLine($"Obecny status zamówienia: {order.Status}");
+            OrderStatus newStatus = ViewHelper.AskForOption<OrderStatus>("Dostępne statusy", "Nowy status dla zamówienia: ", order.Status.ToString());
+            order.Status = newStatus;
+            _orderRepository.Edit(order);
+
+            ViewHelper.WriteAndWait($"Nowy status dla zamówienia: {newStatus}");
         }
 
-        public MarioResult ChangeOrderPriority()
+        public void ChangeOrderPriority()
         {
-            Console.Clear();
             var orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz zmienić priorytet: ");
             var order = _orderRepository.Get(orderId);
             if (order == null)
             {
-                string message = $"Zamówienie o id = {orderId} nie istnieje!";
-                Console.WriteLine(message);
-                Console.ReadLine();
-                return new MarioResult { Message = message, Success = false };
+                ViewHelper.WriteAndWait($"Zamówienie o id = {orderId} nie istnieje!");
+                return;
             }
             Console.WriteLine($"Obecny priorytet zamówienia: {order.Priority}");
             OrderPriority newPriority = ViewHelper.AskForOption<OrderPriority>("Dostępne priorytety", "Nowy priorytet dla zamówienia: ", order.Priority.ToString());
-            _orderRepository.ChangePriority(orderId, newPriority);
+            order.Priority = newPriority;
+            _orderRepository.Edit(order);
 
-            Console.WriteLine($"Nowy priorytet dla zamówienia: {newPriority}");
-            Console.ReadLine();
-            return new MarioResult { Success = true };
+            ViewHelper.WriteAndWait($"Nowy priorytet dla zamówienia: {newPriority}");
         }
 
-        public MarioResult DeleteOrder()
+        public void DeleteOrder()
         {
-            Console.Clear();
             var orderId = ViewHelper.AskForInt("Podaj id zamówienia które chcesz usunąć: ");
             if(!_orderRepository.Exists(orderId))
             {
-                return new MarioResult { Message = "Zamówienie nie istnieje!", Success = false };
+                ViewHelper.WriteAndWait($"Zamówienie od id {orderId} nie istnieje!");
+                return;
             }
             _orderRepository.Remove(orderId);
-            return new MarioResult { Success = true };
+            List<OrderElement> orderElements = _orderElementRepository.GetElements(orderId);
+            foreach(var orderElement in orderElements)
+            {
+                _orderElementRepository.Remove(orderElement.OrderElementId);
+                List<OrderSubElement> orderSubElements = _orderSubElementRepository.GetSubElements(orderElement.OrderElementId);
+                if(orderSubElements.Count != 0)
+                {
+                    orderSubElements.ForEach(x => _orderSubElementRepository.Remove(x.SubOrderElementId));
+                }
+            }
+            ViewHelper.WriteAndWait($"Usubnięto zamówienie nr {orderId} wraz z elementami i podelementami");
         }
 
         public void EditOrder()
@@ -213,9 +223,16 @@ namespace MarioPizzaOriginal.Controller
             //You can try to modify "Filter" to manage edited values and replace them when not DEFAULT
         }
 
-        private void CalculatePriceForFood()
+        public void CalculatePriceForOrder()
         {
-
+            int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz sprawdzić cenę: ");
+            if (!_orderRepository.Exists(orderId))
+            {
+                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+                return;
+            }
+            double price = _orderRepository.CalculatePriceForOrder(orderId);
+            ViewHelper.WriteAndWait($"Koszt zamówienia nr {orderId} wynosi {price} zł");
         }
 
         private void ShowOrders(List<MarioPizzaOrder> orderList)
@@ -382,54 +399,31 @@ namespace MarioPizzaOriginal.Controller
             ShowOrders(filter);
         }
 
-        public MarioResult GetOrdersWaiting()
-        {
-            ShowOrders(_orderRepository.GetByStatus(OrderStatus.WAITING));
-            return new MarioResult { Success = true };
-        }
+        public void GetOrdersWaiting() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.WAITING));
+        public void GetOrdersInProgress() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.IN_PROGRESS));
+        public void GetOrdersReadyForDelivery() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.DELIVERY));
+        public void GetOrdersDone() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.DONE));
 
-        public MarioResult GetOrdersInProgress()
+        public void MoveToNextStatus()
         {
-            ShowOrders(_orderRepository.GetByStatus(OrderStatus.IN_PROGRESS));
-            return new MarioResult { Success = true };
-        }
-
-        public MarioResult GetOrdersReadyForDelivery()
-        {
-            ShowOrders(_orderRepository.GetByStatus(OrderStatus.DELIVERY));
-            return new MarioResult { Success = true };
-        }
-
-        public MarioResult GetOrdersDone()
-        {
-            ShowOrders(_orderRepository.GetByStatus(OrderStatus.DONE));
-            return new MarioResult { Success = true };
-        }
-
-        public MarioResult MoveToNextStatus()
-        {
-            Console.Clear();
             int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz zmienić status: ");
             var order = _orderRepository.Get(orderId);
             if (order == null)
             {
-                return new MarioResult { Message = $"Nie znaleziono zamówienia o id {orderId}", Success = false };
+                ViewHelper.WriteAndWait($"Nie znaleziono zamówienia o id {orderId}");
+                return;
             }
             OrderStatus currentStatus = order.Status;
             order.Status = (OrderStatus) ((int)currentStatus + 1);
             if (currentStatus != OrderStatus.DONE)
             {
-                _orderRepository.ChangeStatus(order);
+                _orderRepository.Edit(order);
+                ViewHelper.WriteAndWait($"Nowy status zamówienia: {order.Status.ToString()}");
             }
             else
             {
-                string messsage = "Obecny status zamówienia to: DONE, nie możesz zmienić statusu!";
-                Console.WriteLine(messsage);
-                return new MarioResult { Success = true, Message = messsage };
+                ViewHelper.WriteAndWait("Obecny status zamówienia to: DONE, nie możesz zmienić statusu!");
             }
-            Console.WriteLine($"Nowy status zamówienia: {Enum.GetName(typeof(OrderStatus), order.Status)}");
-            Console.ReadLine();
-            return new MarioResult { Success = true };
         }
 
         private void ShowOrderElements(List<OrderElement> orderElements)
@@ -437,18 +431,20 @@ namespace MarioPizzaOriginal.Controller
             Console.WriteLine("Elementy zamówienia:");
             string orderSpace = " * ";
             string subOrderSpace = "    * ";
+            Food food;
+            Food subFood;
             foreach(var orderElement in orderElements)
             {
-                string foodName = _foodRepository.GetName(orderElement.FoodId);
-                Console.WriteLine($"{orderSpace}{foodName} (x{orderElement.Amount})");
+                food = _foodRepository.Get(orderElement.FoodId);
+                Console.WriteLine($"{orderSpace}{food.FoodName} (x{orderElement.Amount}) = {food.Price*orderElement.Amount} zł");
 
-                var subOrderElements = _orderSubElementRepository.GetSubElements(orderElement.OrderId, orderElement.OrderElementId);
-                if(subOrderElements != null)
+                var subOrderElements = _orderSubElementRepository.GetSubElements(orderElement.OrderElementId);
+                if(subOrderElements.Count != 0)
                 {
                     foreach(var subOrderElement in subOrderElements)
                     {
-                        foodName = _foodRepository.GetName(subOrderElement.FoodId);
-                        Console.WriteLine($"{subOrderSpace}{foodName} (x{subOrderElement.Amount})");
+                        subFood = _foodRepository.Get(subOrderElement.FoodId);
+                        Console.WriteLine($"{subOrderSpace}{subFood.FoodName} (x{subOrderElement.Amount}) = {subFood.Price*subOrderElement.Amount} zł");
                     }
                 }
             }
@@ -465,15 +461,14 @@ namespace MarioPizzaOriginal.Controller
             }
         }
 
-        public MarioResult GetOrder()
+        public void GetOrder()
         {
             int orderId = ViewHelper.AskForInt("Podaj id zamówienia: ");
             var selectedOrder = _orderRepository.Get(orderId);
             if (selectedOrder == null)
             {
-                var message = $"Zamówienie o id {orderId} nie istnieje!";
-                Console.WriteLine(message);
-                return new MarioResult { Success = false, Message = message};
+                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+                return;
             }
             Console.Clear();
             Console.WriteLine($"=== Informacje dla zamówienia id = {orderId} ===");
@@ -482,10 +477,20 @@ namespace MarioPizzaOriginal.Controller
             Console.WriteLine($"Numer tel. klienta: {selectedOrder.ClientPhoneNumber}");
             Console.WriteLine($"Priorytet: {selectedOrder.Priority}");
             Console.WriteLine($"Status: {selectedOrder.Status}");
+            Console.WriteLine($"Cena: {_orderRepository.CalculatePriceForOrder(orderId)} zł");
             //And SubOrder Elements
             ShowOrderElements(_orderElementRepository.GetElements(orderId));
             Console.ReadLine();
-            return new MarioResult { Success = true };
+        }
+
+        public void ShowAllSubOrderElements()
+        {
+            var subOrderElements = _orderSubElementRepository.GetAll();
+            foreach (var subOrderElement in subOrderElements)
+            {
+                Console.WriteLine($"{subOrderElement.SubOrderElementId}, {subOrderElement.OrderElementId}, {subOrderElement.FoodId}, {subOrderElement.Amount}");
+            }
+            ViewHelper.WriteAndWait($"{subOrderElements.Count} wyników");
         }
     }
 }

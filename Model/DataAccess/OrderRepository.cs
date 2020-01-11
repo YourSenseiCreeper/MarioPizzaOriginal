@@ -13,42 +13,6 @@ namespace Model.DataAccess
         {
             db = dbConnection;
         }
-        /*
-        public void Add(MarioPizzaOrder order)
-        {
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                var query = "INSERT INTO MarioPizzaOrder (OrderId,ClientPhoneNumber,DeliveryAddress,Priority,Status,OrderTime) " +
-                    $"VALUES ({order.OrderId},'{order.ClientPhoneNumber}','{order.DeliveryAddress}',{(int)order.Priority},{(int)order.Status},'{order.OrderTime.ToString("dd/MM/yyyy HH:MM:ss")}')";
-                var output = con.Execute(query);
-                //Adding OrderElements and SubOrderElements
-                List<OrderElement> orderElements = new List<OrderElement>();
-                orderElements.ForEach(orderElement =>
-                {
-                    _orderElementRepository.Add(new OrderElement
-                    {
-                        OrderId = order.OrderId,
-                        FoodId = orderElement.FoodId,
-                        Amount = orderElement.Amount
-                    });
-                    //AddElementToOrder(order.OrderId, orderElement.FoodId, orderElement.Amount);
-                    if (orderElement.SubOrderElements != null)
-                    {
-                        orderElement.SubOrderElements.ForEach(subOrder => _orderSubElementRepository.Add(subOrder));
-                    }
-                });
-            }
-        }
-        */
-        public void ChangePriority(int orderId, OrderPriority newOrderPriority)
-        {
-            db.Open().Save(newOrderPriority);
-        }
-
-        public void ChangeStatus(MarioPizzaOrder orderWithChangedStatus)
-        {
-            db.Open().Save(orderWithChangedStatus);
-        }
 
         public List<MarioPizzaOrder> GetByStatus(OrderStatus status)
         {
@@ -62,7 +26,18 @@ namespace Model.DataAccess
 
         public double CalculatePriceForOrder(int orderId)
         {
-            return 0;
+            return db.Open().Single<double>(
+                "SELECT " +
+                "SUM((F.Price * O.Amount) + " +
+                "IFNULL((SELECT SUM((F2.Price * OE.Amount)) FROM OrderSubElement AS OE " +
+                "INNER JOIN OrderElement O2 ON O2.OrderElementId = OE.OrderElementId " +
+                "LEFT JOIN Food F2 ON F2.FoodId = OE.FoodId " +
+                "WHERE O2.OrderElementId = O.OrderElementId), 0)" +
+                ") AS Cena " +
+                "FROM Food F " +
+                "JOIN OrderElement O ON O.FoodId = F.FoodId " +
+                $"WHERE O.OrderId = {orderId}");
         }
+
     }
 }

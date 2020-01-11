@@ -1,6 +1,10 @@
-﻿namespace MarioPizzaOriginal.Domain.Enums
+﻿using ServiceStack.DataAnnotations;
+using System;
+
+namespace MarioPizzaOriginal.Domain.Enums
 {
-    public enum OrderStatus
+    [EnumAsInt]
+    public enum OrderStatus : int
     {
         WAITING,
         IN_PROGRESS,

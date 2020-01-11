@@ -1,9 +1,5 @@
-﻿using Dapper;
-using ServiceStack.OrmLite;
+﻿using ServiceStack.OrmLite;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SQLite;
 
 namespace Model.DataAccess
 {
@@ -15,9 +11,9 @@ namespace Model.DataAccess
             db = dbConnection;
         }
 
-        public List<OrderSubElement> GetSubElements(int orderId, int orderElementId)
+        public List<OrderSubElement> GetSubElements(int orderElementId)
         {
-            return db.Open().Select<OrderSubElement>(x => x.OrderId == orderId && x.OrderElementId == orderElementId);
+            return db.Open().Select<OrderSubElement>($"SELECT * FROM OrderSubElement Where OrderElementId = {orderElementId}");
         }
     }
 }

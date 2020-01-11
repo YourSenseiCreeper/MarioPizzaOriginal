@@ -1,36 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarioPizzaOriginal
 {
     public static class ViewHelper
     {
-        public static int AskForInt(string message, bool inline = true, bool loop = false)
+        public static int AskForInt(string message, bool inline = true, bool clear = true)
         {
             bool answerOk = false;
             int result = 0;
-            string answer;
+            string answer; 
             while (!answerOk)
             {
-                Console.Clear();
+                if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine();
                 try { result = Convert.ToInt32(answer); answerOk = true; }
                 catch (FormatException)
                 { 
-                    Console.WriteLine($"{answer} nie jest liczbą całkowitą!");
-                    Console.ReadLine();
+                    WriteAndWait($"{answer} nie jest liczbą całkowitą!");
                 }
             }
             return result; 
         }
 
-        public static string AskForString(string message, bool inline = true)
+        public static double AskForDouble(string message, bool inline = true, bool clear = true)
         {
+            bool answerOk = false;
+            int result = 0;
+            string answer;
+            while (!answerOk)
+            {
+                if (clear) Console.Clear();
+                if (inline) Console.Write(message);
+                else Console.WriteLine(message);
+                answer = Console.ReadLine();
+                try { result = Convert.ToInt32(answer); answerOk = true; }
+                catch (FormatException)
+                {
+                    WriteAndWait($"{answer} nie jest liczbą!");
+                }
+            }
+            return result;
+        }
+
+        public static string AskForString(string message, bool inline = true, bool clear = true)
+        {
+            if (clear) Console.Clear();
             if (inline) Console.Write(message);
             else Console.WriteLine(message);
             return Console.ReadLine();
@@ -39,13 +56,13 @@ namespace MarioPizzaOriginal
         public static string AskForStringNotBlank(string message, bool inline = true)
         {
             string answer = "";
-            //XOR xd (!AB + A!B)
             while (string.IsNullOrEmpty(answer))
             {
+                Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine();
-                if (string.IsNullOrEmpty(answer)) { Console.WriteLine("Nazwa nie może być pusta!"); }
+                if (string.IsNullOrEmpty(answer)) { WriteAndWait("Nazwa nie może być pusta!"); }
             }
             return answer;
         }
@@ -58,51 +75,40 @@ namespace MarioPizzaOriginal
         /// <param name="messageNewValue"></param>
         /// <param name="currentValue"></param>
         /// <param name="inline">Answer in the same line as question?</param>
-        /// <param name="currentWhenBlank">Accepts blank answer and uses currentValue instead</param>
         /// <returns></returns>
         public static T AskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "", 
             bool inline = true) where T : Enum
         {
             bool answerOk = false;
             string answer;
-            T result = (T) Enum.GetValues(typeof(T)).GetValue(0);
+            T result = default;
             while (!answerOk)
             {
-                var allElements = Enum.GetNames(typeof(T));
+                Console.Clear();
+                var allElements = new List<string>(Enum.GetNames(typeof(T)));
                 int index = 0;
+
                 Console.WriteLine($"{messageAllElements} ");
-                foreach(string element in allElements)
-                {
-                    Console.WriteLine($"{index++}. {element}");
-                }
+                allElements.ForEach(element => Console.WriteLine($"{index++}. {element}"));
+
                 if (inline) Console.Write(messageNewValue);
                 else Console.WriteLine(messageNewValue);
                 answer = Console.ReadLine();
                 try
                 {
-                    result = (T) Enum.Parse(typeof(T), !string.IsNullOrEmpty(currentValue) ? currentValue.ToUpper() : answer.ToUpper());
+                    //If currentValue is not Null or Empty parse currentValue otherwise parse answer
+                    if (string.IsNullOrEmpty(answer)) answer = currentValue;
+                    result = (T) Enum.Parse(typeof(T), answer.ToUpper());
                     answerOk = true;
-                    return result;
                 }
-                catch (ArgumentException){ Console.WriteLine($"{answer} nie jest jedną z możliwych wartości!"); }
+                catch (ArgumentException){ WriteAndWait($"{answer} nie jest jedną z możliwych wartości!"); }
             }
             return result;
         }
 
-        public static bool Exists<T, U>(T repository, int id, string whatNotExist) where T : Model.DataAccess.IRepository<U>
-        {
-            U element = repository.Get(id);
-            bool exist = false;
-            if (element == null)
-            {
-                Console.WriteLine($"{whatNotExist} o id = {id} nie istnieje!");
-                exist = true;
-            }
-            return exist;
-        }
-
         public static bool AskForYesNo(string question)
         {
+            Console.Clear();
             Console.Write($"{question} (y/n): ");
             string answer = Console.ReadLine();
             return answer.ToLower().Equals("yes") ||
@@ -115,6 +121,40 @@ namespace MarioPizzaOriginal
         {
             Console.WriteLine(message);
             Console.ReadLine();
+        }
+
+        public static double? FilterDouble(string message)
+        {
+            var input = AskForDouble(message);
+            double? result = null;
+            if (Convert.ToInt32(input) != -1) result = Convert.ToDouble(input);
+            return result;
+        }
+
+        public static int? FilterInt(string message, bool m1 = false)
+        {
+            bool answerOk = false;
+            int? result = null;
+            double input;
+            while (!answerOk)
+            {
+                input = AskForDouble(message);
+                result = Convert.ToInt32(input);
+                if (result > 0) answerOk = true;
+                else if (m1 && result == -1)
+                {
+                    answerOk = true;
+                    return null;
+                }
+                else WriteAndWait("Wartość nie może być mniejsza niż -1!");
+            }
+            return result;
+        }
+
+        public static string FilterString(string message)
+        {
+            string input = AskForString(message);
+            return input != "-1" ? input : null;
         }
     }
 }

@@ -3,6 +3,7 @@ using MarioPizzaOriginal.Domain;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
+using MarioPizzaOriginal.Filter;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
@@ -20,29 +21,7 @@ namespace Model.DataAccess
         {
             db = dbConnection;
         }
-        /*
-        public void Edit(Food editOne)
-        {
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                List<string> updateQuery = new List<string> {
-                    "UPDATE Food ",
-                    editOne.FoodName != "" ? $"SET FoodName = {editOne.FoodName}" : "",
-                    editOne.NettPrice != null ? $"SET NettPrice = {editOne.NettPrice}" : "",
-                    editOne.Price != null ? $"SET Price = {editOne.Price}" : "",
-                    editOne.Weight != null ? $"SET Weight = {editOne.Weight}" : "",
-                    editOne.ProductionTime != null ? $"SET ProductionTime = {editOne.ProductionTime}" : "",
-                    $"WHERE FoodId = {editOne.FoodId}" };
-                con.Execute(String.Join("", updateQuery));
-                if (editOne.Ingredients != null)
-                {
-                    // It doesnt' check if the ingredient was removed or added!
-                    // Need to fix that
-                    //editOne.Ingredients.ForEach(ing => EditIngredient(ing));
-                }
-            }
-        }
-        */
+
         public string GetName(int foodId)
         {
             return db.Open().Single<Food>(x => x.FoodId == foodId).FoodName;
@@ -56,6 +35,7 @@ namespace Model.DataAccess
             {
                 Console.WriteLine($"{result.Item3.IngredientName} - {result.Item2.IngredientAmount} {result.Item3.UnitOfMeasureType}");
             }
+            Console.ReadLine();
             /*
             using (IDbConnection con = new SQLiteConnection(ConnectionString))
             {
@@ -71,17 +51,52 @@ namespace Model.DataAccess
             return 0;
         }
 
-        public Dictionary<Ingredient, double> GetIngredients(int foodId)
+        public List<Tuple<string, double>> GetIngredients(int foodId)
         {
-            var q = db.Open().From<Food>().Join<Food, FoodIngredient>().Join<Food, Ingredient>().Where(x => x.FoodId == foodId).Select("*");
-            var results = db.Open().SelectMulti<Food, FoodIngredient, Ingredient>(q);
-            Dictionary<Ingredient, double> returnValues = new Dictionary<Ingredient, double>();
+            string query = "SELECT I.IngredientName, FI.IngredientAmount FROM Ingredient AS I " +
+                           "JOIN FoodIngredient AS FI ON FI.IngredientId = I.IngredientId " +
+                           "LEFT JOIN Food AS F ON F.FoodId = FI.FoodId " +
+                           $"WHERE F.FoodId = {foodId}";
+            List<Tuple<string, double>> results = db.Open().Query<Tuple<string, double>>(query).ToList();
             foreach (var result in results)
             {
-                returnValues.Add(result.Item3, result.Item2.IngredientAmount);
-                Console.WriteLine($"{result.Item3.IngredientName} - {result.Item2.IngredientAmount} {result.Item3.UnitOfMeasureType}");
+                //returnValues.Add(result.Item3, result.Item2.IngredientAmount);
+                Console.WriteLine($"{result.Item1} - {result.Item2} xd");
             }
-            return returnValues;
+            return results;
+        }
+
+        public List<Food> Filter(FoodFilter filter)
+        {
+            int and = 0;
+            string foodNameSql = !string.IsNullOrEmpty(filter.FoodName) ? ((and++ > 0 ? " AND " : "") + $" FoodName LIKE '%{filter.FoodName}%' ") : "";
+            string query = filter == null ? "SELECT * FROM Food " : "SELECT * FROM Food WHERE " +
+                sqlStringForRange(ref and, "FoodId", (double?) filter.FoodIdMin, (double?) filter.FoodIdMax) +
+                foodNameSql +
+                sqlStringForRange(ref and, "NettPrice", filter.NettPriceMin, filter.NettPriceMax) +
+                sqlStringForRange(ref and, "Price", filter.PriceMin, filter.PriceMax) +
+                sqlStringForRange(ref and, "Weight", filter.WeightMin, filter.WeightMax) +
+                sqlStringForRange(ref and, "ProductionTime", (double?) filter.ProductionTimeMin, (double?) filter.ProductionTimeMax);
+                //sqlStringForRange(and, filter.PriceSmallMin, filter.PriceSmallMax) +
+                //sqlStringForRange(and, filter.PriceMediumMin, filter.PriceMediumMax) +
+                //sqlStringForRange(and, filter.PriceLargeMin, filter.PriceLargeMax);
+            return db.Open().Select<Food>(query);
+        }
+
+        private string sqlStringForRange(ref int and, string key, double? minValue, double? maxValue)
+        {
+            string result = "";
+            if(minValue != null)
+            {
+                if (and++ > 0) result += " AND ";
+                result += $"{key} >= {minValue} ";
+            }
+            if (maxValue != null)
+            {
+                if (and++ > 0) result += " AND ";
+                result += $"{key} <= {maxValue} ";
+            }
+            return result;
         }
     }
 }

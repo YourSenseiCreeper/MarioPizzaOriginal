@@ -1,12 +1,12 @@
 ﻿using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
+using MarioPizzaOriginal.Filter;
 using System;
 using System.Collections.Generic;
 
 namespace Model.DataAccess
 {
-    public interface IRepository { }
-    public interface IRepository<T> : IRepository
+    public interface IRepository<T>
     {
         T Get(int id);
         void Add(T newOne);
@@ -24,14 +24,13 @@ namespace Model.DataAccess
     public interface IFoodRepository : IRepository<Food> 
     {
         string GetName(int foodId);
-        Dictionary<Ingredient, double> GetIngredients(int foodId);
+        List<Tuple<string, double>> GetIngredients(int foodId);
         double CalculatePriceForFood(int foodId);
+        List<Food> Filter(FoodFilter filter);
     }
     public interface IOrderRepository : IRepository<MarioPizzaOrder> 
     {
         int OrderNextId();
-        void ChangePriority(int orderId, OrderPriority newOrderPriority);
-        void ChangeStatus(MarioPizzaOrder orderWithChangedStatus);
         List<MarioPizzaOrder> GetByStatus(OrderStatus status);
         double CalculatePriceForOrder(int orderId);
     }
@@ -44,6 +43,6 @@ namespace Model.DataAccess
     }
     public interface IOrderSubElementRepository : IRepository<OrderSubElement> 
     {
-        List<OrderSubElement> GetSubElements(int orderId, int orderElementId);
+        List<OrderSubElement> GetSubElements(int orderElementId);
     }
 }

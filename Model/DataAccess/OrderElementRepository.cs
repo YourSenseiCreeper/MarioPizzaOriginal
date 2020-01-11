@@ -27,7 +27,7 @@ namespace Model.DataAccess
 
         public List<OrderElement> GetElements(int orderId)
         {
-            return db.Open().Select<OrderElement>(x => x.OrderId == orderId);
+            return db.Open().Select<OrderElement>($"SELECT * FROM OrderElement Where OrderId = {orderId}");
         }
 
         public int OrderElementNextId()

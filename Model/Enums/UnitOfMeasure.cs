@@ -1,5 +1,8 @@
-﻿namespace MarioPizzaOriginal
+﻿using ServiceStack.DataAnnotations;
+
+namespace MarioPizzaOriginal
 {
+    [EnumAsInt]
     public enum UnitOfMeasure
     {
         KILOGRAM,

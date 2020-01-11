@@ -16,9 +16,10 @@ namespace Model.DataAccess
         public IOrderRepository OrderRepository { get; }
         public IOrderElementRepository OrderElementRepository { get; }
         public IOrderSubElementRepository OrderSubElementRepository { get; }
+        private readonly OrmLiteConnectionFactory db;
         public MarioPizzaRepository()
         {
-            var db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);
+            db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);
 
             FoodRepository = new FoodRepository(db);
             IngredientRepository = new IngredientRepository(db);
