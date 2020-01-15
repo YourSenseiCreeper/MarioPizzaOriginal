@@ -156,5 +156,16 @@ namespace MarioPizzaOriginal
             string input = AskForString(message);
             return input != "-1" ? input : null;
         }
+
+        public static DateTime FilterDateTime(string message, bool isMin)
+        {
+            string input = AskForString(message);
+            return input != "-1" ? Convert.ToDateTime(input) : (isMin ? DateTime.MinValue : DateTime.MaxValue);
+        }
+
+        public static T FilterOption<T>(string message)
+        {
+            return default(T);
+        }
     }
 }

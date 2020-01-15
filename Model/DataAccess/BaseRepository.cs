@@ -1,9 +1,6 @@
 ﻿using ServiceStack.OrmLite;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.DataAccess
 {
@@ -18,7 +15,7 @@ namespace Model.DataAccess
 
         public void Add(T element)
         {
-            db.Open().Insert(element);
+             db.Open().Insert(element);
         }
 
         public int Count()
@@ -29,7 +26,6 @@ namespace Model.DataAccess
         public void Edit(T editedElement)
         {
             db.Open().Save(editedElement);
-            //db.Open().Save<T>(editedElement);
         }
 
         public bool Exists(int elementId)

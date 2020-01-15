@@ -1,15 +1,9 @@
-﻿using Dapper;
-using MarioPizzaOriginal.Domain;
+﻿using MarioPizzaOriginal.Domain;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
 using MarioPizzaOriginal.Filter;
-using System.Configuration;
-using System.Data;
-using System.Data.SQLite;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.DataAccess
 {
@@ -51,18 +45,14 @@ namespace Model.DataAccess
             return 0;
         }
 
-        public List<Tuple<string, double>> GetIngredients(int foodId)
+        public Dictionary<string, double> GetIngredients(int foodId)
         {
             string query = "SELECT I.IngredientName, FI.IngredientAmount FROM Ingredient AS I " +
                            "JOIN FoodIngredient AS FI ON FI.IngredientId = I.IngredientId " +
                            "LEFT JOIN Food AS F ON F.FoodId = FI.FoodId " +
                            $"WHERE F.FoodId = {foodId}";
-            List<Tuple<string, double>> results = db.Open().Query<Tuple<string, double>>(query).ToList();
-            foreach (var result in results)
-            {
-                //returnValues.Add(result.Item3, result.Item2.IngredientAmount);
-                Console.WriteLine($"{result.Item1} - {result.Item2} xd");
-            }
+            var results = db.Open().Dictionary<string, double>(query);
+            if (results == null) return new Dictionary<string, double>();
             return results;
         }
 

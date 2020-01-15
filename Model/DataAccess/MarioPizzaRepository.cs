@@ -1,11 +1,5 @@
 ﻿using ServiceStack.OrmLite;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.DataAccess
 {
@@ -20,7 +14,7 @@ namespace Model.DataAccess
         public MarioPizzaRepository()
         {
             db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);
-
+            
             FoodRepository = new FoodRepository(db);
             IngredientRepository = new IngredientRepository(db);
             OrderElementRepository = new OrderElementRepository(db);

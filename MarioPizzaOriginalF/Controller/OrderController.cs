@@ -2,6 +2,8 @@
 using MarioPizzaOriginal.Domain.Enums;
 using Model;
 using Model.DataAccess;
+using Model.Enums;
+using Model.Filter;
 using System;
 using System.Collections.Generic;
 
@@ -34,7 +36,7 @@ namespace MarioPizzaOriginal.Controller
                 OrderTime = DateTime.Now,
             };
             int step = 1;
-            int maxStep = 5;
+            int maxStep = 7;
 
             newOrder.ClientPhoneNumber = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Numer telefonu klienta: ");
             if (newOrder.ClientPhoneNumber.Length > 9)
@@ -103,6 +105,10 @@ namespace MarioPizzaOriginal.Controller
                 }
                 else Console.WriteLine($"Nie ma opcji: {input}!");
             }
+
+            newOrder.Payment = ViewHelper.AskForOption<Payment>("Dostępne opcje: ", $"({step++} z {maxStep}) Wybierz gdzie chcesz zapłacić: ");
+            newOrder.PaymentMethod = ViewHelper.AskForOption<PaymentMethod>("Dostępne opcje: ", $"({step++} z {maxStep}) Wybierz w jaki sposób chcesz zapłacić: ");
+
             if (ViewHelper.AskForYesNo($"({step} z {maxStep}) Czy chcesz dodać to zamówienie?"))
             {
                 //Edit all ids to the latest I hope
@@ -273,130 +279,56 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetFilteredOrders()
         {
-            Console.WriteLine("Wybierz numer filtra by go dostosować. Wpisz -1 by anulować zmiany");
-            List<string> filterList = new List<string> { 
-                "1. Minimalne Id zamówienia", 
-                "2. Maksymalne Id zamówienia",
-                "3. Numer klienta zawiera", 
-                "4. Adres dostawy zawiera", 
-                "5. Priorytet", 
-                "6. Status",
-                "7. Dolny znacznik czasowy zamówienia", 
-                "8. Górny znacznik czasowy zamówienia", 
-                "9. WYŚWIETL WYNIKI", 
-                "10. Wyjdź"};
-            int orderIdMin = -1, orderIdMax = -1;
-            string clientPhoneNumber = "", deliveryAddress = "";
-            OrderPriority priority = OrderPriority.NONE;
-            OrderStatus status = OrderStatus.NONE;
-            var lowerTimestamp = new DateTime(1970, 1, 1);
-            var higherTimestamp = new DateTime(2170, 1, 1);
-            string option = "";
-            while(!option.Equals("-1"))
+            var filter = new OrderFilter
             {
-                Console.Clear();
-                filterList.ForEach(line => Console.WriteLine(line));
+                LowerTimestamp = DateTime.MinValue,
+                HigherTimestamp = DateTime.MaxValue
+            };
+            Console.WriteLine("Wybierz numer filtra by go dostosować. Wpisz -1 by anulować zmiany");
+            List<string> filterList;
+            string option = "";
+            bool exit = false;
+            bool filterAction = false;
+            while (!exit)
+            {
+                filterList = new List<string> {
+                    "1. Minimalne Id zamówienia" + (filter.OrderIdMin != null ? $"({filter.OrderIdMin})" : ""),
+                    "2. Maksymalne Id zamówienia" + (filter.OrderIdMax != null ? $"({filter.OrderIdMax})" : ""),
+                    "3. Numer klienta zawiera" + (filter.ClientPhoneNumber != null ? $"({filter.ClientPhoneNumber})" : ""),
+                    "4. Adres dostawy zawiera" + (filter.DeliveryAddress != null ? $"({filter.DeliveryAddress})" : ""),
+                    "5. Priorytet" + (filter.Priority != OrderPriority.NONE ? $"({filter.Priority})" : ""),
+                    "6. Status" + (filter.Status != OrderStatus.NONE ? $"({filter.Status})" : ""),
+                    "7. Dolny znacznik czasowy zamówienia" + (filter.LowerTimestamp != DateTime.MinValue ? $"({filter.LowerTimestamp.ToString()})" : ""),
+                    "8. Górny znacznik czasowy zamówienia" + (filter.HigherTimestamp != DateTime.MaxValue ? $"({filter.HigherTimestamp.ToString()})" : ""),
+                    "9. WYŚWIETL WYNIKI",
+                    "10. Wyjdź"
+                };
+                filterList.ForEach(x => Console.WriteLine(x));
                 option = Console.ReadLine();
-
-                if (option.Equals("1"))
+                
+                switch (option)
                 {
-                    Console.WriteLine("Podaj wartość dla Minimalne Id zamówienia: ");
-                    // Not a number exception!!!
-                    var input = Convert.ToInt32(Console.ReadLine());
-                    if(input > 0){ orderIdMin = input; }
-                    else { orderIdMin = -1; }
+                    case "1": filter.OrderIdMin = ViewHelper.FilterInt("Podaj wartość dla Minimalne Id zamówienia: ", true); break;
+                    case "2": filter.OrderIdMax = ViewHelper.FilterInt("Podaj wartość dla Maksymalne Id zamówienia: ", true); break;
+                    case "3": filter.ClientPhoneNumber = ViewHelper.FilterString("Podaj wartość ciąg który znajduje się w Numerze klienta: "); break;
+                    case "4": filter.DeliveryAddress = ViewHelper.FilterString("Podaj wartość ciąg który znajduje się w Adresie dostawy: "); break;
+                    case "5": filter.Priority = ViewHelper.FilterOption<OrderPriority>(""); break;
+                    case "6": filter.Status = ViewHelper.FilterOption<OrderStatus>(""); break;
+                    case "7": filter.LowerTimestamp = ViewHelper.FilterDateTime($"Wybierz dolny zakres czasu zamówienia.\n Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda", true); break;
+                    case "8": filter.HigherTimestamp = ViewHelper.FilterDateTime($"Wybierz górny zakres czasu zamówienia.\n Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda", false); break;
+                    case "9": filterAction = true; break;
+                    case "10": exit = true; break;
+                    default:
+                        ViewHelper.WriteAndWait($"Nie ma opcji {option}!");
+                        break;
                 }
-                else if (option.Equals("2"))
-                {
-                    Console.WriteLine("Podaj wartość dla Maksymalne Id zamówienia: ");
-                    // Not a number exception!!!
-                    var input = Convert.ToInt32(Console.ReadLine());
-                    if (input > 0) { orderIdMax = input; }
-                    else { orderIdMax = -1; }
-                }
-                else if (option.Equals("3"))
-                {
-                    Console.WriteLine("Podaj wartość ciąg który znajduje się w Numerze klienta: ");
-                    var input = Console.ReadLine();
-                    if ((Convert.ToInt32(input) != -1)) { clientPhoneNumber = input; }
-                    else { clientPhoneNumber = ""; }
-                }
-                else if (option.Equals("4"))
-                {
-                    Console.WriteLine("Podaj wartość ciąg który znajduje się w Adresie dostawy: ");
-                    var input = Console.ReadLine();
-                    if ((Convert.ToInt32(input) != -1)) { deliveryAddress = input; }
-                    else { deliveryAddress = ""; }
-                }
-                else if (option.Equals("5"))
-                {
-                    Console.WriteLine("Wybierz priorytet zamówienia:");
-                    Console.WriteLine($"Dostępne wartości: {Enum.GetValues(typeof(OrderPriority)).ToString()}");
-                    var input = Console.ReadLine();
-                    if (input.Equals("-1")) { priority = OrderPriority.NONE; }
-                    else { priority = (OrderPriority)Enum.Parse(typeof(OrderPriority), input); }
-                }
-                else if (option.Equals("6"))
-                {
-                    Console.WriteLine("Wybierz status zamówienia:");
-                    Console.WriteLine($"Dostępne wartości: {Enum.GetValues(typeof(OrderStatus)).ToString()}");
-                    var input = Console.ReadLine();
-                    if (input.Equals("-1")) { status = OrderStatus.NONE; }
-                    else { status = (OrderStatus)Enum.Parse(typeof(OrderStatus), input); }
-                }
-                else if (option.Equals("7") || option.Equals("8"))
-                {
-                    var lowerUpper = option.Equals("7") ? "dolny" : "górny";
-                    Console.WriteLine($"Wybierz {lowerUpper} zakres czasu zamówienia. Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda");
-                    var input = Console.ReadLine();
-                    var someTimestamp = new DateTime();
-                    if (input.Equals("-1")) { someTimestamp = new DateTime(1, 1, 1970); }
-                    else {
-                        var splitedInput = input.Split(' ');
-                        if (splitedInput.Length != 3 || splitedInput.Length != 6)
-                        {
-                            Console.WriteLine($"Niepoprawny format! Twój format: {input}");
-                        }
-                        else
-                        {
-                            if(splitedInput.Length == 3)
-                            {
-                                someTimestamp = new DateTime(Convert.ToInt32(splitedInput[0]),
-                                Convert.ToInt32(splitedInput[1]), Convert.ToInt32(splitedInput[2]));
-                            }
-                            else
-                            {
-                                someTimestamp = new DateTime(Convert.ToInt32(splitedInput[0]),
-                                Convert.ToInt32(splitedInput[1]), Convert.ToInt32(splitedInput[2]), Convert.ToInt32(splitedInput[3]),
-                                Convert.ToInt32(splitedInput[4]), Convert.ToInt32(splitedInput[5]));
-                            }
-                        }
-                    }
-                    if (option.Equals("7")) { lowerTimestamp = someTimestamp; }
-                    else { higherTimestamp = someTimestamp; }
-                }
-                else if (option.Equals("9"))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Nie ma takiej opcji!");
-                }
-                option = Console.ReadLine();
             }
-            var filter = _orderRepository.GetAll().FindAll(x =>
-                (orderIdMin == -1 || x.OrderId >= orderIdMin) &&
-                (orderIdMax == -1 || x.OrderId <= orderIdMax) &&
-                (clientPhoneNumber == "" || x.ClientPhoneNumber.Contains(clientPhoneNumber)) &&
-                (deliveryAddress == "" || x.DeliveryAddress.Contains(deliveryAddress)) &&
-                (priority == OrderPriority.NONE || x.Priority == priority) &&
-                (status == OrderStatus.NONE || x.Status == status) &&
-                (lowerTimestamp == new DateTime(1,1,1970) || x.OrderTime >= lowerTimestamp) &&
-                (higherTimestamp == new DateTime(1,1,2170) || x.OrderTime <= higherTimestamp)
-            );
-            Console.WriteLine("Historia wszystkich zamówień:");
-            ShowOrders(filter);
+            if (filterAction)
+            {
+                Console.WriteLine("Wybrane zamówienia:");
+                var filteredElements = _orderRepository.Filter(filter);
+                ShowOrders(filteredElements);
+            }
         }
 
         public void GetOrdersWaiting() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.WAITING));
@@ -492,5 +424,6 @@ namespace MarioPizzaOriginal.Controller
             }
             ViewHelper.WriteAndWait($"{subOrderElements.Count} wyników");
         }
+
     }
 }

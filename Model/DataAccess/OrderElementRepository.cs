@@ -1,9 +1,5 @@
-﻿using Dapper;
-using ServiceStack.OrmLite;
+﻿using ServiceStack.OrmLite;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SQLite;
 
 namespace Model.DataAccess
 {
@@ -27,7 +23,7 @@ namespace Model.DataAccess
 
         public List<OrderElement> GetElements(int orderId)
         {
-            return db.Open().Select<OrderElement>($"SELECT * FROM OrderElement Where OrderId = {orderId}");
+            return db.Open().Select<OrderElement>($"SELECT * FROM OrderElement WHERE OrderId = {orderId}");
         }
 
         public int OrderElementNextId()
@@ -38,6 +34,11 @@ namespace Model.DataAccess
         public void RemoveFromOrder(int orderId, int foodId)
         {
             db.Open().Delete<OrderElement>(x => x.OrderId == orderId && x.FoodId == foodId);
+        }
+
+        public bool IsElementInOrder(int orderId, int orderElementId)
+        {
+            return db.Open().Exists<OrderElement>(x => x.OrderId == orderId && x.OrderElementId == orderElementId);
         }
     }
 }

@@ -2,7 +2,9 @@
 using MarioPizzaOriginal.Filter;
 using Model.DataAccess;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MarioPizzaOriginal.Controller
 {
@@ -14,12 +16,13 @@ namespace MarioPizzaOriginal.Controller
             _foodRepository = foodRepository;
         }
 
-        private List<string> ShowIngredients(List<Tuple<string, double>> ingredients)
+        private List<string> ShowIngredients(Dictionary<string, double> ingredients)
         {
             var formatted = new List<string> { "Składniki: " };
-            ingredients.ForEach(x => {
-                formatted.Add($"* {x.Item2} {x.Item1} (?)");
-            });
+            foreach(var element in ingredients)
+            {
+                formatted.Add($"* {element.Key} {element.Value}");
+            }
             return formatted;
         }
 
@@ -45,12 +48,11 @@ namespace MarioPizzaOriginal.Controller
                 $"Czas produkcji: {ConvertProductionTime(food.ProductionTime)}",
                 $"Waga: {food.Weight}kg"
             };
-            List<Tuple<string,double>> ingredients = _foodRepository.GetIngredients(foodId);
-            if (food.Ingredients == null) Console.WriteLine("Brak składników");
-            else
-            {
-                entries.AddRange(ShowIngredients(ingredients));
-            }
+            var ingredients = _foodRepository.GetIngredients(foodId);
+
+            if (ingredients.Count == 0) entries.Add("Brak składników!");
+            else entries.AddRange(ShowIngredients(ingredients));
+
             entries.ForEach(x => Console.WriteLine(x));
             Console.ReadLine();
         }
@@ -93,6 +95,9 @@ namespace MarioPizzaOriginal.Controller
             string option = "";
             List<string> filterList;
             var filter = new FoodFilter();
+            filter.FoodIdMin = 10;
+            //List<PropertyInfo> properties = new List<PropertyInfo>(filter.GetType().GetProperties());
+
             while (!option.Equals("-1"))
             {
                 Console.Clear();
@@ -112,6 +117,8 @@ namespace MarioPizzaOriginal.Controller
                 "12. Filtruj po składnikach",
                 "13. WYŚWIETL WYNIKI"};
                 filterList.ForEach(x => Console.WriteLine(x));
+                //properties.ForEach(y => Console.WriteLine($"{y.Name} ({y.PropertyType.FullName}) = {y.GetValue(filter) ?? "NULL"}"));
+
                 option = Console.ReadLine();
                 switch (option)
                 {
@@ -146,6 +153,78 @@ namespace MarioPizzaOriginal.Controller
             ShowIngredients(_foodRepository.GetIngredients(foodId));
             Console.Read();
             return;
-        }        
+        }
+        /*
+        private static void Filter(string header, Dictionary<string, FilterObject> filterObjects, string footer)
+        {
+            bool exit = false;
+            int input;
+            int index = 1;
+            
+            filterObjects.Add(footer, null); // Last option - return
+            //List<string> keys = new List<string>();
+            //List<FilterObject> values = new List<FilterObject>();
+            foreach (var entry in filterObjects)
+            {
+                keys.Add($"{index++}. {entry.Key}");
+                values.Add(entry.Value);
+            }
+            while (!exit)
+            {
+                Console.Clear();
+                Console.WriteLine(header);
+                keys.ForEach(x => Console.WriteLine(x));
+                input = ViewHelper.AskForInt("", clear: false); //Waiting for answer
+                if (input > 0 && input <= values.Count)
+                {
+                    if (input == values.Count) exit = true;
+                    else values[input - 1] = FilterValue(values[input - 1]); //Possible loop? Nope
+                }
+
+                else ViewHelper.WriteAndWait($"Nie ma opcji: {input}!");
+            }
+        }
+
+        private static FilterObject FilterValue(FilterObject filterElement)
+        {
+            Console.Write(filterElement.Message);
+            string input = Console.ReadLine();
+            bool answerOk = false;
+            while (!answerOk)
+            {
+                try
+                {
+                    if (filterElement.IntendtType == typeof(int)) filterElement.IntFilter = Convert.ToInt32(input);
+                    else if (filterElement.IntendtType == typeof(double)) filterElement.DoubleFilter = Convert.ToDouble(input);
+                    else filterElement.StringFilter = input;
+                    answerOk = true;
+                }
+                catch (FormatException)
+                {
+                    string variableType = filterElement.IntendtType == typeof(int) ? "liczbą całkowitą!" : "liczbą!";
+                    Console.WriteLine($"{input} nie jest {variableType}");
+                    Console.ReadLine();
+                }
+            }
+            return filterElement;
+        }
+        */
+    }
+
+    public class FilterObject
+    {
+        public string Message { get; set; }
+        public int? IntFilter { get; set; }
+        public double? DoubleFilter { get; set; }
+        public string StringFilter { get; set; }
+        public Type IntendtType { get; set; }
+        public Type ValueType
+        {
+            get {
+                if (IntFilter != null) return typeof(int);
+                else if (DoubleFilter != null) return typeof(double);
+                else return typeof(string);
+            }
+        }
     }
 }

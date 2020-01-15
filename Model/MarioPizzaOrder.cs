@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using MarioPizzaOriginal.Domain.Enums;
-using Model;
+using Model.Enums;
 using ServiceStack.DataAnnotations;
 
 namespace MarioPizzaOriginal.Domain
@@ -19,6 +18,8 @@ namespace MarioPizzaOriginal.Domain
         public OrderPriority Priority { get; set; }
         [Required]
         public OrderStatus Status { get; set; }
+        public Payment Payment { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         [Required]
         public DateTime OrderTime { get; set; }
     }

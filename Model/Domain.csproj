@@ -227,8 +227,11 @@
     <Compile Include="DataAccess\OrderSubElementRepository.cs" />
     <Compile Include="Enums\OrderPriority.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
+    <Compile Include="Enums\Payment.cs" />
+    <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Enums\UnitOfMeasure.cs" />
     <Compile Include="Filter\FoodFilter.cs" />
+    <Compile Include="Filter\OrderFilter.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="FoodIngredient.cs" />
     <Compile Include="Ingredient.cs" />
