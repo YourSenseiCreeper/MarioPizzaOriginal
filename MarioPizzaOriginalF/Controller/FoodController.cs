@@ -89,7 +89,6 @@ namespace MarioPizzaOriginal.Controller
             ShowFood(_foodRepository.GetAll());
         }
         
-
         public void GetFilteredFood()
         {
             string option = "";

@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2 class="display-3">Wszystkie zamówienia</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Numer tel</td>
+                    <td>Adres</td>
+                    <td>Priorytet</td>
+                    <td>Status</td>
+                    <td>Opłata</td>
+                    <td>Sposób opłaty</td>
+                    <td>Czas złożenia</td>
+                </tr>
+            </thead>
+            @foreach(var order in ViewBag.Orders)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.ClientPhoneNumber</td>
+                    <td>@order.DeliveryAddress</td>
+                    <td>@order.Priority</td>
+                    <td>@order.Status</td>
+                    <td>@order.Payment</td>
+                    <td>@order.PaymentMethod</td>
+                    <td>@order.OrderTime</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

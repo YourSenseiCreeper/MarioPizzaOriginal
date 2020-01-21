@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MarioPizza.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MarioPizza.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Domain.csproj" />
+  </ItemGroup>
+
+
+
+</Project>
