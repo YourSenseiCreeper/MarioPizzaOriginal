@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\BaseRepository.cs" />
+    <Compile Include="DataAccess\FoodIngredientRepository.cs" />
     <Compile Include="DataAccess\FoodRepository.cs" />
     <Compile Include="DataAccess\IMarioPizzaRepository.cs" />
     <Compile Include="DataAccess\IngredientRepository.cs" />

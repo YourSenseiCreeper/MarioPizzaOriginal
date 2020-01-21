@@ -17,6 +17,8 @@ namespace MarioPizzaOriginal.Account
             "Food",
                 "GetFood",
                 "GetAllFood",
+                "AddFood",
+                "DeleteFood",
                 "GetFilteredFood",
             "Orders",
                 "GetAllOrders",

@@ -51,9 +51,7 @@ namespace Model.DataAccess
                            "JOIN FoodIngredient AS FI ON FI.IngredientId = I.IngredientId " +
                            "LEFT JOIN Food AS F ON F.FoodId = FI.FoodId " +
                            $"WHERE F.FoodId = {foodId}";
-            var results = db.Open().Dictionary<string, double>(query);
-            if (results == null) return new Dictionary<string, double>();
-            return results;
+            return db.Open().Dictionary<string, double>(query) ?? new Dictionary<string, double>();
         }
 
         public List<Food> Filter(FoodFilter filter)

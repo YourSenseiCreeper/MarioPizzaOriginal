@@ -21,6 +21,10 @@ namespace Model.DataAccess
     {
         List<Ingredient> GetIngredientsForFood(int foodId);
     }
+    public interface IFoodIngredientRepository : IRepository<FoodIngredient>
+    {
+        void DeleteFoodIngredients(int foodId);
+    }
     public interface IFoodRepository : IRepository<Food> 
     {
         string GetName(int foodId);

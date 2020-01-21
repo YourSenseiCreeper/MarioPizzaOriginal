@@ -19,7 +19,7 @@ namespace MarioPizzaOriginal
             IMarioPizzaRepository repository = new MarioPizzaRepository();
             orderC = new OrderController(repository.FoodRepository, repository.OrderRepository, repository.OrderElementRepository, repository.OrderSubElementRepository);
             ingredientC = new IngredientController(repository.IngredientRepository);
-            foodC = new FoodController(repository.FoodRepository);
+            foodC = new FoodController(repository.FoodRepository, repository.FoodIngredientRepository);
             orderElemC = new OrderElementController(repository.OrderElementRepository, repository.OrderRepository, repository.FoodRepository);
             
             user = GetUser();
@@ -78,6 +78,8 @@ namespace MarioPizzaOriginal
                 {
                     { "Lista wszystkich produktów", new Action(foodC.GetAllFood) },
                     { "Szczegóły produktu", new Action(foodC.GetFood) },
+                    { "Dodaj produkt", new Action(foodC.AddFood) },
+                    { "Usuń produkt", new Action(foodC.DeleteFood) },
                     { "Szukaj wg filtru", new Action(foodC.GetFilteredFood) }
                 }, "Powrót");
         }
@@ -129,11 +131,9 @@ namespace MarioPizzaOriginal
         private static User GetUser()
         {
             AccountType account = ViewHelper.AskForOption<AccountType>("Dostępne rodzaj konta", "Wpisz nazwę konta, na które chcesz się zalogować: ");
-            User user;
-            if (account == AccountType.ROOT) user = new Root();
-            else if (account == AccountType.CASHIER) user = new Cashier();
-            else user = new Driver();
-            return user;
+            if (account == AccountType.ROOT) return new Root();
+            else if (account == AccountType.CASHIER) return new Cashier();
+            else return new Driver();
         }
     }
 }

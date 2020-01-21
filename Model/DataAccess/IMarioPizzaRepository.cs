@@ -10,6 +10,7 @@ namespace Model.DataAccess
     {
         IFoodRepository FoodRepository { get; }
         IIngredientRepository IngredientRepository { get; }
+        IFoodIngredientRepository FoodIngredientRepository { get; }
         IOrderRepository OrderRepository { get; }
         IOrderElementRepository OrderElementRepository { get; }
         IOrderSubElementRepository OrderSubElementRepository { get; }
