@@ -5,43 +5,57 @@ namespace MarioPizzaOriginal
 {
     public static class ViewHelper
     {
-        public static int AskForInt(string message, bool inline = true, bool clear = true)
+        public static int AskForInt(string message, int? min = null, int? max = null, bool inline = true, bool clear = true)
         {
-            bool answerOk = false;
+            string answer;
+            bool answerOk;
             int result = 0;
-            string answer; 
-            while (!answerOk)
+            do
             {
+                answerOk = true;
                 if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine();
-                try { result = Convert.ToInt32(answer); answerOk = true; }
-                catch (FormatException)
-                { 
-                    WriteAndWait($"{answer} nie jest liczbą całkowitą!");
+                // Check if answer is Int, then 
+                // if min is not null check wheater Int is above and 
+                // if max is not null check if Int is below max
+                if (int.TryParse(answer, out int innerResult))
+                {
+                    if (min != null && innerResult <= min)
+                    {
+                        WriteAndWait($"{answer} nie może być mniejsza niż {min}!");
+                        answerOk = false;
+                    }
+                    if (max != null && innerResult >= max)
+                    {
+                        WriteAndWait($"{answer} nie może być większa od {max}!");
+                        answerOk = false;
+                    }
+                    result = innerResult;
                 }
-            }
-            return result; 
+                else WriteAndWait($"{answer} nie jest liczbą!");
+            } while (!answerOk);
+            return result;
         }
 
         public static double AskForDouble(string message, bool inline = true, bool clear = true)
         {
-            bool answerOk = false;
-            int result = 0;
             string answer;
-            while (!answerOk)
+            bool answerOk = false;
+            double result = 0;
+            do
             {
                 if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine();
-                try { result = Convert.ToInt32(answer); answerOk = true; }
-                catch (FormatException)
+                if (double.TryParse(answer, out double innerResult))
                 {
-                    WriteAndWait($"{answer} nie jest liczbą!");
+                    answerOk = true; result = innerResult;
                 }
-            }
+                else WriteAndWait($"{answer} nie jest liczbą!");
+            } while (!answerOk);
             return result;
         }
 
@@ -53,17 +67,19 @@ namespace MarioPizzaOriginal
             return Console.ReadLine();
         }
 
-        public static string AskForStringNotBlank(string message, bool inline = true)
+        public static string AskForStringNotBlank(string message, bool inline = true, bool clear = true)
         {
-            string answer = "";
-            while (string.IsNullOrEmpty(answer))
+            string answer;
+            bool answerOk = false;
+            do
             {
-                Console.Clear();
+                if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine();
-                if (string.IsNullOrEmpty(answer)) { WriteAndWait("Nazwa nie może być pusta!"); }
-            }
+                if (!string.IsNullOrEmpty(answer)) answerOk = true;
+                else { WriteAndWait("Nazwa nie może być pusta!"); }
+            } while (!answerOk);
             return answer;
         }
 
@@ -79,10 +95,10 @@ namespace MarioPizzaOriginal
         public static T AskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "", 
             bool inline = true) where T : Enum
         {
-            bool answerOk = false;
             string answer;
             T result = default;
-            while (!answerOk)
+            bool answerOk = false;
+            do
             {
                 Console.Clear();
                 var allElements = new List<string>(Enum.GetNames(typeof(T)));
@@ -91,18 +107,20 @@ namespace MarioPizzaOriginal
                 Console.WriteLine($"{messageAllElements} ");
                 allElements.ForEach(element => Console.WriteLine($"{index++}. {element}"));
 
-                if (inline) Console.Write(messageNewValue);
-                else Console.WriteLine(messageNewValue);
+                string message = string.IsNullOrEmpty(currentValue) ? messageNewValue : $"{messageNewValue} ({currentValue})";
+                if (inline) Console.Write(message);
+                else Console.WriteLine(message);
                 answer = Console.ReadLine();
+
                 try
                 {
                     //If currentValue is not Null or Empty parse currentValue otherwise parse answer
                     if (string.IsNullOrEmpty(answer)) answer = currentValue;
-                    result = (T) Enum.Parse(typeof(T), answer.ToUpper());
+                    result = (T)Enum.Parse(typeof(T), answer.ToUpper());
                     answerOk = true;
                 }
-                catch (ArgumentException){ WriteAndWait($"{answer} nie jest jedną z możliwych wartości!"); }
-            }
+                catch (ArgumentException) { WriteAndWait($"{answer} nie jest jedną z możliwych wartości!"); }
+            } while (!answerOk);
             return result;
         }
 
@@ -110,11 +128,9 @@ namespace MarioPizzaOriginal
         {
             Console.Clear();
             Console.Write($"{question} (y/n): ");
+            var options = new List<string> { "yes", "y", "tak", "t" };
             string answer = Console.ReadLine();
-            return answer.ToLower().Equals("yes") ||
-                answer.ToLower().Equals("y") ||
-                answer.ToLower().Equals("tak") ||
-                answer.ToLower().Equals("t");
+            return options.Contains(answer.ToLower());
         }
         
         public static void WriteAndWait(string message)
@@ -125,30 +141,14 @@ namespace MarioPizzaOriginal
 
         public static double? FilterDouble(string message)
         {
-            var input = AskForDouble(message);
-            double? result = null;
-            if (Convert.ToInt32(input) != -1) result = Convert.ToDouble(input);
-            return result;
+            double? input = AskForDouble(message);
+            return input == -1 ? null : input;
         }
 
         public static int? FilterInt(string message, bool m1 = false)
         {
-            bool answerOk = false;
-            int? result = null;
-            double input;
-            while (!answerOk)
-            {
-                input = AskForDouble(message);
-                result = Convert.ToInt32(input);
-                if (result > 0) answerOk = true;
-                else if (m1 && result == -1)
-                {
-                    answerOk = true;
-                    return null;
-                }
-                else WriteAndWait("Wartość nie może być mniejsza niż -1!");
-            }
-            return result;
+            int? input = m1 ? AskForInt(message, min: -1) : AskForInt(message);
+            return input == -1 ? null : input;
         }
 
         public static string FilterString(string message)
@@ -163,9 +163,9 @@ namespace MarioPizzaOriginal
             return input != "-1" ? Convert.ToDateTime(input) : (isMin ? DateTime.MinValue : DateTime.MaxValue);
         }
 
-        public static T FilterOption<T>(string message)
+        public static T FilterOption<T>(string message) where T : Enum
         {
-            return default(T);
+            return AskForOption<T>(message, "");
         }
     }
 }
