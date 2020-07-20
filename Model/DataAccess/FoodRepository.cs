@@ -14,12 +14,20 @@ namespace Model.DataAccess
         public FoodRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
         {
             db = dbConnection;
+            using (var conn = dbConnection.Open())
+            {
+                conn.CreateTable<Food>();
+                if (!conn.TableExists<Food>())
+                {
+                    conn.CreateTable<Food>();
+                    conn.Insert(
+                        new Food { FoodId = 1, FoodName = "TestFood", Price = 2, NettPrice = 1, 
+                            ProductionTime = 90, Weight = 0.5 });
+                }
+            }
         }
 
-        public string GetName(int foodId)
-        {
-            return db.Open().Single<Food>(x => x.FoodId == foodId).FoodName;
-        }
+        public string GetName(int foodId) => Get(foodId).FoodName;
 
         public double CalculatePriceForFood(int foodId)
         {

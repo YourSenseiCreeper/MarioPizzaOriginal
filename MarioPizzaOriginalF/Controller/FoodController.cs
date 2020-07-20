@@ -4,6 +4,7 @@ using Model;
 using Model.DataAccess;
 using System;
 using System.Collections.Generic;
+using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
 {
@@ -11,10 +12,10 @@ namespace MarioPizzaOriginal.Controller
     {
         private readonly IFoodRepository _foodRepository;
         private readonly IFoodIngredientRepository _foodIngredientRepository;
-        public FoodController(IFoodRepository foodRepository, IFoodIngredientRepository foodIngredientRepository)
+        public FoodController(TinyIoCContainer container)
         {
-            _foodRepository = foodRepository;
-            _foodIngredientRepository = foodIngredientRepository;
+            _foodRepository = container.Resolve<IFoodRepository>();
+            _foodIngredientRepository = container.Resolve<IFoodIngredientRepository>();
         }
 
         private List<string> ShowIngredients(Dictionary<string, double> ingredients)
@@ -40,9 +41,10 @@ namespace MarioPizzaOriginal.Controller
         {
             int step = 1;
             int maxStep = 6;
+            
             var food = new Food
             {
-                FoodName = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Podaj nazwę nowego produktu: "),
+                FoodName = ViewHelper.AskForStringNotBlank(string.Format(Resource.FoodController_NewFood_step1, step++, maxStep)),
                 Ingredients = new List<FoodIngredient>()
             };
             
@@ -153,19 +155,11 @@ namespace MarioPizzaOriginal.Controller
 
         private void ShowFood(List<Food> foodList)
         {
-            var header = $"{"Id".PadRight(5)}|" +
-                $"{"Nazwa".PadRight(25)}|" +
-                $"{"Cena".PadLeft(5)}|";
+            var header = $"{"Id",5} | {"Nazwa",25}| {"Cena",5}|";
             Console.WriteLine(header);
-            for (int i = 0; i < header.Length; i++)
-            {
-                Console.Write("=");
-            }
-            Console.Write("\n");
+            Console.WriteLine(new string('-', header.Length));
             foodList.ForEach(x => {
-                Console.WriteLine($"{x.FoodId.ToString().PadRight(5)}|" +
-                    $"{x.FoodName.PadRight(25)}|" +
-                    $"{x.Price.ToString().PadRight(5)} zł");
+                Console.WriteLine($"{x.FoodId,5}| {x.FoodName,25}| {x.Price,5} zł");
             });
             ViewHelper.WriteAndWait($"Znaleziono {foodList.Count} pasujących produktów:");
         }
@@ -179,6 +173,8 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetFilteredFood()
         {
+            var fullFilter = new FilterBase<FoodFilter, Food>(new FoodFilter(), _foodRepository, "Cośtam",
+                new[] { });
             string option = "";
             List<string> filterList;
             var filter = new FoodFilter();

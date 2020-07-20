@@ -60,25 +60,28 @@
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.5.7.0\lib\net45\ServiceStack.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.5.8.0\lib\net45\ServiceStack.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Client.5.7.0\lib\net45\ServiceStack.Client.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Client.5.8.0\lib\net45\ServiceStack.Client.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Common.5.7.0\lib\net45\ServiceStack.Common.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.5.8.0\lib\net45\ServiceStack.Common.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Interfaces.5.7.0\lib\net45\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Interfaces.5.8.0\lib\net45\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.OrmLite.5.7.0\lib\net45\ServiceStack.OrmLite.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.OrmLite.5.8.0\lib\net45\ServiceStack.OrmLite.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite.MySql, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.MySql.5.8.0\lib\net452\ServiceStack.OrmLite.MySql.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite.Sqlite, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.OrmLite.Sqlite.5.7.0\lib\net45\ServiceStack.OrmLite.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Text.5.7.0\lib\net45\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Text.5.8.0\lib\net45\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -91,6 +94,7 @@
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -140,19 +144,19 @@
     <Compile Include="DataAccess\BaseRepository.cs" />
     <Compile Include="DataAccess\FoodIngredientRepository.cs" />
     <Compile Include="DataAccess\FoodRepository.cs" />
-    <Compile Include="DataAccess\IMarioPizzaRepository.cs" />
     <Compile Include="DataAccess\IngredientRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
-    <Compile Include="DataAccess\MarioPizzaRepository.cs" />
     <Compile Include="DataAccess\OrderElementRepository.cs" />
     <Compile Include="DataAccess\OrderRepository.cs" />
     <Compile Include="DataAccess\OrderSubElementRepository.cs" />
+    <Compile Include="DomainStartup.cs" />
     <Compile Include="Enums\OrderPriority.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\Payment.cs" />
     <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Enums\UnitOfMeasure.cs" />
     <Compile Include="Filter\FoodFilter.cs" />
+    <Compile Include="Filter\MinMaxPair.cs" />
     <Compile Include="Filter\OrderFilter.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="FoodIngredient.cs" />
@@ -161,6 +165,7 @@
     <Compile Include="OrderElement.cs" />
     <Compile Include="OrderSubElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

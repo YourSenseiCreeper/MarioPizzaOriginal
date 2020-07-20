@@ -1,8 +1,9 @@
 ﻿using MarioPizzaOriginal.Account;
 using MarioPizzaOriginal.Controller;
-using Model.DataAccess;
+using Model;
 using System;
 using System.Collections.Generic;
+using TinyIoC;
 
 namespace MarioPizzaOriginal
 {
@@ -16,21 +17,25 @@ namespace MarioPizzaOriginal
 
         public static void Main(string[] args)
         {
-            IMarioPizzaRepository repository = new MarioPizzaRepository();
-            orderC = new OrderController(repository.FoodRepository, repository.OrderRepository, repository.OrderElementRepository, repository.OrderSubElementRepository);
-            ingredientC = new IngredientController(repository.IngredientRepository);
-            foodC = new FoodController(repository.FoodRepository, repository.FoodIngredientRepository);
-            orderElemC = new OrderElementController(repository.OrderElementRepository, repository.OrderRepository, repository.FoodRepository);
+            //IMarioPizzaRepository repository = new MarioPizzaRepository();
+            //IList<string> lisa = new List<string>();
+            var container = TinyIoCContainer.Current;
+            new DomainStartup(container); // registering repositories to IoC
+            //new Startup(container); // to samo co w DomainStartup
+            orderC = new OrderController(container);
+            ingredientC = new IngredientController(container);
+            foodC = new FoodController(container);
+            orderElemC = new OrderElementController(container);
             
             user = GetUser();
 
             Menu("Dostępne opcje: ",
                 new Dictionary<string, Action>
                 {
-                    { "Składniki", new Action(Ingredients) },
-                    { "Zamówienia", new Action(Orders) },
+                    { "Składniki",          new Action(Ingredients) },
+                    { "Zamówienia",         new Action(Orders) },
                     { "Elementy zamówienia", new Action(OrderElements) },
-                    { "Produkty", new Action(Food) }
+                    { "Produkty",           new Action(Food) }
                 },
                 "Wyjdź");
         }
@@ -40,11 +45,11 @@ namespace MarioPizzaOriginal
             Menu("Dostępne opcje - składniki: ",
                 new Dictionary<string, Action>
                 {
-                    { "Wszystkie dostępne składniki", new Action(ingredientC.GetAllIngredients) },
-                    { "Szczegóły składnika", new Action(ingredientC.GetIngredient) },
-                    { "Dodaj składnik", new Action(ingredientC.AddIngredient) },
-                    { "Edytuj składnik", new Action(ingredientC.EditIngredient) },
-                    { "Usuń składnik", new Action(ingredientC.DeleteIngredient) }
+                    { "Wszystkie dostępne składniki",   new Action(ingredientC.GetAllIngredients) },
+                    { "Szczegóły składnika",            new Action(ingredientC.GetIngredient) },
+                    { "Dodaj składnik",                 new Action(ingredientC.AddIngredient) },
+                    { "Edytuj składnik",                new Action(ingredientC.EditIngredient) },
+                    { "Usuń składnik",                  new Action(ingredientC.DeleteIngredient) }
                 },
                 "Powrót");
         }
@@ -113,7 +118,7 @@ namespace MarioPizzaOriginal
                     values.Add(entry.Value);
                 }
             }
-            while (!exit)
+            do
             {
                 Console.Clear();
                 Console.WriteLine(header);
@@ -125,7 +130,7 @@ namespace MarioPizzaOriginal
                     else values[input - 1].DynamicInvoke();
                 }
                 else ViewHelper.WriteAndWait($"Nie ma opcji: {input}!");
-            }
+            } while (!exit);
         }
 
         private static User GetUser()

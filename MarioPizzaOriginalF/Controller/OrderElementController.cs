@@ -1,6 +1,7 @@
 ﻿using MarioPizzaOriginal.Domain;
 using Model.DataAccess;
 using System;
+using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
 {
@@ -9,11 +10,11 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IFoodRepository _foodRepository;
-        public OrderElementController(IOrderElementRepository orderElementRepository, IOrderRepository orderRepository, IFoodRepository foodRepository)
+        public OrderElementController(TinyIoCContainer container)
         {
-            _orderElementRepository = orderElementRepository;
-            _orderRepository = orderRepository;
-            _foodRepository = foodRepository;
+            _orderElementRepository = container.Resolve<IOrderElementRepository>();
+            _orderRepository = container.Resolve<IOrderRepository>();
+            _foodRepository = container.Resolve<IFoodRepository>();
         }
 
         public void GetAllOrderElements()

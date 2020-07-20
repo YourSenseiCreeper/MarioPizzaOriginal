@@ -2,7 +2,9 @@
 using MarioPizzaOriginal.Domain.Enums;
 using Model.Filter;
 using ServiceStack.OrmLite;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Model.DataAccess
 {
@@ -13,6 +15,24 @@ namespace Model.DataAccess
         public OrderRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
         {
             db = dbConnection;
+            using (var conn = dbConnection.Open())
+            {
+                if (conn.CreateTableIfNotExists<MarioPizzaOrder>())
+                {
+                    conn.Insert(
+                        new MarioPizzaOrder
+                        {
+                            OrderId = 1,
+                            ClientPhoneNumber = "133244355",
+                            DeliveryAddress = "Radolin 5",
+                            Priority = OrderPriority.NORMAL,
+                            Status = OrderStatus.WAITING,
+                            PaymentMethod = Enums.PaymentMethod.CASH,
+                            Payment = Enums.Payment.AT_PLACE,
+                            OrderTime = DateTime.Now
+                        });
+                }
+            }
         }
 
         public List<MarioPizzaOrder> GetByStatus(OrderStatus status)
@@ -42,11 +62,47 @@ namespace Model.DataAccess
 
         public List<MarioPizzaOrder> Filter(OrderFilter filter)
         {
-            /*=
+            string result = "";
             int and = 0;
-            string foodNameSql = !string.IsNullOrEmpty(filter.FoodName) ? ((and++ > 0 ? " AND " : "") + $" FoodName LIKE '%{filter.FoodName}%' ") : "";
-            string query = filter == null ? "SELECT * FROM Food " : "SELECT * FROM Food WHERE " +
-                sqlStringForRange(ref and, "FoodId", (double?)filter.FoodIdMin, (double?)filter.FoodIdMax) +
+            var properties = filter.GetType().GetProperties();
+            List<PropertyInfo> mins = new List<PropertyInfo>();
+            List<PropertyInfo> maxes = new List<PropertyInfo>();
+            List<PropertyInfo> names = new List<PropertyInfo>();
+
+            var propertyData = new Dictionary<string, MinMaxPair>();
+            /*
+            string propertyName = "";
+            foreach (var property in properties)
+            {
+                propertyName = property.Name.ToLower().Replace("min", "").Replace("max", "");
+                if (!propertyData.ContainsKey(propertyName))
+                {
+                    propertyData.Add(propertyName, new MinMaxPair());
+                }
+                // what happens to date???
+                var minmax = new MinMaxPair<Type> ();
+
+                if (property.Name.ToLower().EndsWith("min")) propertyData[propertyName].Min = (double?) property.GetValue(filter);
+                else if (property.Name.ToLower().EndsWith("max")) propertyData[propertyName].Max = (double?) property.GetValue(filter);
+                // if property inherits from Enum or is String
+                //else propertyData[propertyName] = new MinMaxPair();
+
+                if (property.PropertyType == typeof(string)) 
+                {
+                    string value = (string) property.GetValue(filter);
+                    result += !string.IsNullOrEmpty(value) ? ((and++ > 0 ? " AND " : "") + $" FoodName LIKE '%{value}%' ") : "";
+                }
+                else
+                {
+                    Type type = property.PropertyType == typeof(double?) ? typeof(double?) : typeof(int?);
+                    var value = property.GetValue(filter); 
+                }
+            }
+            int and = 0;
+            string orderSql = !string.IsNullOrEmpty(filter.) ? ((and++ > 0 ? " AND " : "") + $" FoodName LIKE '%{filter.FoodName}%' ") : "";
+            string query = filter == null ? "SELECT * FROM MarioPizzaOrder " : "SELECT * FROM MarioPizzaOrder WHERE " +
+                sqlStringForRange(ref and, "ClientPhoneNumber", filter.OrderIdMin, filter.OrderIdMax) +
+                sqlStringForRange(ref and, "OrderId", filter.OrderIdMin, filter.OrderIdMax) +
                 foodNameSql +
                 sqlStringForRange(ref and, "NettPrice", filter.NettPriceMin, filter.NettPriceMax) +
                 sqlStringForRange(ref and, "Price", filter.PriceMin, filter.PriceMax) +
@@ -75,4 +131,6 @@ namespace Model.DataAccess
             return result;
         }
     }
+
+
 }

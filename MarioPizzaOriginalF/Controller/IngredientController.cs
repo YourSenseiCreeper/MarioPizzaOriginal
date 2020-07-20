@@ -3,15 +3,16 @@ using Model.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
 {
     public class IngredientController
     {
         private readonly IIngredientRepository _ingredientRepository;
-        public IngredientController(IIngredientRepository ingredientRepository)
+        public IngredientController(TinyIoCContainer container)
         {
-            _ingredientRepository = ingredientRepository;
+            _ingredientRepository = container.Resolve<IIngredientRepository>();
         }
 
         public void AddIngredient()

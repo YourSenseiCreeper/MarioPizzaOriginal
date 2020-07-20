@@ -2,6 +2,7 @@
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
+using MarioPizzaOriginal;
 
 namespace Model.DataAccess
 {
@@ -12,6 +13,22 @@ namespace Model.DataAccess
         public IngredientRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
         {
             db = dbConnection;
+            using (var conn = dbConnection.Open())
+            {
+                if (conn.CreateTableIfNotExists<Ingredient>())
+                {
+                    conn.Insert(
+                        new Ingredient
+                        {
+                            IngredientId = 1,
+                            IngredientName = "TestIngredient",
+                            PriceSmall = 1,
+                            PriceMedium = 2,
+                            PriceLarge = 3,
+                            UnitOfMeasureType = UnitOfMeasure.KILOGRAM
+                        });
+                }
+            }
         }
         
         public List<Ingredient> GetIngredientsForFood(int foodId)

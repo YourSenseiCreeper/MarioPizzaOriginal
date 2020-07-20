@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace MarioPizzaOriginal
 {
@@ -13,7 +14,7 @@ namespace MarioPizzaOriginal
             do
             {
                 answerOk = true;
-                if (clear) Console.Clear();
+                //if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine();
@@ -67,6 +68,19 @@ namespace MarioPizzaOriginal
             return Console.ReadLine();
         }
 
+        public static string AskForString(string mes, object[] args) 
+        {
+            int argIndex = 0;
+            string message = Resource.ResourceManager.GetString(mes); 
+            //Resource.FoodController_NewFood_step1
+            
+            foreach (object arg in args)
+            {
+                message = message.Replace($"{argIndex}", arg.ToString());
+            }
+            return AskForString(message);
+        }
+
         public static string AskForStringNotBlank(string message, bool inline = true, bool clear = true)
         {
             string answer;
@@ -81,6 +95,18 @@ namespace MarioPizzaOriginal
                 else { WriteAndWait("Nazwa nie może być pusta!"); }
             } while (!answerOk);
             return answer;
+        }
+
+        public static string AskForStringNotBlank(string message, object[] args)
+        {
+            int argIndex = 0;
+            //Resource.FoodController_NewFood_step1
+
+            foreach (object arg in args)
+            {
+                message = message.Replace($"{argIndex}", arg.ToString());
+            }
+            return AskForStringNotBlank(message);
         }
 
         /// <summary>
@@ -167,5 +193,13 @@ namespace MarioPizzaOriginal
         {
             return AskForOption<T>(message, "");
         }
+
+        //public static void Filter<T>(string message, bool? isMin = null)
+        //{
+        //    switch (typeof(T).Name)
+        //    {
+        //        case "int":
+        //    }
+        //}
     }
 }

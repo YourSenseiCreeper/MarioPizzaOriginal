@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Model\Domain.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarioPizzaOriginal", "MarioPizzaOriginalF\MarioPizzaOriginal.csproj", "{FA86F93E-4419-4A09-B2D9-13EEDECB23EE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTest", "DomainTest\DomainTest.csproj", "{21A5B321-B239-4CE8-A7A1-38F84E04643F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarioPizzaOriginalTests", "MarioPizzaOriginalTests\MarioPizzaOriginalTests.csproj", "{72C57AD1-6E61-48E2-9381-C251BF6BBF09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{FA86F93E-4419-4A09-B2D9-13EEDECB23EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA86F93E-4419-4A09-B2D9-13EEDECB23EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA86F93E-4419-4A09-B2D9-13EEDECB23EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A5B321-B239-4CE8-A7A1-38F84E04643F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A5B321-B239-4CE8-A7A1-38F84E04643F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A5B321-B239-4CE8-A7A1-38F84E04643F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A5B321-B239-4CE8-A7A1-38F84E04643F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C57AD1-6E61-48E2-9381-C251BF6BBF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C57AD1-6E61-48E2-9381-C251BF6BBF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C57AD1-6E61-48E2-9381-C251BF6BBF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C57AD1-6E61-48E2-9381-C251BF6BBF09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

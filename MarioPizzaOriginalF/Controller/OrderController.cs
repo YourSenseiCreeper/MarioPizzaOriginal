@@ -6,6 +6,7 @@ using Model.Enums;
 using Model.Filter;
 using System;
 using System.Collections.Generic;
+using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
 {
@@ -15,13 +16,12 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderSubElementRepository _orderSubElementRepository;
-        public OrderController(IFoodRepository foodRepository, IOrderRepository orderRepository, 
-            IOrderElementRepository orderElementRepository, IOrderSubElementRepository orderSubElementRepository)
+        public OrderController(TinyIoCContainer container)
         {
-            _foodRepository = foodRepository;
-            _orderRepository = orderRepository;
-            _orderElementRepository = orderElementRepository;
-            _orderSubElementRepository = orderSubElementRepository;
+            _foodRepository = container.Resolve<IFoodRepository>();
+            _orderRepository = container.Resolve<IOrderRepository>();
+            _orderElementRepository = container.Resolve<IOrderElementRepository>();
+            _orderSubElementRepository = container.Resolve<IOrderSubElementRepository>();
         }
 
         public void AddOrder()
@@ -402,7 +402,7 @@ namespace MarioPizzaOriginal.Controller
                 ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
                 return;
             }
-            Console.Clear();
+            //Console.Clear();
             Console.WriteLine($"=== Informacje dla zamówienia id = {orderId} ===");
             Console.WriteLine($"Data złożenia: {selectedOrder.OrderTime.ToString("dd/MM/yyyy HH:MM:ss")}");
             Console.WriteLine($"Adres dostawy: {selectedOrder.DeliveryAddress}");

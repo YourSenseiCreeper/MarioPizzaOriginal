@@ -3,12 +3,26 @@ using System.Collections.Generic;
 
 namespace Model.DataAccess
 {
-    internal class OrderElementRepository : BaseRepository<OrderElement>, IOrderElementRepository
+    public class OrderElementRepository : BaseRepository<OrderElement>, IOrderElementRepository
     {
         private readonly OrmLiteConnectionFactory db;
         public OrderElementRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
         {
             db = dbConnection;
+            using (var conn = dbConnection.Open())
+            {
+                if (conn.CreateTableIfNotExists<OrderElement>())
+                {
+                    conn.Insert(
+                        new OrderElement
+                        {
+                            OrderElementId = 1,
+                            OrderId = 1,
+                            FoodId = 1,
+                            Amount = 1
+                        });
+                }
+            }
         }
 
         public void AddToOrder(int orderId, int foodId, double amount)
