@@ -113,7 +113,7 @@ namespace MarioPizzaOriginal
             List<Action> values = new List<Action>();
             foreach (var entry in keyValues)
             {
-                if (entry.Value == null || user.Rights.Contains(entry.Value.Method.Name)){
+                if (entry.Value == null || user.Permissions.Contains(entry.Value.Method.Name)){
                     keys.Add($"{index++}. {entry.Key}");
                     values.Add(entry.Value);
                 }

@@ -7,40 +7,11 @@ namespace MarioPizzaOriginal.Account
     {
         public Root()
         {
-            Rights = new List<string> {
-            "Ingredients",
-                "AddIngredient",
-                "GetAllIngredients",
-                "EditIngredient",
-                "DeleteIngredient",
-                "GetIngredient",
-            "Food",
-                "GetFood",
-                "GetAllFood",
-                "AddFood",
-                "DeleteFood",
-                "GetFilteredFood",
-            "Orders",
-                "GetAllOrders",
-                "GetOrder",
-                "GetOrdersWaiting",
-                "GetOrdersInProgress",
-                "GetOrdersReadyForDelivery",
-                "AddOrder",
-                "EditOrder",
-                "DeleteOrder",
-                "ChangeOrderStatus",
-                "MoveToNextStatus",
-                "ChangeOrderPriority",
-                "CalculatePriceForOrder",
-                "ShowAllSubOrderElements",
-            "OrderElements",
-                "GetAllOrderElements",
-                "GetAllElementsForOrder",
-                "AddOrderElement",
-                "ChangeAmount",
-                "DeleteOrderElement"
-        };
+            Permissions = new List<string>();
+            Permissions.AddRange(Rights.Ingredients.Global);
+            Permissions.AddRange(Rights.Food.Global);
+            Permissions.AddRange(Rights.Orders.Global);
+            Permissions.AddRange(Rights.OrderElements.Global);
         }
     }
 }
