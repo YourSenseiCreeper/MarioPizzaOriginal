@@ -7,9 +7,9 @@ namespace MarioPizzaOriginal.Account
         public Driver()
         {
             Permissions = new List<string> {
-                Rights.Food.FoodMenu,
-                Rights.Food.GetFood,
-                Rights.Food.GetAllFood,
+                Rights.Foods.FoodMenu,
+                Rights.Foods.GetFood,
+                Rights.Foods.GetAllFood,
                 Rights.Orders.OrdersMenu,
                 Rights.Orders.GetAllOrders,
                 Rights.Orders.GetOrdersWaiting,

@@ -1,14 +1,13 @@
+﻿using MarioPizzaOriginal.Controller;
+using MarioPizzaOriginal.Domain;
 using Model.DataAccess;
 using Moq;
 using NUnit.Framework;
-using MarioPizzaOriginal.Domain;
-using MarioPizzaOriginal;
-using MarioPizzaOriginal.Controller;
-//using MarioPizzaOriginal.Domain;
+using TinyIoC;
 
-namespace DomainTest
+namespace MarioPizzaOriginal.Tests.Domain
 {
-    public class Tests
+    public class IngredientControllerTest
     {
         [SetUp]
         public void Setup()
@@ -22,7 +21,7 @@ namespace DomainTest
             var factory = new MockRepository(MockBehavior.Loose);
             var mockIngredientRepository = factory.Create<IIngredientRepository>();
             mockIngredientRepository.Setup(t => t);
-            var mockController = new IngredientController(mockIngredientRepository.Object);
+            var mockController = new IngredientController(TinyIoCContainer.Current);
 
         }
 

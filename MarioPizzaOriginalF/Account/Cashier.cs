@@ -11,10 +11,10 @@ namespace MarioPizzaOriginal.Account
         public Cashier()
         {
             Permissions = new List<string> {
-                Rights.Food.FoodMenu,
-                Rights.Food.GetFood,
-                Rights.Food.GetAllFood,
-                Rights.Food.GetFilteredFood,
+                Rights.Foods.FoodMenu,
+                Rights.Foods.GetFood,
+                Rights.Foods.GetAllFood,
+                Rights.Foods.GetFilteredFood,
                 Rights.Orders.OrdersMenu,
                 Rights.Orders.GetAllOrders,
                 Rights.Orders.GetOrder,

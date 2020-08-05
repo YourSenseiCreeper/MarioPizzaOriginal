@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MarioPizzaOriginal.Controller;
+using System;
 using System.Collections.Generic;
-using System.Runtime.Versioning;
 
 namespace MarioPizzaOriginal
 {
@@ -101,7 +101,6 @@ namespace MarioPizzaOriginal
         {
             int argIndex = 0;
             //Resource.FoodController_NewFood_step1
-
             foreach (object arg in args)
             {
                 message = message.Replace($"{argIndex}", arg.ToString());
@@ -120,6 +119,12 @@ namespace MarioPizzaOriginal
         /// <returns></returns>
         public static T AskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "", 
             bool inline = true) where T : Enum
+        {
+            return UnsafeAskForOption<T>(messageAllElements, messageNewValue, currentValue, inline);
+        }
+
+        public static T UnsafeAskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "",
+            bool inline = true)
         {
             string answer;
             T result = default;
@@ -165,41 +170,29 @@ namespace MarioPizzaOriginal
             Console.ReadLine();
         }
 
-        public static double? FilterDouble(string message)
+        public static object FilterDouble(string message, object[] args)
         {
             double? input = AskForDouble(message);
             return input == -1 ? null : input;
         }
 
-        public static int? FilterInt(string message, bool m1 = false)
+        public static object FilterInt(string message, object[] args)
         {
-            int? input = m1 ? AskForInt(message, min: -1) : AskForInt(message);
+            int? input = args?[0] as int? == -1 ? AskForInt(message, min: -1) : AskForInt(message);
             return input == -1 ? null : input;
         }
 
-        public static string FilterString(string message)
+        public static object FilterString(string message, object[] args)
         {
             string input = AskForString(message);
             return input != "-1" ? input : null;
         }
 
-        public static DateTime FilterDateTime(string message, bool isMin)
+        public static object FilterDateTime(string message, object[] args)
         {
             string input = AskForString(message);
-            return input != "-1" ? Convert.ToDateTime(input) : (isMin ? DateTime.MinValue : DateTime.MaxValue);
+            return input != "-1" ? Convert.ToDateTime(input) : ((bool) args[0] ? DateTime.MinValue : DateTime.MaxValue);
         }
-
-        public static T FilterOption<T>(string message) where T : Enum
-        {
-            return AskForOption<T>(message, "");
-        }
-
-        //public static void Filter<T>(string message, bool? isMin = null)
-        //{
-        //    switch (typeof(T).Name)
-        //    {
-        //        case "int":
-        //    }
-        //}
+        public static T FilterOption<T>(T filterType, string message, object[] args) => UnsafeAskForOption<T>(message, "");
     }
 }

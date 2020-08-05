@@ -1,4 +1,5 @@
 ﻿using ServiceStack.OrmLite;
+using ServiceStack.OrmLite.Dapper;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,5 +18,6 @@ namespace Model.DataAccess
         public T Get(int elementId) => db.Open().SingleById<T>(elementId);
         public List<T> GetAll() => db.Open().Select<T>();
         public void Remove(int elementId) => db.Open().DeleteById<T>(elementId);
+        public List<T> Query(string queryString) => db.Open().Query<T>(queryString).ToList();
     }
 }

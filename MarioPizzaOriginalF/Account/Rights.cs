@@ -5,34 +5,34 @@ namespace MarioPizzaOriginal.Account
 {
     public static class Rights
     {
-        public static class Ingredients
+        internal static class Ingredients
         {
-            public static string IngredientsMenu = "Ingredients";
-            public static string AddIngredient = "AddIngredient";
-            public static string GetAllIngredients = "GetAllIngredients";
-            public static string EditIngredient = "EditIngredient";
-            public static string GetIngredient = "GetIngredient";
-            public static IEnumerable<string> Global = new[] {
+            public static readonly string IngredientsMenu = "Ingredients";
+            public static readonly string AddIngredient = "AddIngredient";
+            public static readonly string GetAllIngredients = "GetAllIngredients";
+            public static readonly string EditIngredient = "EditIngredient";
+            public static readonly string GetIngredient = "GetIngredient";
+            public static readonly IEnumerable<string> Global = new[] {
                 IngredientsMenu, AddIngredient, GetAllIngredients,
                 EditIngredient, GetIngredient};
         }
-        
-        public static class Food
+
+        internal class Foods
         {
-            public static string FoodMenu = "Food";
-            public static string GetFood = "GetFood";
-            public static string GetAllFood = "GetAllFood";
-            public static string AddFood = "AddFood";
-            public static string DeleteFood = "DeleteFood";
-            public static string GetFilteredFood = "GetFilteredFood";
-            public static IEnumerable<string> Global = new[]
+            public static readonly string FoodMenu = "Food";
+            public static readonly string GetFood = "GetFood";
+            public static readonly string GetAllFood = "GetAllFood";
+            public static readonly string AddFood = "AddFood";
+            public static readonly string DeleteFood = "DeleteFood";
+            public static readonly string GetFilteredFood = "GetFilteredFood";
+            public static readonly IEnumerable<string> Global = new[]
             {
                 FoodMenu, GetFood, GetAllFood,
                 AddFood, DeleteFood, GetFilteredFood
             };
         }
 
-        public static class Orders
+        internal static class Orders
         {
             public static string OrdersMenu = "Orders";
             public static string GetAllOrders = "GetAllOrders";
@@ -57,7 +57,7 @@ namespace MarioPizzaOriginal.Account
             };
         }
 
-        public static class OrderElements
+        internal static class OrderElements
         {
             public static string OrderElementsMenu = "OrderElements";
             public static string GetAllOrderElements = "GetAllOrderElements";

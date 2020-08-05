@@ -9,7 +9,7 @@ namespace MarioPizzaOriginal.Account
         {
             Permissions = new List<string>();
             Permissions.AddRange(Rights.Ingredients.Global);
-            Permissions.AddRange(Rights.Food.Global);
+            Permissions.AddRange(Rights.Foods.Global);
             Permissions.AddRange(Rights.Orders.Global);
             Permissions.AddRange(Rights.OrderElements.Global);
         }

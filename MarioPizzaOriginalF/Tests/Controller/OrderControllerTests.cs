@@ -33,12 +33,7 @@ namespace MarioPizzaOriginal.Controller.Tests
             mockOrderElementRepository = factory.Create<IOrderElementRepository>();
             mockOrderSubElementRepository = factory.Create<IOrderSubElementRepository>();
             
-            orderController = new OrderController(
-                mockFoodRepository.Object,
-                mockOrderRepository.Object,
-                mockOrderElementRepository.Object,
-                mockOrderSubElementRepository.Object
-            );
+            orderController = new OrderController(null);
             sampleOrder = new MarioPizzaOrder
             {
                 OrderId = 0,

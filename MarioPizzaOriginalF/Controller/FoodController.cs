@@ -1,9 +1,11 @@
-﻿using MarioPizzaOriginal.Domain;
-using MarioPizzaOriginal.Filter;
+﻿
+using MarioPizzaOriginal.Domain;
+using MarioPizzaOriginal.Domain.Filter;
 using Model;
 using Model.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -12,19 +14,18 @@ namespace MarioPizzaOriginal.Controller
     {
         private readonly IFoodRepository _foodRepository;
         private readonly IFoodIngredientRepository _foodIngredientRepository;
+        private readonly FoodFilter _foodFilter;
         public FoodController(TinyIoCContainer container)
         {
             _foodRepository = container.Resolve<IFoodRepository>();
             _foodIngredientRepository = container.Resolve<IFoodIngredientRepository>();
+            _foodFilter = new FoodFilter(container);
         }
 
         private List<string> ShowIngredients(Dictionary<string, double> ingredients)
         {
             var formatted = new List<string> { "Składniki: " };
-            foreach(var element in ingredients)
-            {
-                formatted.Add($"* {element.Key} {element.Value}");
-            }
+            formatted.AddRange(ingredients.Select((key, value) => $"* {key} {value}"));
             return formatted;
         }
 
@@ -170,58 +171,9 @@ namespace MarioPizzaOriginal.Controller
             ShowFood(_foodRepository.GetAll());
         }
         
-
         public void GetFilteredFood()
         {
-            var fullFilter = new FilterBase<FoodFilter, Food>(new FoodFilter(), _foodRepository, "Cośtam",
-                new[] { });
-            string option = "";
-            List<string> filterList;
-            var filter = new FoodFilter();
-            filter.FoodIdMin = 10;
-            //List<PropertyInfo> properties = new List<PropertyInfo>(filter.GetType().GetProperties());
-
-            while (!option.Equals("-1"))
-            {
-                Console.Clear();
-                filterList = new List<string> {
-                "Wybierz numer filtra by go dostosować. Wpisz -1 by anulować zmiany",
-                "1. Minimalne Id produktu " + (filter.FoodIdMin != null ? $"({filter.FoodIdMin})" : ""),
-                "2. Maksymalne Id produktu " + (filter.FoodIdMax != null ? $"({filter.FoodIdMax})" : ""),
-                "3. Nazwa produktu zawiera " + (filter.FoodName != null ? $"({filter.FoodName})" : ""),
-                "4. Minmalna cena netto " + (filter.NettPriceMin != null ? $"({filter.NettPriceMin})" : ""),
-                "5. Maksymalna cena netto " + (filter.NettPriceMax != null ? $"({filter.NettPriceMax})" : ""),
-                "6. Minimalna cena " + (filter.PriceMin != null ? $"({filter.PriceMin})" : ""),
-                "7. Maksymalna cena " + (filter.PriceMax != null ? $"({filter.PriceMax})" : ""),
-                "8. Minimalna waga " + (filter.WeightMin != null ? $"({filter.WeightMin})" : ""),
-                "9. Maksymalna waga " + (filter.WeightMax != null ? $"({filter.WeightMax})" : ""),
-                "10. Minimalny czas produkcji " + (filter.ProductionTimeMin != null ? $"({filter.ProductionTimeMin})" : ""),
-                "11. Maksymalny czas produkcji " + (filter.ProductionTimeMax != null ? $"({filter.ProductionTimeMax})" : ""),
-                "12. Filtruj po składnikach",
-                "13. WYŚWIETL WYNIKI"};
-                filterList.ForEach(x => Console.WriteLine(x));
-                //properties.ForEach(y => Console.WriteLine($"{y.Name} ({y.PropertyType.FullName}) = {y.GetValue(filter) ?? "NULL"}"));
-
-                option = Console.ReadLine();
-                switch (option)
-                {
-                    case "1": filter.FoodIdMin = ViewHelper.FilterInt("Podaj wartość dla Minimalne Id produktu: ", true); break;
-                    case "2": filter.FoodIdMax = ViewHelper.FilterInt("Podaj wartość dla Maksymalne Id produktu: ", true); break;
-                    case "3": filter.FoodName = ViewHelper.FilterString("Podaj ciąg który znajduje się w Nazwie produktu: "); break;
-                    case "4": filter.NettPriceMin = ViewHelper.FilterDouble("Podaj minimalną cenę netto produktu: "); break;
-                    case "5": filter.NettPriceMax = ViewHelper.FilterDouble("Podaj maksymalną cenę netto produktu: "); break;
-                    case "6": filter.PriceMin = ViewHelper.FilterDouble("Podaj minimalną cenę (brutto) produktu: "); break;
-                    case "7": filter.PriceMax = ViewHelper.FilterDouble("Podaj maksymalną cenę (brutto) produktu: "); break;
-                    case "8": filter.WeightMin = ViewHelper.FilterDouble("Podaj minimalną wagę produktu w kg: "); break;
-                    case "9": filter.WeightMax = ViewHelper.FilterDouble("Podaj maksymalną wagę produktu w kg: "); break;
-                    case "10": filter.ProductionTimeMin = ViewHelper.FilterInt("Podaj minimalny czas produkcji w sekundach bez przecinka: "); break;
-                    case "11": filter.ProductionTimeMax = ViewHelper.FilterInt("Podaj maksymalny czas produkcji w sekundach bez przecinka: "); break;
-                    case "12": ViewHelper.WriteAndWait("do dodania"); break;
-                    case "13": option = "-1"; break;
-                    default: ViewHelper.WriteAndWait("Nie ma takiej opcji!"); break;
-                }
-            }
-            ShowFood(_foodRepository.Filter(filter));
+            if (_foodFilter.FilterMenu()) ShowFood(_foodFilter.Query());
         }
 
 
@@ -234,80 +186,7 @@ namespace MarioPizzaOriginal.Controller
                 return;
             }
             ShowIngredients(_foodRepository.GetIngredients(foodId));
-            Console.Read();
             return;
-        }
-        /*
-        private static void Filter(string header, Dictionary<string, FilterObject> filterObjects, string footer)
-        {
-            bool exit = false;
-            int input;
-            int index = 1;
-            
-            filterObjects.Add(footer, null); // Last option - return
-            //List<string> keys = new List<string>();
-            //List<FilterObject> values = new List<FilterObject>();
-            foreach (var entry in filterObjects)
-            {
-                keys.Add($"{index++}. {entry.Key}");
-                values.Add(entry.Value);
-            }
-            while (!exit)
-            {
-                Console.Clear();
-                Console.WriteLine(header);
-                keys.ForEach(x => Console.WriteLine(x));
-                input = ViewHelper.AskForInt("", clear: false); //Waiting for answer
-                if (input > 0 && input <= values.Count)
-                {
-                    if (input == values.Count) exit = true;
-                    else values[input - 1] = FilterValue(values[input - 1]); //Possible loop? Nope
-                }
-
-                else ViewHelper.WriteAndWait($"Nie ma opcji: {input}!");
-            }
-        }
-
-        private static FilterObject FilterValue(FilterObject filterElement)
-        {
-            Console.Write(filterElement.Message);
-            string input = Console.ReadLine();
-            bool answerOk = false;
-            while (!answerOk)
-            {
-                try
-                {
-                    if (filterElement.IntendtType == typeof(int)) filterElement.IntFilter = Convert.ToInt32(input);
-                    else if (filterElement.IntendtType == typeof(double)) filterElement.DoubleFilter = Convert.ToDouble(input);
-                    else filterElement.StringFilter = input;
-                    answerOk = true;
-                }
-                catch (FormatException)
-                {
-                    string variableType = filterElement.IntendtType == typeof(int) ? "liczbą całkowitą!" : "liczbą!";
-                    Console.WriteLine($"{input} nie jest {variableType}");
-                    Console.ReadLine();
-                }
-            }
-            return filterElement;
-        }
-        */
-    }
-
-    public class FilterObject
-    {
-        public string Message { get; set; }
-        public int? IntFilter { get; set; }
-        public double? DoubleFilter { get; set; }
-        public string StringFilter { get; set; }
-        public Type IntendtType { get; set; }
-        public Type ValueType
-        {
-            get {
-                if (IntFilter != null) return typeof(int);
-                else if (DoubleFilter != null) return typeof(double);
-                else return typeof(string);
-            }
         }
     }
 }

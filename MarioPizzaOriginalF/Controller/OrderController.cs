@@ -3,7 +3,6 @@ using MarioPizzaOriginal.Domain.Enums;
 using Model;
 using Model.DataAccess;
 using Model.Enums;
-using Model.Filter;
 using System;
 using System.Collections.Generic;
 using TinyIoC;
@@ -226,6 +225,7 @@ namespace MarioPizzaOriginal.Controller
 
         public void EditOrder()
         {
+            throw new NotImplementedException();
             //You can try to modify "Filter" to manage edited values and replace them when not DEFAULT
         }
 
@@ -244,91 +244,22 @@ namespace MarioPizzaOriginal.Controller
         private void ShowOrders(List<MarioPizzaOrder> orderList)
         {
             Console.Clear();
-            List<string> headerElements = new List<string> { "Nr zam.", "Data", "Status", "Priorytet", "Nr tel", "Adres" };
-            var header = $"{headerElements[0].PadRight(7)}|" +
-                    $"{headerElements[1].PadRight(20)}|" +
-                    $"{headerElements[2].PadRight(12)}|" +
-                    $"{headerElements[3].PadRight(10)}|" +
-                    $"{headerElements[4].PadRight(10)}|" +
-                    $"{headerElements[5].PadRight(15)}";
+            var header = $"{"Nr zam.",7}|{"Data",20}|{"Status",12}|{"Priorytet",10}|{"Nr tel",10}|{"Adres",15}";
             Console.WriteLine(header);
-            for(int i = 0; i<header.Length; i++)
-            {
-                Console.Write("=");
-            }
-            Console.Write("\n");
-            foreach (var order in orderList)
-            {
-                Console.WriteLine($"{order.OrderId.ToString().PadRight(7)}|" +
-                    $"{order.OrderTime.ToString().PadRight(20)}|" +
-                    $"{order.Status.ToString().PadRight(12)}|" +
-                    $"{order.Priority.ToString().PadRight(10)}|" +
-                    $"{order.ClientPhoneNumber.PadRight(10)}|" +
-                    $"{order.DeliveryAddress.PadRight(15)}");
-            }
+            Console.WriteLine(new string('=', header.Length));
+            orderList.ForEach(order => Console.WriteLine($"{order.OrderId,7}|{order.OrderTime,20}|{order.Status,12}|" +
+                    $"{order.Priority,10}|{order.ClientPhoneNumber,10}|{order.DeliveryAddress,15}"));
             if (orderList.Count > 1)
             {
                 Console.WriteLine($"Znaleziono {orderList.Count} wyników");
             }
             Console.ReadLine();
         }
-        public void GetAllOrders()
-        {
-            ShowOrders(_orderRepository.GetAll());
-        }
+        public void GetAllOrders() => ShowOrders(_orderRepository.GetAll());
 
         public void GetFilteredOrders()
         {
-            var filter = new OrderFilter
-            {
-                LowerTimestamp = DateTime.MinValue,
-                HigherTimestamp = DateTime.MaxValue
-            };
-            Console.WriteLine("Wybierz numer filtra by go dostosować. Wpisz -1 by anulować zmiany");
-            List<string> filterList;
-            string option = "";
-            bool exit = false;
-            bool filterAction = false;
-            while (!exit)
-            {
-                filterList = new List<string> {
-                    "1. Minimalne Id zamówienia" + (filter.OrderIdMin != null ? $"({filter.OrderIdMin})" : ""),
-                    "2. Maksymalne Id zamówienia" + (filter.OrderIdMax != null ? $"({filter.OrderIdMax})" : ""),
-                    "3. Numer klienta zawiera" + (filter.ClientPhoneNumber != null ? $"({filter.ClientPhoneNumber})" : ""),
-                    "4. Adres dostawy zawiera" + (filter.DeliveryAddress != null ? $"({filter.DeliveryAddress})" : ""),
-                    "5. Priorytet" + (filter.Priority != OrderPriority.NONE ? $"({filter.Priority})" : ""),
-                    "6. Status" + (filter.Status != OrderStatus.NONE ? $"({filter.Status})" : ""),
-                    "7. Dolny znacznik czasowy zamówienia" + (filter.LowerTimestamp != DateTime.MinValue ? $"({filter.LowerTimestamp.ToString()})" : ""),
-                    "8. Górny znacznik czasowy zamówienia" + (filter.HigherTimestamp != DateTime.MaxValue ? $"({filter.HigherTimestamp.ToString()})" : ""),
-                    "9. WYŚWIETL WYNIKI",
-                    "10. Wyjdź"
-                };
-                filterList.ForEach(x => Console.WriteLine(x));
-                option = Console.ReadLine();
-                
-                switch (option)
-                {
-                    case "1": filter.OrderIdMin = ViewHelper.FilterInt("Podaj wartość dla Minimalne Id zamówienia: ", true); break;
-                    case "2": filter.OrderIdMax = ViewHelper.FilterInt("Podaj wartość dla Maksymalne Id zamówienia: ", true); break;
-                    case "3": filter.ClientPhoneNumber = ViewHelper.FilterString("Podaj wartość ciąg który znajduje się w Numerze klienta: "); break;
-                    case "4": filter.DeliveryAddress = ViewHelper.FilterString("Podaj wartość ciąg który znajduje się w Adresie dostawy: "); break;
-                    case "5": filter.Priority = ViewHelper.FilterOption<OrderPriority>(""); break;
-                    case "6": filter.Status = ViewHelper.FilterOption<OrderStatus>(""); break;
-                    case "7": filter.LowerTimestamp = ViewHelper.FilterDateTime($"Wybierz dolny zakres czasu zamówienia.\n Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda", true); break;
-                    case "8": filter.HigherTimestamp = ViewHelper.FilterDateTime($"Wybierz górny zakres czasu zamówienia.\n Datę wprowadź w formacie: dzień miesiąc rok godzina minuta sekunda", false); break;
-                    case "9": filterAction = true; break;
-                    case "10": exit = true; break;
-                    default:
-                        ViewHelper.WriteAndWait($"Nie ma opcji {option}!");
-                        break;
-                }
-            }
-            if (filterAction)
-            {
-                Console.WriteLine("Wybrane zamówienia:");
-                var filteredElements = _orderRepository.Filter(filter);
-                ShowOrders(filteredElements);
-            }
+            // TODO do implementacji
         }
 
         public void GetOrdersWaiting() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.WAITING));

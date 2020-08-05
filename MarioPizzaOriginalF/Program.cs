@@ -1,6 +1,6 @@
 ﻿using MarioPizzaOriginal.Account;
 using MarioPizzaOriginal.Controller;
-using Model;
+using MarioPizzaOriginal.Domain;
 using System;
 using System.Collections.Generic;
 using TinyIoC;
@@ -21,7 +21,6 @@ namespace MarioPizzaOriginal
             //IList<string> lisa = new List<string>();
             var container = TinyIoCContainer.Current;
             new DomainStartup(container); // registering repositories to IoC
-            //new Startup(container); // to samo co w DomainStartup
             orderC = new OrderController(container);
             ingredientC = new IngredientController(container);
             foodC = new FoodController(container);
