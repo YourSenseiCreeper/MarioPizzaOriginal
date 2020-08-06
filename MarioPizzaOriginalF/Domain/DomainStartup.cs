@@ -25,7 +25,7 @@ namespace MarioPizzaOriginal.Domain
 
             var orderRepository = new OrderRepository(db);
             container.Register<IOrderRepository, OrderRepository>(orderRepository);
-            container.Register<IRepository<MarioPizzaOrder>, OrderRepository>(orderRepository);
+            container.Register<IRepository<Order>, OrderRepository>(orderRepository);
 
             var orderElementRepository = new OrderElementRepository(db);
             container.Register<IOrderElementRepository, OrderElementRepository>(orderElementRepository);

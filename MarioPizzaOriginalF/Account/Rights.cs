@@ -12,9 +12,10 @@ namespace MarioPizzaOriginal.Account
             public static readonly string GetAllIngredients = "GetAllIngredients";
             public static readonly string EditIngredient = "EditIngredient";
             public static readonly string GetIngredient = "GetIngredient";
+            public static readonly string GetFilteredIngredients = "GetFilteredIngredients";
             public static readonly IEnumerable<string> Global = new[] {
                 IngredientsMenu, AddIngredient, GetAllIngredients,
-                EditIngredient, GetIngredient};
+                EditIngredient, GetIngredient, GetFilteredIngredients};
         }
 
         internal class Foods

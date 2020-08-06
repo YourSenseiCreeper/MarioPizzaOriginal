@@ -158,10 +158,12 @@
     <Compile Include="Domain\Filter\Filter.cs" />
     <Compile Include="Domain\Filter\FilterObject.cs" />
     <Compile Include="Domain\Filter\FoodFilter.cs" />
+    <Compile Include="Domain\Filter\IngredientFilter.cs" />
+    <Compile Include="Domain\Filter\OrderFilter.cs" />
     <Compile Include="Domain\Food.cs" />
     <Compile Include="Domain\FoodIngredient.cs" />
     <Compile Include="Domain\Ingredient.cs" />
-    <Compile Include="Domain\MarioPizzaOrder.cs" />
+    <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\OrderElement.cs" />
     <Compile Include="Domain\OrderSubElement.cs" />
     <Compile Include="Program.cs" />

@@ -48,7 +48,8 @@ namespace MarioPizzaOriginal
                     { "Szczegóły składnika",            new Action(ingredientC.GetIngredient) },
                     { "Dodaj składnik",                 new Action(ingredientC.AddIngredient) },
                     { "Edytuj składnik",                new Action(ingredientC.EditIngredient) },
-                    { "Usuń składnik",                  new Action(ingredientC.DeleteIngredient) }
+                    { "Usuń składnik",                  new Action(ingredientC.DeleteIngredient) },
+                    { "Filtruj",                        new Action(ingredientC.GetFilteredIngredients) }
                 },
                 "Powrót");
         }

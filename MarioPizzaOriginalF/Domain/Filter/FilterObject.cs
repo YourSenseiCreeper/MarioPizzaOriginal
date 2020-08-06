@@ -36,13 +36,22 @@ namespace MarioPizzaOriginal.Domain.Filter
                 case "double": return ViewHelper.FilterDouble(FilterMessage, Args);
                 case "string": return ViewHelper.FilterString(FilterMessage, Args);
                 case "datetime": return ViewHelper.FilterDateTime(FilterMessage, Args);
-                default: return ViewHelper.FilterOption(FilterType, FilterMessage, Args);
+                case "unitofmeasure": return ViewHelper.FilterOption<UnitOfMeasure>(FilterMessage, Args);
+                default: return ViewHelper.FilterString(FilterMessage, Args);
             }
         }
         /// <summary>
         /// Null value check is above in implementation
         /// </summary>
         /// <returns></returns>
-        public string ToQueryString() => string.Format(QueryString,Value);
+        public string ToQueryString()
+        {
+            if (typeof(Enum).IsAssignableFrom(FilterType))
+            {
+                var enumValue = Enum.Parse(FilterType, Value.ToString());
+                return string.Format(QueryString, (int) enumValue);
+            }
+            else return string.Format(QueryString, Value);
+        }
     }
 }

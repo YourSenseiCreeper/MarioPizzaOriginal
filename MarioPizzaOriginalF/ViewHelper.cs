@@ -13,7 +13,7 @@ namespace MarioPizzaOriginal
             int result = 0;
             do
             {
-                answerOk = true;
+                answerOk = false;
                 //if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
@@ -25,17 +25,18 @@ namespace MarioPizzaOriginal
                 {
                     if (min != null && innerResult <= min)
                     {
-                        WriteAndWait($"{answer} nie może być mniejsza niż {min}!");
-                        answerOk = false;
+                        WriteAndWait($"'{answer}' nie może być mniejsza niż {min}!");
+                        continue;
                     }
                     if (max != null && innerResult >= max)
                     {
-                        WriteAndWait($"{answer} nie może być większa od {max}!");
-                        answerOk = false;
+                        WriteAndWait($"'{answer}' nie może być większa od {max}!");
+                        continue;
                     }
                     result = innerResult;
+                    answerOk = true;
                 }
-                else WriteAndWait($"{answer} nie jest liczbą!");
+                else WriteAndWait($"'{answer}' nie jest liczbą!");
             } while (!answerOk);
             return result;
         }
@@ -193,6 +194,6 @@ namespace MarioPizzaOriginal
             string input = AskForString(message);
             return input != "-1" ? Convert.ToDateTime(input) : ((bool) args[0] ? DateTime.MinValue : DateTime.MaxValue);
         }
-        public static T FilterOption<T>(T filterType, string message, object[] args) => UnsafeAskForOption<T>(message, "");
+        public static T FilterOption<T>(string message, object[] args) where T : Enum => UnsafeAskForOption<T>(message, "");
     }
 }

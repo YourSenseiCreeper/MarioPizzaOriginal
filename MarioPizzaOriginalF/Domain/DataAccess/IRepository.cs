@@ -30,10 +30,10 @@ namespace Model.DataAccess
         Dictionary<string, double> GetIngredients(int foodId);
         double CalculatePriceForFood(int foodId);
     }
-    public interface IOrderRepository : IRepository<MarioPizzaOrder> 
+    public interface IOrderRepository : IRepository<Order> 
     {
         int OrderNextId();
-        List<MarioPizzaOrder> GetByStatus(OrderStatus status);
+        List<Order> GetByStatus(OrderStatus status);
         double CalculatePriceForOrder(int orderId);
         //List<MarioPizzaOrder> Filter(OrderFilter filter);
     }

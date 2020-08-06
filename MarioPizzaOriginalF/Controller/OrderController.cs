@@ -27,7 +27,7 @@ namespace MarioPizzaOriginal.Controller
         {
             //DB check
             //I still can add an order and group them by add timestamp and check if the first one has correct data - that's it
-            var newOrder = new MarioPizzaOrder
+            var newOrder = new Order
             {
                 OrderId = 404,  //OrderId will be replaced
                 Status = OrderStatus.WAITING,
@@ -241,7 +241,7 @@ namespace MarioPizzaOriginal.Controller
             ViewHelper.WriteAndWait($"Koszt zamówienia nr {orderId} wynosi {price} zł");
         }
 
-        private void ShowOrders(List<MarioPizzaOrder> orderList)
+        private void ShowOrders(List<Order> orderList)
         {
             Console.Clear();
             var header = $"{"Nr zam.",7}|{"Data",20}|{"Status",12}|{"Priorytet",10}|{"Nr tel",10}|{"Adres",15}";

@@ -1,4 +1,5 @@
 ﻿using MarioPizzaOriginal.Domain;
+using MarioPizzaOriginal.Domain.Filter;
 using Model.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace MarioPizzaOriginal.Controller
     public class IngredientController
     {
         private readonly IIngredientRepository _ingredientRepository;
+        private IngredientFilter _ingredientFilter;
         public IngredientController(TinyIoCContainer container)
         {
             _ingredientRepository = container.Resolve<IIngredientRepository>();
+            _ingredientFilter = new IngredientFilter(container);
         }
 
         public void AddIngredient()
@@ -209,24 +212,29 @@ namespace MarioPizzaOriginal.Controller
         //Unused
         public void GetFilteredIngredients()
         {
-            Dictionary<string, object> filter = GetFilteredIngredientsDict();
-            int ingredientIdMin = (int) filter["IngredientIdMin"];
-            int ingredientIdMax = (int) filter["IngredientIdMax"];
-            string ingredientName = (string) filter["IngredientName"];
-            UnitOfMeasure unitOfMeasure = (UnitOfMeasure) filter["UnitOfMeasure"];
-            double amountOfUOMmin = (double)filter["AmountOfUOMmin"];
-            double amountOfUOMmax = (double)filter["AmountOfUOMmax"];
+            _ingredientFilter.FilterMenu();
+            var results = _ingredientFilter.Query();
+            Console.WriteLine($"Znaleziono {results.Count()} pasujących do filtra:");
+            ShowIngredients(results);
 
-            var filteredValues = _ingredientRepository.GetAll().FindAll(x =>
-                (ingredientIdMin != -1 || x.IngredientId >= ingredientIdMin) &&
-                (ingredientIdMax != -1 || x.IngredientId <= ingredientIdMax) &&
-                (ingredientName != "" || x.IngredientName.Contains(ingredientName)) &&
-                (unitOfMeasure != UnitOfMeasure.NONE || x.UnitOfMeasureType == unitOfMeasure) &&
-                (amountOfUOMmin != -1 || x.PriceSmall >= amountOfUOMmin) &&
-                (amountOfUOMmax != -1 || x.PriceSmall <= amountOfUOMmax)
-            );
-            Console.WriteLine($"Znaleziono {filteredValues.Count()} pasujących do filtra:");
-            ShowIngredients(filteredValues);
+            //Dictionary<string, object> filter = GetFilteredIngredientsDict();
+            //int ingredientIdMin = (int) filter["IngredientIdMin"];
+            //int ingredientIdMax = (int) filter["IngredientIdMax"];
+            //string ingredientName = (string) filter["IngredientName"];
+            //UnitOfMeasure unitOfMeasure = (UnitOfMeasure) filter["UnitOfMeasure"];
+            //double amountOfUOMmin = (double)filter["AmountOfUOMmin"];
+            //double amountOfUOMmax = (double)filter["AmountOfUOMmax"];
+
+            //var filteredValues = _ingredientRepository.GetAll().FindAll(x =>
+            //    (ingredientIdMin != -1 || x.IngredientId >= ingredientIdMin) &&
+            //    (ingredientIdMax != -1 || x.IngredientId <= ingredientIdMax) &&
+            //    (ingredientName != "" || x.IngredientName.Contains(ingredientName)) &&
+            //    (unitOfMeasure != UnitOfMeasure.NONE || x.UnitOfMeasureType == unitOfMeasure) &&
+            //    (amountOfUOMmin != -1 || x.PriceSmall >= amountOfUOMmin) &&
+            //    (amountOfUOMmax != -1 || x.PriceSmall <= amountOfUOMmax)
+            //);
+            //Console.WriteLine($"Znaleziono {filteredValues.Count()} pasujących do filtra:");
+            //ShowIngredients(filteredValues);
         }
     }
 }

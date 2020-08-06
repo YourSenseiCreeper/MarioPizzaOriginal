@@ -5,7 +5,7 @@ using ServiceStack.DataAnnotations;
 
 namespace MarioPizzaOriginal.Domain
 {
-    public class MarioPizzaOrder
+    public class Order
     {
         [Index]
         [AutoIncrement]

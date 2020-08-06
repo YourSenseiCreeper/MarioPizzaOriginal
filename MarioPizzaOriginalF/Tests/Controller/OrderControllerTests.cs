@@ -20,7 +20,7 @@ namespace MarioPizzaOriginal.Controller.Tests
         private Mock<IOrderElementRepository> mockOrderElementRepository;
         private Mock<IOrderSubElementRepository> mockOrderSubElementRepository;
         private OrderController orderController;
-        private MarioPizzaOrder sampleOrder;
+        private Order sampleOrder;
         private List<OrderElement> orderElements;
         private List<Food> testFood;
 
@@ -34,7 +34,7 @@ namespace MarioPizzaOriginal.Controller.Tests
             mockOrderSubElementRepository = factory.Create<IOrderSubElementRepository>();
             
             orderController = new OrderController(null);
-            sampleOrder = new MarioPizzaOrder
+            sampleOrder = new Order
             {
                 OrderId = 0,
                 ClientPhoneNumber = "123",
@@ -55,7 +55,7 @@ namespace MarioPizzaOriginal.Controller.Tests
         public void GetOrderNullOrderTest()
         {
             // Arrange
-            MarioPizzaOrder nullOrder = null;
+            Order nullOrder = null;
             mockOrderRepository.Setup(t => t.Get(sampleOrder.OrderId)).Returns(nullOrder);
             using (StringWriter sw = new StringWriter())
             {
