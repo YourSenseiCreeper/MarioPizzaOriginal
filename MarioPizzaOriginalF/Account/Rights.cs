@@ -49,12 +49,13 @@ namespace MarioPizzaOriginal.Account
             public static string ChangePriority = "ChangeOrderPriority";
             public static string CalculatePriceForOrder = "CalculatePriceForOrder";
             public static string ShowAllSubOrderElements = "ShowAllSubOrderElements";
+            public static string GetFilteredOrders = "GetFilteredOrders";
             public static IEnumerable<string> Global = new[]
             {
                 OrdersMenu, GetAllOrders, GetOrder, GetOrdersWaiting, GetOrdersInProgress,
                 GetOrdersReadyForDelivery, AddOrder, EditOrder, DeleteOrder,
                 ChangeOrderStatus, MoveToNextStatus, ChangePriority,
-                CalculatePriceForOrder, ShowAllSubOrderElements
+                CalculatePriceForOrder, ShowAllSubOrderElements, GetFilteredOrders
             };
         }
 

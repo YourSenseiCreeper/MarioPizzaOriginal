@@ -1,5 +1,6 @@
 ﻿using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
+using MarioPizzaOriginal.Domain.Filter;
 using Model;
 using Model.DataAccess;
 using Model.Enums;
@@ -15,12 +16,14 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderSubElementRepository _orderSubElementRepository;
+        private readonly TinyIoCContainer _container;
         public OrderController(TinyIoCContainer container)
         {
             _foodRepository = container.Resolve<IFoodRepository>();
             _orderRepository = container.Resolve<IOrderRepository>();
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderSubElementRepository = container.Resolve<IOrderSubElementRepository>();
+            
         }
 
         public void AddOrder()
@@ -256,12 +259,6 @@ namespace MarioPizzaOriginal.Controller
             Console.ReadLine();
         }
         public void GetAllOrders() => ShowOrders(_orderRepository.GetAll());
-
-        public void GetFilteredOrders()
-        {
-            // TODO do implementacji
-        }
-
         public void GetOrdersWaiting() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.WAITING));
         public void GetOrdersInProgress() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.IN_PROGRESS));
         public void GetOrdersReadyForDelivery() => ShowOrders(_orderRepository.GetByStatus(OrderStatus.DELIVERY));
@@ -281,7 +278,7 @@ namespace MarioPizzaOriginal.Controller
             if (currentStatus != OrderStatus.DONE)
             {
                 _orderRepository.Edit(order);
-                ViewHelper.WriteAndWait($"Nowy status zamówienia: {order.Status.ToString()}");
+                ViewHelper.WriteAndWait($"Nowy status zamówienia: {order.Status}");
             }
             else
             {
@@ -356,5 +353,14 @@ namespace MarioPizzaOriginal.Controller
             ViewHelper.WriteAndWait($"{subOrderElements.Count} wyników");
         }
 
+        public void GetFilteredOrders()
+        {
+            var orderFilter = new OrderFilter(_container);
+            if (orderFilter.FilterMenu())
+            {
+                var results = orderFilter.Query();
+                ShowOrders(results);
+            }
+        }
     }
 }

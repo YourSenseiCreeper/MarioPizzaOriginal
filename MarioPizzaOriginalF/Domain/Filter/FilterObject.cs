@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarioPizzaOriginal.Domain.Enums;
+using System;
 
 namespace MarioPizzaOriginal.Domain.Filter
 {
@@ -32,11 +33,13 @@ namespace MarioPizzaOriginal.Domain.Filter
         {
             switch (FilterType.Name.ToLower())
             {
-                case "int32": return ViewHelper.FilterInt(FilterMessage, Args);
+                case "int32": return ViewHelper.FilterInt(FilterMessage, Value, Args);
                 case "double": return ViewHelper.FilterDouble(FilterMessage, Args);
                 case "string": return ViewHelper.FilterString(FilterMessage, Args);
                 case "datetime": return ViewHelper.FilterDateTime(FilterMessage, Args);
                 case "unitofmeasure": return ViewHelper.FilterOption<UnitOfMeasure>(FilterMessage, Args);
+                case "orderpriority": return ViewHelper.FilterOption<OrderPriority>(FilterMessage, Args);
+                case "orderstatus": return ViewHelper.FilterOption<OrderStatus>(FilterMessage, Args);
                 default: return ViewHelper.FilterString(FilterMessage, Args);
             }
         }

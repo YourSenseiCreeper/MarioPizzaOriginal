@@ -1,12 +1,14 @@
 ﻿using MarioPizzaOriginal.Controller;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace MarioPizzaOriginal
 {
     public static class ViewHelper
     {
-        public static int AskForInt(string message, int? min = null, int? max = null, bool inline = true, bool clear = true)
+        public static int AskForInt(string message, int? min = null, int? max = null, int? current = null, bool inline = true, bool clear=true)
         {
             string answer;
             bool answerOk;
@@ -14,9 +16,10 @@ namespace MarioPizzaOriginal
             do
             {
                 answerOk = false;
-                //if (clear) Console.Clear();
-                if (inline) Console.Write(message);
-                else Console.WriteLine(message);
+                var formatedMessage = current != null ? $"{message.Replace(":", "")} ({current}): " : message;
+                if (clear) Console.Clear();
+                if (inline) Console.Write(formatedMessage);
+                else Console.WriteLine(formatedMessage);
                 answer = Console.ReadLine();
                 // Check if answer is Int, then 
                 // if min is not null check wheater Int is above and 
@@ -121,11 +124,10 @@ namespace MarioPizzaOriginal
         public static T AskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "", 
             bool inline = true) where T : Enum
         {
-            return UnsafeAskForOption<T>(messageAllElements, messageNewValue, currentValue, inline);
+            return UnsafeAskForOption<T>(messageAllElements, messageNewValue, inline);
         }
 
-        public static T UnsafeAskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "",
-            bool inline = true)
+        public static T UnsafeAskForOption<T>(string messageAllElements, string messageNewValue, bool inline = true)
         {
             string answer;
             T result = default;
@@ -133,25 +135,20 @@ namespace MarioPizzaOriginal
             do
             {
                 Console.Clear();
-                var allElements = new List<string>(Enum.GetNames(typeof(T)));
                 int index = 0;
 
-                Console.WriteLine($"{messageAllElements} ");
-                allElements.ForEach(element => Console.WriteLine($"{index++}. {element}"));
-
-                string message = string.IsNullOrEmpty(currentValue) ? messageNewValue : $"{messageNewValue} ({currentValue})";
-                if (inline) Console.Write(message);
-                else Console.WriteLine(message);
+                Console.WriteLine(messageAllElements);
+                Enum.GetNames(typeof(T)).ToList().ForEach(element => Console.WriteLine($"{index++}. {element}"));
                 answer = Console.ReadLine();
 
                 try
                 {
                     //If currentValue is not Null or Empty parse currentValue otherwise parse answer
-                    if (string.IsNullOrEmpty(answer)) answer = currentValue;
-                    result = (T)Enum.Parse(typeof(T), answer.ToUpper());
+                    //if (string.IsNullOrEmpty(answer)) answer = currentValue;
+                    result = (T) Enum.Parse(typeof(T), answer.ToUpper());
                     answerOk = true;
                 }
-                catch (ArgumentException) { WriteAndWait($"{answer} nie jest jedną z możliwych wartości!"); }
+                catch (ArgumentException) { WriteAndWait($"'{answer}' nie jest jedną z możliwych wartości!"); }
             } while (!answerOk);
             return result;
         }
@@ -162,7 +159,7 @@ namespace MarioPizzaOriginal
             Console.Write($"{question} (y/n): ");
             var options = new List<string> { "yes", "y", "tak", "t" };
             string answer = Console.ReadLine();
-            return options.Contains(answer.ToLower());
+            return options.Contains(answer.ToLower().Trim());
         }
         
         public static void WriteAndWait(string message)
@@ -177,9 +174,11 @@ namespace MarioPizzaOriginal
             return input == -1 ? null : input;
         }
 
-        public static object FilterInt(string message, object[] args)
+        public static object FilterInt(string message, object current, object[] args)
         {
-            int? input = args?[0] as int? == -1 ? AskForInt(message, min: -1) : AskForInt(message);
+            int? input = args?[0] as int? == -1 ? 
+                AskForInt(message, min: -1, current: (int?) current) : 
+                AskForInt(message, current: (int?)current);
             return input == -1 ? null : input;
         }
 
@@ -191,8 +190,27 @@ namespace MarioPizzaOriginal
 
         public static object FilterDateTime(string message, object[] args)
         {
-            string input = AskForString(message);
-            return input != "-1" ? Convert.ToDateTime(input) : ((bool) args[0] ? DateTime.MinValue : DateTime.MaxValue);
+            string answer;
+            bool answerOk = false;
+            DateTime result = new DateTime();
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(message);
+                answer = Console.ReadLine();
+                
+                if (string.IsNullOrEmpty(answer)) WriteAndWait("Data nie może być pusta! Jeżeli chcesz wyjść wpisz -1");
+                if (answer == "-1") return null;
+                try
+                {
+                    result = DateTime.ParseExact(answer, "g", new CultureInfo("fr-FR"));
+                    answerOk = true;
+                } catch (FormatException)
+                {
+                    WriteAndWait($"'{answer}' zły format daty! Przykład: 01/01/2000 06:15");
+                }
+            } while (!answerOk);
+            return result;
         }
         public static T FilterOption<T>(string message, object[] args) where T : Enum => UnsafeAskForOption<T>(message, "");
     }

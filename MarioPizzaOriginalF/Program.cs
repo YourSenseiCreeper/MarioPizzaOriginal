@@ -71,7 +71,8 @@ namespace MarioPizzaOriginal
                     { "Przenieś zamówienia do kolejnego etapu", new Action(orderC.MoveToNextStatus) },
                     { "Zmień priorytet zamówienia",             new Action(orderC.ChangeOrderPriority) },
                     { "Policz cenę dla zamówienia",             new Action(orderC.CalculatePriceForOrder) },
-                    { "Wszystkie podelementy zamówienia",       new Action(orderC.ShowAllSubOrderElements) }
+                    { "Wszystkie podelementy zamówienia",       new Action(orderC.ShowAllSubOrderElements) },
+                    { "Filtruj zamówienia",                     new Action(orderC.GetFilteredOrders)}           
                 },
                 "Powrót");
         }
