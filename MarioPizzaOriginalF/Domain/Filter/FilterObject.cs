@@ -54,6 +54,7 @@ namespace MarioPizzaOriginal.Domain.Filter
                 var enumValue = Enum.Parse(FilterType, Value.ToString());
                 return string.Format(QueryString, (int) enumValue);
             }
+            else if (FilterType == typeof(double)) return string.Format(QueryString, Value.ToString().Replace(",", "."));
             else return string.Format(QueryString, Value);
         }
     }

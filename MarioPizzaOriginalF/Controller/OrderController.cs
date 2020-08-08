@@ -23,7 +23,6 @@ namespace MarioPizzaOriginal.Controller
             _orderRepository = container.Resolve<IOrderRepository>();
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderSubElementRepository = container.Resolve<IOrderSubElementRepository>();
-            
         }
 
         public void AddOrder()

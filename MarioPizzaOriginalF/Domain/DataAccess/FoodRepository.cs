@@ -13,13 +13,18 @@ namespace Model.DataAccess
             db = dbConnection;
             using (var conn = dbConnection.Open())
             {
-                conn.CreateTable<Food>();
                 if (!conn.TableExists<Food>())
                 {
                     conn.CreateTable<Food>();
-                    conn.Insert(
-                        new Food { FoodId = 1, FoodName = "TestFood", Price = 2, NettPrice = 1, 
-                            ProductionTime = 90, Weight = 0.5 });
+                    conn.Save(new Food
+                    {
+                        FoodId = 1,
+                        FoodName = "TestFood",
+                        Price = 2,
+                        NettPrice = 1,
+                        ProductionTime = 90,
+                        Weight = 0.5
+                    });
                 }
             }
         }

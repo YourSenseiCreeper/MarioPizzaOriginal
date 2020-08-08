@@ -54,10 +54,11 @@ namespace MarioPizzaOriginal
                 if (clear) Console.Clear();
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
-                answer = Console.ReadLine();
+                answer = Console.ReadLine().Replace(".", ",");
                 if (double.TryParse(answer, out double innerResult))
                 {
-                    answerOk = true; result = innerResult;
+                    answerOk = true; 
+                    result = innerResult;
                 }
                 else WriteAndWait($"{answer} nie jest liczbą!");
             } while (!answerOk);
@@ -139,6 +140,7 @@ namespace MarioPizzaOriginal
 
                 Console.WriteLine(messageAllElements);
                 Enum.GetNames(typeof(T)).ToList().ForEach(element => Console.WriteLine($"{index++}. {element}"));
+                Console.Write(messageNewValue);
                 answer = Console.ReadLine();
 
                 try

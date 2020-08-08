@@ -46,15 +46,15 @@ namespace Model.DataAccess
         public double CalculatePriceForOrder(int orderId)
         {
             var sql = $@"SELECT
-                SUM((F.Price * O.Amount)
-                IFNULL((SELECT SUM((F2.Price * OE.Amount)) FROM OrderSubElement AS OE 
-                INNER JOIN OrderElement O2 ON O2.OrderElementId = OE.OrderElementId
-                LEFT JOIN Food F2 ON F2.FoodId = OE.FoodId
-                WHERE O2.OrderElementId = O.OrderElementId), 0)
-                ) AS Cena
-                FROM Food F
-                JOIN OrderElement O ON O.FoodId = F.FoodId
-                WHERE O.OrderId = {orderId}";
+                        SUM(F.Price * O.Amount) +
+                        IFNULL((SELECT SUM(F2.Price * OE.Amount) 
+                                FROM OrderSubElement AS OSE 
+                                INNER JOIN OrderElement OE ON OE.OrderElementId = OSE.OrderElementId
+                                LEFT JOIN Food F2 ON F2.FoodId = OSE.FoodId
+                                WHERE OE.OrderElementId = O.OrderElementId), 0) AS Cena
+                        FROM Food F
+                        JOIN OrderElement O ON O.FoodId = F.FoodId
+                        WHERE O.OrderId = {orderId}";
             return db.Open().Single<double>(sql);
         }
     }
