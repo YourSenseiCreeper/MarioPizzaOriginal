@@ -4,6 +4,6 @@ solution: MarioPizzaOriginal.sln
 script:
  - msbuild /p:Configuration=Debug MarioPizzaOriginal.sln
 
-branch:
+branches:
   only:
     - trunk

@@ -8,6 +8,6 @@ namespace MarioPizzaOriginal.Account
 {
     public class User
     {
-        public List<string> Rights;
+        public List<string> Permissions;
     }
 }

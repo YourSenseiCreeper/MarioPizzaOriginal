@@ -6,22 +6,21 @@ namespace MarioPizzaOriginal.Account
     {
         public Driver()
         {
-            Rights = new List<string> {
-            "Food",
-                "GetFood",
-                "GetAllFood",
-            "Orders",
-                "GetAllOrders",
-                "GetOrder",
-                "GetOrdersWaiting",
-                "GetOrdersInProgress",
-                "GetOrdersReadyForDelivery",
-                "ChangeOrderStatus",
-                "MoveToNextStatus",
-                "CalculatePriceForOrder",
-            "OrderElements",
-                "GetAllElementsForOrder",
-        };
+            Permissions = new List<string> {
+                Rights.Foods.FoodMenu,
+                Rights.Foods.GetFood,
+                Rights.Foods.GetAllFood,
+                Rights.Orders.OrdersMenu,
+                Rights.Orders.GetAllOrders,
+                Rights.Orders.GetOrdersWaiting,
+                Rights.Orders.GetOrdersInProgress,
+                Rights.Orders.GetOrdersReadyForDelivery,
+                Rights.Orders.ChangeOrderStatus,
+                Rights.Orders.MoveToNextStatus,
+                Rights.Orders.CalculatePriceForOrder,
+                Rights.OrderElements.OrderElementsMenu,
+                Rights.OrderElements.GetAllElementsForOrder
+            };
         }
     }
 }
