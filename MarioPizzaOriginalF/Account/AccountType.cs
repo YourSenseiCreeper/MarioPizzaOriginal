@@ -8,6 +8,6 @@ namespace MarioPizzaOriginal.Account
 {
     public enum AccountType
     {
-        CASHIER,DRIVER,ROOT
+        NONE,CASHIER,DRIVER,ROOT,
     }
 }

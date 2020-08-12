@@ -2,38 +2,37 @@
 using Model.DataAccess;
 using ServiceStack.OrmLite;
 using System.Configuration;
+using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
+using System;
 
 namespace MarioPizzaOriginal.Domain
 {
     public class DomainStartup
     {
+        private OrmLiteConnectionFactory db;
+        private TinyIoCContainer container;
         public DomainStartup(TinyIoCContainer container)
         {
-            var db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);
-            var foodRepository = new FoodRepository(db);
-            container.Register<IFoodRepository, FoodRepository>(foodRepository);
-            container.Register<IRepository<Food>, FoodRepository>(foodRepository);
+            db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);
+            this.container = container;
+            RegisterRepository<FoodRepository, IFoodRepository, IRepository<Food>>(repo => new FoodRepository(repo));
+            RegisterRepository<FoodIngredientRepository, IFoodIngredientRepository, IRepository<FoodIngredient>>
+                (repo => new FoodIngredientRepository(repo));
+            RegisterRepository<IngredientRepository, IIngredientRepository, IRepository<Ingredient>>(repo => new IngredientRepository(repo));
+            RegisterRepository<OrderRepository, IOrderRepository, IRepository<Order>>(repo => new OrderRepository(repo));
+            RegisterRepository<OrderElementRepository, IOrderElementRepository, IRepository<OrderElement>>(repo => new OrderElementRepository(repo));
+            RegisterRepository<OrderSubElementRepository, IOrderSubElementRepository, IRepository<OrderSubElement>>
+                (repo => new OrderSubElementRepository(repo));
+            RegisterRepository<UserRepository, IUserRepository, IRepository<User>>(repo => new UserRepository(repo));
 
-            var foodIngredientRepository = new FoodIngredientRepository(db);
-            container.Register<IFoodIngredientRepository, FoodIngredientRepository>(foodIngredientRepository);
-            container.Register<IRepository<FoodIngredient>, FoodIngredientRepository>(foodIngredientRepository);
+        }
 
-            var ingredientRepository = new IngredientRepository(db);
-            container.Register<IIngredientRepository, IngredientRepository>(ingredientRepository);
-            container.Register<IRepository<Ingredient>, IngredientRepository>(ingredientRepository);
-
-            var orderRepository = new OrderRepository(db);
-            container.Register<IOrderRepository, OrderRepository>(orderRepository);
-            container.Register<IRepository<Order>, OrderRepository>(orderRepository);
-
-            var orderElementRepository = new OrderElementRepository(db);
-            container.Register<IOrderElementRepository, OrderElementRepository>(orderElementRepository);
-            container.Register<IRepository<OrderElement>, OrderElementRepository>(orderElementRepository);
-
-            var orderSubElementRepository = new OrderSubElementRepository(db);
-            container.Register<IOrderSubElementRepository, OrderSubElementRepository>(orderSubElementRepository);
-            container.Register<IRepository<OrderSubElement>, OrderSubElementRepository>(orderSubElementRepository);
+        private void RegisterRepository<T, K, V>(Func<OrmLiteConnectionFactory, T> repository) 
+            where K : class where V : class where T : class, V, K
+        {
+            container.Register<K, T>(repository(db));
+            container.Register<V, T>(repository(db));
         }
     }
 }

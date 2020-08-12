@@ -2,7 +2,7 @@
 
 namespace MarioPizzaOriginal.Account
 {
-    public class Driver : User
+    public class Driver : BaseRights
     {
         public Driver()
         {

@@ -35,22 +35,22 @@ namespace MarioPizzaOriginal.Account
 
         internal static class Orders
         {
-            public static string OrdersMenu = "Orders";
-            public static string GetAllOrders = "GetAllOrders";
-            public static string GetOrder = "GetOrder";
-            public static string GetOrdersWaiting = "GetOrdersWaiting";
-            public static string GetOrdersInProgress = "GetOrdersInProgress";
-            public static string GetOrdersReadyForDelivery = "GetOrdersReadyForDelivery";
-            public static string AddOrder = "AddOrder";
-            public static string EditOrder = "EditOrder";
-            public static string DeleteOrder = "DeleteOrder";
-            public static string ChangeOrderStatus = "ChangeOrderStatus";
-            public static string MoveToNextStatus = "MoveToNextStatus";
-            public static string ChangePriority = "ChangeOrderPriority";
-            public static string CalculatePriceForOrder = "CalculatePriceForOrder";
-            public static string ShowAllSubOrderElements = "ShowAllSubOrderElements";
-            public static string GetFilteredOrders = "GetFilteredOrders";
-            public static IEnumerable<string> Global = new[]
+            public const string OrdersMenu = "Orders";
+            public const string GetAllOrders = "GetAllOrders";
+            public const string GetOrder = "GetOrder";
+            public const string GetOrdersWaiting = "GetOrdersWaiting";
+            public const string GetOrdersInProgress = "GetOrdersInProgress";
+            public const string GetOrdersReadyForDelivery = "GetOrdersReadyForDelivery";
+            public const string AddOrder = "AddOrder";
+            public const string EditOrder = "EditOrder";
+            public const string DeleteOrder = "DeleteOrder";
+            public const string ChangeOrderStatus = "ChangeOrderStatus";
+            public const string MoveToNextStatus = "MoveToNextStatus";
+            public const string ChangePriority = "ChangeOrderPriority";
+            public const string CalculatePriceForOrder = "CalculatePriceForOrder";
+            public const string ShowAllSubOrderElements = "ShowAllSubOrderElements";
+            public const string GetFilteredOrders = "GetFilteredOrders";
+            public static readonly IEnumerable<string> Global = new[]
             {
                 OrdersMenu, GetAllOrders, GetOrder, GetOrdersWaiting, GetOrdersInProgress,
                 GetOrdersReadyForDelivery, AddOrder, EditOrder, DeleteOrder,
@@ -61,16 +61,30 @@ namespace MarioPizzaOriginal.Account
 
         internal static class OrderElements
         {
-            public static string OrderElementsMenu = "OrderElements";
-            public static string GetAllOrderElements = "GetAllOrderElements";
-            public static string GetAllElementsForOrder = "GetAllElementsForOrder";
-            public static string AddOrderElement = "AddOrderElement";
-            public static string ChangeAmount = "ChangeAmount";
-            public static string DeleteOrderElement = "DeleteOrderElement";
-            public static IEnumerable<string> Global = new[]
+            public const string OrderElementsMenu = "OrderElements";
+            public const string GetAllOrderElements = "GetAllOrderElements";
+            public const string GetAllElementsForOrder = "GetAllElementsForOrder";
+            public const string AddOrderElement = "AddOrderElement";
+            public const string ChangeAmount = "ChangeAmount";
+            public const string DeleteOrderElement = "DeleteOrderElement";
+            public static readonly IEnumerable<string> Global = new[]
             {
                 OrderElementsMenu, GetAllOrderElements, GetAllElementsForOrder,
                 AddOrderElement, ChangeAmount, DeleteOrderElement
+            };
+        }
+
+        internal static class User
+        {
+            public const string Register = "Register";
+            public const string Login = "Login";
+            public static readonly IEnumerable<string> Basic = new[]
+            {
+                Register, Login
+            };
+            public static readonly IEnumerable<string> Global = new[]
+            {
+                Register, Login
             };
         }
     }

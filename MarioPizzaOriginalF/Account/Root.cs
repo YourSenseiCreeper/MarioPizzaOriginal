@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace MarioPizzaOriginal.Account
 {
-    public class Root : User
+    public class Root : BaseRights
     {
         public Root()
         {
-            Permissions = new List<string>();
             Permissions.AddRange(Rights.Ingredients.Global);
             Permissions.AddRange(Rights.Foods.Global);
             Permissions.AddRange(Rights.Orders.Global);
             Permissions.AddRange(Rights.OrderElements.Global);
+            Permissions.AddRange(Rights.User.Global);
         }
     }
 }

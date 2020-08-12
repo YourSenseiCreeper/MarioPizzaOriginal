@@ -35,7 +35,6 @@ namespace Model.DataAccess
         int OrderNextId();
         List<Order> GetByStatus(OrderStatus status);
         double CalculatePriceForOrder(int orderId);
-        //List<MarioPizzaOrder> Filter(OrderFilter filter);
     }
     public interface IOrderElementRepository : IRepository<OrderElement> 
     {
@@ -48,5 +47,13 @@ namespace Model.DataAccess
     public interface IOrderSubElementRepository : IRepository<OrderSubElement> 
     {
         List<OrderSubElement> GetSubElements(int orderElementId);
+    }
+
+    public interface IUserRepository : IRepository<User>
+    {
+        bool Authenticate(string username, string passwordHash);
+        bool UserExists(string username);
+        void Register(string username, string passwordHash);
+        User GetUser(string username);
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MarioPizzaOriginal.Account
 {
-    public class Cashier : User
+    public class Cashier : BaseRights
     {
         public Cashier()
         {
-            Permissions = new List<string> {
+            var cashierPermissions = new List<string> {
                 Rights.Foods.FoodMenu,
                 Rights.Foods.GetFood,
                 Rights.Foods.GetAllFood,

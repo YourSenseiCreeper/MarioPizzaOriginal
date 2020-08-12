@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace MarioPizzaOriginal
 {
@@ -100,6 +101,44 @@ namespace MarioPizzaOriginal
                 else { WriteAndWait("Nazwa nie może być pusta!"); }
             } while (!answerOk);
             return answer;
+        }
+        /// <summary>
+        /// Method asking for password replacing writed letters with asterisks. By CraigTP
+        /// </summary>
+        public static string AskForPassword(string message, object[] args)
+        {
+            Console.Write(message);
+            var pass = string.Empty;
+            ConsoleKey key;
+            do
+            {
+                var keyInfo = Console.ReadKey(intercept: true);
+                key = keyInfo.Key;
+
+                if (key == ConsoleKey.Backspace && pass.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    pass = pass.Substring(0, pass.Length - 1);
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    Console.Write("*");
+                    pass += keyInfo.KeyChar;
+                }
+            } while (key != ConsoleKey.Enter);
+            return pass;
+        }
+
+        public static string ConvertSHAToString(byte[] array)
+        {
+            var builder = new StringBuilder();
+            for (int i = 0; i < array.Length; i++)
+            {
+                builder.Append($"{array[i]:X2}");
+                if (i % 4 == 3) builder.Append(" ");
+            }
+
+            return builder.ToString();
         }
 
         public static string AskForStringNotBlank(string message, object[] args)
