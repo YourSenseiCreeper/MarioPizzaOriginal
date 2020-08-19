@@ -7,7 +7,7 @@ namespace MarioPizzaOriginal.Account
     {
         internal static class Ingredients
         {
-            public static readonly string IngredientsMenu = "Ingredients";
+            public static readonly string IngredientsMenu = "IngredientsMenu";
             public static readonly string AddIngredient = "AddIngredient";
             public static readonly string GetAllIngredients = "GetAllIngredients";
             public static readonly string EditIngredient = "EditIngredient";
@@ -20,7 +20,7 @@ namespace MarioPizzaOriginal.Account
 
         internal class Foods
         {
-            public static readonly string FoodMenu = "Food";
+            public static readonly string FoodMenu = "FoodMenu";
             public static readonly string GetFood = "GetFood";
             public static readonly string GetAllFood = "GetAllFood";
             public static readonly string AddFood = "AddFood";
@@ -35,7 +35,7 @@ namespace MarioPizzaOriginal.Account
 
         internal static class Orders
         {
-            public const string OrdersMenu = "Orders";
+            public const string OrdersMenu = "OrdersMenu";
             public const string GetAllOrders = "GetAllOrders";
             public const string GetOrder = "GetOrder";
             public const string GetOrdersWaiting = "GetOrdersWaiting";
@@ -61,7 +61,7 @@ namespace MarioPizzaOriginal.Account
 
         internal static class OrderElements
         {
-            public const string OrderElementsMenu = "OrderElements";
+            public const string OrderElementsMenu = "OrderElementsMenu";
             public const string GetAllOrderElements = "GetAllOrderElements";
             public const string GetAllElementsForOrder = "GetAllElementsForOrder";
             public const string AddOrderElement = "AddOrderElement";
@@ -76,15 +76,17 @@ namespace MarioPizzaOriginal.Account
 
         internal static class User
         {
+            public const string UserMenu = "UserMenu";
             public const string Register = "Register";
             public const string Login = "Login";
+            public const string ShowCurrentUserInfo = "ShowCurrentUserInfo";
             public static readonly IEnumerable<string> Basic = new[]
             {
-                Register, Login
+                UserMenu, Register, Login
             };
             public static readonly IEnumerable<string> Global = new[]
             {
-                Register, Login
+                UserMenu, Register, Login, ShowCurrentUserInfo
             };
         }
     }

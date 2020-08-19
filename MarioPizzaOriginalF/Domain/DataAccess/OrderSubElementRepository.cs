@@ -1,7 +1,7 @@
 ﻿using ServiceStack.OrmLite;
 using System.Collections.Generic;
 
-namespace Model.DataAccess
+namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class OrderSubElementRepository : BaseRepository<OrderSubElement>, IOrderSubElementRepository
     {

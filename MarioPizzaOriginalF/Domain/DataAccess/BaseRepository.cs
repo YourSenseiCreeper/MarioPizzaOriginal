@@ -3,7 +3,7 @@ using ServiceStack.OrmLite.Dapper;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Model.DataAccess
+namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class BaseRepository<T> : IRepository<T>
     {

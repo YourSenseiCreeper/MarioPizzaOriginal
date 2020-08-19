@@ -1,8 +1,8 @@
-﻿using Model.DataAccess;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Domain.Filter
@@ -10,7 +10,6 @@ namespace MarioPizzaOriginal.Domain.Filter
     public class Filter<T>
     {
         public List<FilterObject> FilterObjects { get; set; }
-        private IRepository<T> _repository { get; set; }
         public Filter(TinyIoCContainer container)
         {
             _repository = container.Resolve<IRepository<T>>();
@@ -18,13 +17,13 @@ namespace MarioPizzaOriginal.Domain.Filter
 
         public bool FilterMenu()
         {
-            int selection = 0;
+            var selection = 0;
             do
             {
                 Console.Clear();
                 PrepareMenu();
-                string input = Console.ReadLine();
-                if (!int.TryParse(input, out int option))
+                var input = Console.ReadLine();
+                if (!int.TryParse(input, out var option))
                 {
                     Console.WriteLine($"{input} nie jest liczbą!");
                     continue;
@@ -40,14 +39,7 @@ namespace MarioPizzaOriginal.Domain.Filter
             } while (selection != FilterObjects.Count);
             return true;
         }
-        private void PrepareMenu()
-        {
-            int index = 0;
-            FilterObjects.ForEach(filter => Console.WriteLine($"{index + 1}. {FilterObjects[index++].ToMenuString()}"));
-            Console.WriteLine($"{index++ + 1}. WYŚWIETL WYNIKI");
-            Console.WriteLine($"{index + 1}. Wyjdź");
-        }
-
+        
         public List<T> Query()
         {
             var queryBuilder = new StringBuilder();
@@ -67,5 +59,14 @@ namespace MarioPizzaOriginal.Domain.Filter
             var results = _repository.Query(queryBuilder.ToString());
             return results;
         }
+        private void PrepareMenu()
+        {
+            var index = 0;
+            FilterObjects.ForEach(filter => Console.WriteLine($"{index + 1}. {FilterObjects[index++].ToMenuString()}"));
+            Console.WriteLine($"{index++ + 1}. WYŚWIETL WYNIKI");
+            Console.WriteLine($"{index + 1}. Wyjdź");
+        }
+
+        private readonly IRepository<T> _repository;
     }
 }

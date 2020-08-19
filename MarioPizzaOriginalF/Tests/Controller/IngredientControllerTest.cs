@@ -1,6 +1,7 @@
 ﻿using MarioPizzaOriginal.Controller;
 using MarioPizzaOriginal.Domain;
-using Model.DataAccess;
+using MarioPizzaOriginal.Domain.DataAccess;
+using MarioPizzaOriginal.Domain.Enums;
 using Moq;
 using NUnit.Framework;
 using TinyIoC;

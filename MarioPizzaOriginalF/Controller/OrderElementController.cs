@@ -1,6 +1,7 @@
 ﻿using MarioPizzaOriginal.Domain;
-using Model.DataAccess;
 using System;
+using System.Collections.Generic;
+using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -10,11 +11,24 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IFoodRepository _foodRepository;
+        private readonly Dictionary<string, Action> _menuActions;
         public OrderElementController(TinyIoCContainer container)
         {
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderRepository = container.Resolve<IOrderRepository>();
             _foodRepository = container.Resolve<IFoodRepository>();
+            _menuActions = new Dictionary<string, Action>
+            {
+                {"Lista wszystkich elementów zamówień", GetAllOrderElements},
+                {"Lista elementów zamówienia", GetAllElementsForOrder},
+                {"Dodaj element do zamówienia", AddOrderElement},
+                {"Zmień ilość", ChangeAmount},
+                {"Usuń element", DeleteOrderElement}
+            };
+        }
+        public void OrderElementsMenu()
+        {
+            ViewHelper.Menu("Dostępne opcje - Elementy zamówienia:", _menuActions, "Powrót");
         }
 
         public void GetAllOrderElements()
@@ -23,7 +37,6 @@ namespace MarioPizzaOriginal.Controller
             var orderElements = _orderElementRepository.GetAll();
             foreach (var element in orderElements)
             {
-
                 Console.WriteLine($"{element.OrderElementId},{element.OrderId},{element.FoodId},{element.Amount}");
             }
             ViewHelper.WriteAndWait("Wszystkie elementy zamówień");
@@ -31,7 +44,7 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetAllElementsForOrder()
         {
-            int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz sprawdzić elementy: ");
+            var orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz sprawdzić elementy: ");
             if (!_orderRepository.Exists(orderId))
             {
                 ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
@@ -50,7 +63,7 @@ namespace MarioPizzaOriginal.Controller
             }
             int foodId = ViewHelper.AskForInt("Podaj id produktu, który chcesz dodać: ");
             double amount = ViewHelper.AskForDouble("Podaj ilość: ");
-            _orderElementRepository.Add(new Model.OrderElement { OrderId = orderId, FoodId = foodId, Amount = amount });
+            _orderElementRepository.Add(new OrderElement { OrderId = orderId, FoodId = foodId, Amount = amount });
             string foodName = _foodRepository.GetName(foodId);
             ViewHelper.WriteAndWait($"Dodano {foodName} (x{amount}) do zamówienia o nr {orderId}");
         }

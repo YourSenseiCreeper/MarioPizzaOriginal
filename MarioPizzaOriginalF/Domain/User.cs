@@ -13,14 +13,13 @@ namespace MarioPizzaOriginal.Domain
         public string Username { get; set; }
         [Required]
         public string PasswordHash { get; set; }
-        [Ignore]
         public AccountType AccountType { get; set; }
         [Required]
         public DateTime CreationTime { get; set; }
-        [Ignore]
         public bool IsLogged { get; set; }
-        [Ignore]
         public DateTime LastLogin { get; set; }
+        [Ignore]
+        public BaseRights Permissions { get; set; }
 
     }
 }

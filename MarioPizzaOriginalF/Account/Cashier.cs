@@ -11,11 +11,9 @@ namespace MarioPizzaOriginal.Account
         public Cashier()
         {
             var cashierPermissions = new List<string> {
-                Rights.Foods.FoodMenu,
                 Rights.Foods.GetFood,
                 Rights.Foods.GetAllFood,
                 Rights.Foods.GetFilteredFood,
-                Rights.Orders.OrdersMenu,
                 Rights.Orders.GetAllOrders,
                 Rights.Orders.GetOrder,
                 Rights.Orders.GetOrdersWaiting,
@@ -28,13 +26,13 @@ namespace MarioPizzaOriginal.Account
                 Rights.Orders.MoveToNextStatus,
                 Rights.Orders.ChangeOrderStatus,
                 Rights.Orders.CalculatePriceForOrder,
-                Rights.OrderElements.OrderElementsMenu,
                 Rights.OrderElements.GetAllOrderElements,
                 Rights.OrderElements.GetAllElementsForOrder,
                 Rights.OrderElements.AddOrderElement,
                 Rights.OrderElements.ChangeAmount,
                 Rights.OrderElements.DeleteOrderElement
             };
+            Permissions.AddRange(cashierPermissions);
         }
     }
 }

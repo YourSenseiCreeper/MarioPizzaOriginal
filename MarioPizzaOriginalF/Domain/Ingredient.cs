@@ -1,4 +1,5 @@
-﻿using ServiceStack.DataAnnotations;
+﻿using MarioPizzaOriginal.Domain.Enums;
+using ServiceStack.DataAnnotations;
 
 namespace MarioPizzaOriginal.Domain
 {

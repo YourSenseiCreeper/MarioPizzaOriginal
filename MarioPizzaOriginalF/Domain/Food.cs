@@ -1,6 +1,4 @@
-﻿using Model;
-using ServiceStack.DataAnnotations;
-using System;
+﻿using ServiceStack.DataAnnotations;
 using System.Collections.Generic;
 
 namespace MarioPizzaOriginal.Domain

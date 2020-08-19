@@ -19,6 +19,7 @@ namespace MarioPizzaOriginal.Domain.Filter
             FilterMessage = filterMessage;
             QueryString = queryString;
             FilterType = filterType;
+            Args = args;
         }
 
         public void Filter() => Value = FunctionSelector();
@@ -33,14 +34,14 @@ namespace MarioPizzaOriginal.Domain.Filter
         {
             switch (FilterType.Name.ToLower())
             {
-                case "int32": return ViewHelper.FilterInt(FilterMessage, Value, Args);
-                case "double": return ViewHelper.FilterDouble(FilterMessage, Args);
-                case "string": return ViewHelper.FilterString(FilterMessage, Args);
-                case "datetime": return ViewHelper.FilterDateTime(FilterMessage, Args);
-                case "unitofmeasure": return ViewHelper.FilterOption<UnitOfMeasure>(FilterMessage, Args);
-                case "orderpriority": return ViewHelper.FilterOption<OrderPriority>(FilterMessage, Args);
-                case "orderstatus": return ViewHelper.FilterOption<OrderStatus>(FilterMessage, Args);
-                default: return ViewHelper.FilterString(FilterMessage, Args);
+                case "int32": return FilterHelper.FilterInt(FilterMessage, Value, Args);
+                case "double": return FilterHelper.FilterDouble(FilterMessage, Args);
+                case "string": return FilterHelper.FilterString(FilterMessage, Args);
+                case "datetime": return FilterHelper.FilterDateTime(FilterMessage, Args);
+                case "unitofmeasure": return FilterHelper.FilterOption<UnitOfMeasure>(FilterMessage, Args);
+                case "orderpriority": return FilterHelper.FilterOption<OrderPriority>(FilterMessage, Args);
+                case "orderstatus": return FilterHelper.FilterOption<OrderStatus>(FilterMessage, Args);
+                default: return FilterHelper.FilterString(FilterMessage, Args);
             }
         }
         /// <summary>

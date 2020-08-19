@@ -1,7 +1,6 @@
 ﻿using ServiceStack.DataAnnotations;
-using System;
 
-namespace Model
+namespace MarioPizzaOriginal.Domain
 {
     public class OrderSubElement
     {

@@ -2,7 +2,7 @@
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
-namespace Model.DataAccess
+namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class FoodRepository : BaseRepository<Food>, IFoodRepository
     {

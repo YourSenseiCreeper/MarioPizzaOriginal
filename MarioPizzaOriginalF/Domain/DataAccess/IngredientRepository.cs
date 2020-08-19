@@ -1,18 +1,13 @@
-﻿using MarioPizzaOriginal.Domain;
-using ServiceStack.OrmLite;
-using System;
+﻿using ServiceStack.OrmLite;
 using System.Collections.Generic;
-using MarioPizzaOriginal;
+using MarioPizzaOriginal.Domain.Enums;
 
-namespace Model.DataAccess
+namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class IngredientRepository : BaseRepository<Ingredient>, IIngredientRepository
     {
-        private readonly OrmLiteConnectionFactory db;
-
         public IngredientRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
         {
-            db = dbConnection;
             using (var conn = dbConnection.Open())
             {
                 if (conn.CreateTableIfNotExists<Ingredient>())

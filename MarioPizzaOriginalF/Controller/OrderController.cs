@@ -1,11 +1,9 @@
 ﻿using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
 using MarioPizzaOriginal.Domain.Filter;
-using Model;
-using Model.DataAccess;
-using Model.Enums;
 using System;
 using System.Collections.Generic;
+using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -17,12 +15,35 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderSubElementRepository _orderSubElementRepository;
         private readonly TinyIoCContainer _container;
+        private readonly Dictionary<string, Action> _menuActions;
         public OrderController(TinyIoCContainer container)
         {
             _foodRepository = container.Resolve<IFoodRepository>();
             _orderRepository = container.Resolve<IOrderRepository>();
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderSubElementRepository = container.Resolve<IOrderSubElementRepository>();
+            _menuActions = new Dictionary<string, Action>
+            {
+                {"Lista wszystkich zamówień", GetAllOrders},
+                {"Zawartość zamówienia", GetOrder},
+                {"Oczekujące", GetOrdersWaiting},
+                {"W trakcie", GetOrdersInProgress},
+                {"Gotowe do dostarczenia", GetOrdersReadyForDelivery},
+                {"Dodaj zamówienie", AddOrder},
+                //{ "Zmień zawartość zamówienia", EditOrder },
+                {"Usuń zamówienie", DeleteOrder},
+                {"Zmień status zamówienia", ChangeOrderStatus},
+                {"Przenieś zamówienia do kolejnego etapu", MoveToNextStatus},
+                {"Zmień priorytet zamówienia", ChangeOrderPriority},
+                {"Policz cenę dla zamówienia", CalculatePriceForOrder},
+                {"Wszystkie podelementy zamówienia", ShowAllSubOrderElements},
+                {"Filtruj zamówienia", GetFilteredOrders}
+            };
+        }
+
+        public void OrdersMenu()
+        {
+            ViewHelper.Menu("Dostępne opcje - Zamówienia: ", _menuActions, "Powrót");
         }
 
         public void AddOrder()

@@ -1,6 +1,6 @@
 ﻿using ServiceStack.DataAnnotations;
 
-namespace MarioPizzaOriginal
+namespace MarioPizzaOriginal.Domain.Enums
 {
     [EnumAsInt]
     public enum UnitOfMeasure

@@ -6,11 +6,9 @@ namespace MarioPizzaOriginal.Account
     {
         public Driver()
         {
-            Permissions = new List<string> {
-                Rights.Foods.FoodMenu,
+            var driverPermissions = new List<string> {
                 Rights.Foods.GetFood,
                 Rights.Foods.GetAllFood,
-                Rights.Orders.OrdersMenu,
                 Rights.Orders.GetAllOrders,
                 Rights.Orders.GetOrdersWaiting,
                 Rights.Orders.GetOrdersInProgress,
@@ -18,9 +16,9 @@ namespace MarioPizzaOriginal.Account
                 Rights.Orders.ChangeOrderStatus,
                 Rights.Orders.MoveToNextStatus,
                 Rights.Orders.CalculatePriceForOrder,
-                Rights.OrderElements.OrderElementsMenu,
                 Rights.OrderElements.GetAllElementsForOrder
             };
+            Permissions.AddRange(driverPermissions);
         }
     }
 }

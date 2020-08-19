@@ -1,9 +1,9 @@
 ﻿using ServiceStack.DataAnnotations;
 
-namespace Model.Enums
+namespace MarioPizzaOriginal.Domain.Enums
 {
     [EnumAsInt]
-    public enum PaymentMethod
+    public enum PaymentMethod : int
     {
         CASH,TRANSFER,PAYPAL,BLIK,NOT_DEFINED,NONE
     }

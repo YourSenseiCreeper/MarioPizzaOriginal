@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using MarioPizzaOriginal.Account;
+using TinyIoC;
 
 namespace MarioPizzaOriginal
 {
@@ -129,29 +131,6 @@ namespace MarioPizzaOriginal
             return pass;
         }
 
-        public static string ConvertSHAToString(byte[] array)
-        {
-            var builder = new StringBuilder();
-            for (int i = 0; i < array.Length; i++)
-            {
-                builder.Append($"{array[i]:X2}");
-                if (i % 4 == 3) builder.Append(" ");
-            }
-
-            return builder.ToString();
-        }
-
-        public static string AskForStringNotBlank(string message, object[] args)
-        {
-            int argIndex = 0;
-            //Resource.FoodController_NewFood_step1
-            foreach (object arg in args)
-            {
-                message = message.Replace($"{argIndex}", arg.ToString());
-            }
-            return AskForStringNotBlank(message);
-        }
-
         /// <summary>
         /// Allows to pick a value from Enum
         /// </summary>
@@ -200,7 +179,7 @@ namespace MarioPizzaOriginal
             Console.Write($"{question} (y/n): ");
             var options = new List<string> { "yes", "y", "tak", "t" };
             string answer = Console.ReadLine();
-            return options.Contains(answer.ToLower().Trim());
+            return options.Contains(answer?.ToLower().Trim());
         }
         
         public static void WriteAndWait(string message)
@@ -209,50 +188,38 @@ namespace MarioPizzaOriginal
             Console.ReadLine();
         }
 
-        public static object FilterDouble(string message, object[] args)
+        public static void Menu(string header, Dictionary<string, Action> keyValues, string footer)
         {
-            double? input = AskForDouble(message);
-            return input == -1 ? null : input;
-        }
+            bool exit = false;
+            int input;
+            int index = 1;
 
-        public static object FilterInt(string message, object current, object[] args)
-        {
-            int? input = args?[0] as int? == -1 ? 
-                AskForInt(message, min: -1, current: (int?) current) : 
-                AskForInt(message, current: (int?)current);
-            return input == -1 ? null : input;
-        }
-
-        public static object FilterString(string message, object[] args)
-        {
-            string input = AskForString(message);
-            return input != "-1" ? input : null;
-        }
-
-        public static object FilterDateTime(string message, object[] args)
-        {
-            string answer;
-            bool answerOk = false;
-            DateTime result = new DateTime();
+            keyValues.Add(footer, null); // Last option - return
+            List<string> keys = new List<string>();
+            List<Action> values = new List<Action>();
+            var user = TinyIoCContainer.Current.Resolve<BaseRights>("CurrentUser");
+            foreach (var entry in keyValues)
+            {
+                if (entry.Value == null || user.Permissions.Contains(entry.Value.Method.Name))
+                {
+                    keys.Add($"{index++}. {entry.Key}");
+                    values.Add(entry.Value);
+                }
+            }
             do
             {
                 Console.Clear();
-                Console.WriteLine(message);
-                answer = Console.ReadLine();
-                
-                if (string.IsNullOrEmpty(answer)) WriteAndWait("Data nie może być pusta! Jeżeli chcesz wyjść wpisz -1");
-                if (answer == "-1") return null;
-                try
+                Console.WriteLine(header);
+                Console.WriteLine(new string('-', header.Length));
+                keys.ForEach(Console.WriteLine);
+                input = AskForInt("", clear: false); //Waiting for answer
+                if (input > 0 && input <= values.Count)
                 {
-                    result = DateTime.ParseExact(answer, "g", new CultureInfo("fr-FR"));
-                    answerOk = true;
-                } catch (FormatException)
-                {
-                    WriteAndWait($"'{answer}' zły format daty! Przykład: 01/01/2000 06:15");
+                    if (input == values.Count) exit = true;
+                    else values[input - 1]();
                 }
-            } while (!answerOk);
-            return result;
+                else WriteAndWait($"Nie ma opcji: {input}!");
+            } while (!exit);
         }
-        public static T FilterOption<T>(string message, object[] args) where T : Enum => UnsafeAskForOption<T>(message, "");
     }
 }

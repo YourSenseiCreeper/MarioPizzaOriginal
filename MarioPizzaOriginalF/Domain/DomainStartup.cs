@@ -1,6 +1,4 @@
-﻿using Model;
-using Model.DataAccess;
-using ServiceStack.OrmLite;
+﻿using ServiceStack.OrmLite;
 using System.Configuration;
 using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
@@ -10,8 +8,8 @@ namespace MarioPizzaOriginal.Domain
 {
     public class DomainStartup
     {
-        private OrmLiteConnectionFactory db;
-        private TinyIoCContainer container;
+        private readonly OrmLiteConnectionFactory db;
+        private readonly TinyIoCContainer container;
         public DomainStartup(TinyIoCContainer container)
         {
             db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["SqlLite"].ConnectionString, SqliteDialect.Provider);

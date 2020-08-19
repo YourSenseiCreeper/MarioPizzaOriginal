@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MarioPizzaOriginal.Domain;
 
 namespace MarioPizzaOriginal.Account
 {
@@ -18,9 +16,20 @@ namespace MarioPizzaOriginal.Account
                 Rights.Foods.FoodMenu,
                 Rights.Ingredients.IngredientsMenu,
                 Rights.OrderElements.OrderElementsMenu,
-                Rights.Orders.OrdersMenu
+                Rights.Orders.OrdersMenu,
             };
             Permissions.AddRange(other);
+        }
+
+        public static BaseRights GetAccountPermissions(User localUser)
+        {
+            switch (localUser.AccountType)
+            {
+                case AccountType.ROOT: return new Root();
+                case AccountType.DRIVER: return new Driver();
+                case AccountType.CASHIER: return new Cashier();
+                default: return new BaseRights();
+            }
         }
     }
 }

@@ -1,11 +1,10 @@
 ﻿
 using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Filter;
-using Model;
-using Model.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -15,13 +14,25 @@ namespace MarioPizzaOriginal.Controller
         private readonly IFoodRepository _foodRepository;
         private readonly IFoodIngredientRepository _foodIngredientRepository;
         private readonly FoodFilter _foodFilter;
+        private readonly Dictionary<string, Action> _menuActions;
         public FoodController(TinyIoCContainer container)
         {
             _foodRepository = container.Resolve<IFoodRepository>();
             _foodIngredientRepository = container.Resolve<IFoodIngredientRepository>();
             _foodFilter = new FoodFilter(container);
+            _menuActions = new Dictionary<string, Action>
+            {
+                {"Lista wszystkich produktów", GetAllFood},
+                {"Szczegóły produktu", GetFood},
+                {"Dodaj produkt", AddFood},
+                {"Usuń produkt", DeleteFood},
+                {"Szukaj wg filtru", GetFilteredFood}
+            };
         }
-
+        public void FoodMenu()
+        {
+            ViewHelper.Menu("Dostępne opcje - Produkty:", _menuActions, "Powrót");
+        }
         private List<string> ShowIngredients(Dictionary<string, double> ingredients)
         {
             var formatted = new List<string> { "Składniki: " };

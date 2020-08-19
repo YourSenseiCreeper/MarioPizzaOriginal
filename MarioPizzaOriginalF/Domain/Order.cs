@@ -1,6 +1,5 @@
 ﻿using System;
 using MarioPizzaOriginal.Domain.Enums;
-using Model.Enums;
 using ServiceStack.DataAnnotations;
 
 namespace MarioPizzaOriginal.Domain

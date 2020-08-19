@@ -4,7 +4,7 @@ using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
 
-namespace Model.DataAccess
+namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {
@@ -25,8 +25,8 @@ namespace Model.DataAccess
                             DeliveryAddress = "Radolin 5",
                             Priority = OrderPriority.NORMAL,
                             Status = OrderStatus.WAITING,
-                            PaymentMethod = Enums.PaymentMethod.CASH,
-                            Payment = Enums.Payment.AT_PLACE,
+                            PaymentMethod = PaymentMethod.CASH,
+                            Payment = Payment.AT_PLACE,
                             OrderTime = DateTime.Now
                         });
                 }

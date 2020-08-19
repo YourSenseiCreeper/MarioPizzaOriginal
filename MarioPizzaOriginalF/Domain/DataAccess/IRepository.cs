@@ -2,7 +2,7 @@
 using MarioPizzaOriginal.Domain.Enums;
 using System.Collections.Generic;
 
-namespace Model.DataAccess
+namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public interface IRepository<T>
     {
@@ -55,5 +55,6 @@ namespace Model.DataAccess
         bool UserExists(string username);
         void Register(string username, string passwordHash);
         User GetUser(string username);
+        void Logout(string username);
     }
 }
