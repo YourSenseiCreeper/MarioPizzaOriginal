@@ -5,12 +5,10 @@ namespace MarioPizzaOriginal.Domain
 {
     public class Ingredient
     {
-        [Index]
         [AutoIncrement]
         public int IngredientId { get; set; }
-        [Required]
         public string IngredientName { get; set; }
-        [Required]
+        [Reference]
         public UnitOfMeasure UnitOfMeasureType { get; set; }
         public double? PriceSmall { get; set; }
         public double? PriceMedium { get; set; }

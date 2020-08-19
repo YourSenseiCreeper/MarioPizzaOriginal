@@ -12,26 +12,26 @@ namespace MarioPizzaOriginal.Controller
     {
         private readonly IIngredientRepository _ingredientRepository;
         private IngredientFilter _ingredientFilter;
-        private Dictionary<string, Action> _menuActions;
+        private MenuCreator _ingredientMenu;
         public IngredientController(TinyIoCContainer container)
         {
             _ingredientRepository = container.Resolve<IIngredientRepository>();
             _ingredientFilter = new IngredientFilter(container);
-            _menuActions = new Dictionary<string, Action>
-            {
-                {"Wszystkie dostępne składniki", GetAllIngredients},
-                {"Szczegóły składnika", GetIngredient},
-                {"Dodaj składnik", AddIngredient},
-                {"Edytuj składnik", EditIngredient},
-                {"Usuń składnik", DeleteIngredient},
-                {"Filtruj", GetFilteredIngredients}
-            };
+            _ingredientMenu = MenuCreator.Create()
+                .SetHeader("Dostępne opcje - składniki: ")
+                .AddOptionRange(new Dictionary<string, Action>
+                {
+                    {"Wszystkie dostępne składniki", GetAllIngredients},
+                    {"Szczegóły składnika", GetIngredient},
+                    {"Dodaj składnik", AddIngredient},
+                    {"Edytuj składnik", EditIngredient},
+                    {"Usuń składnik", DeleteIngredient},
+                    {"Filtruj", GetFilteredIngredients}
+                })
+                .AddFooter("Powrót");
         }
 
-        public void IngredientsMenu()
-        {
-            ViewHelper.Menu("Dostępne opcje - składniki: ", _menuActions, "Powrót");
-        }
+        public void IngredientsMenu() => _ingredientMenu.Present();
 
         public void AddIngredient()
         {
@@ -69,6 +69,7 @@ namespace MarioPizzaOriginal.Controller
             if(!_ingredientRepository.Exists(ingredientId))
             {
                 ViewHelper.WriteAndWait($"Nie znaleziono składnika o id: {ingredientId}");
+                return;
             }
             Ingredient actual = _ingredientRepository.Get(ingredientId);
             string ingredientName = ViewHelper.AskForString($"Podaj nazwę składnika ({actual.IngredientName}): ");
@@ -92,7 +93,7 @@ namespace MarioPizzaOriginal.Controller
             if (priceLarge.Equals("-1")) { actual.PriceLarge = null; }
             else if (!priceLarge.Equals("")) { actual.PriceLarge = Convert.ToDouble(priceLarge.Replace(",", ".")); }
 
-            _ingredientRepository.Edit(actual);
+            _ingredientRepository.Save(actual);
         }
 
         private void ShowIngredients(List<Ingredient> ingredients)

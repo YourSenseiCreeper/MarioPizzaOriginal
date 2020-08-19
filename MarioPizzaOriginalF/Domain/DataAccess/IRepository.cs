@@ -8,7 +8,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
     {
         T Get(int id);
         void Add(T newOne);
-        void Edit(T editOne);
+        void Save(T editOne);
         void Remove(int id);
         List<T> GetAll();
         bool Exists(int id);
@@ -51,7 +51,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
     public interface IUserRepository : IRepository<User>
     {
-        bool Authenticate(string username, string passwordHash);
+        User Authenticate(string username, string passwordHash);
         bool UserExists(string username);
         void Register(string username, string passwordHash);
         User GetUser(string username);

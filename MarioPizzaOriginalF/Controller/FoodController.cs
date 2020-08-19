@@ -14,25 +14,26 @@ namespace MarioPizzaOriginal.Controller
         private readonly IFoodRepository _foodRepository;
         private readonly IFoodIngredientRepository _foodIngredientRepository;
         private readonly FoodFilter _foodFilter;
-        private readonly Dictionary<string, Action> _menuActions;
+        private readonly MenuCreator _foodMenu;
         public FoodController(TinyIoCContainer container)
         {
             _foodRepository = container.Resolve<IFoodRepository>();
             _foodIngredientRepository = container.Resolve<IFoodIngredientRepository>();
             _foodFilter = new FoodFilter(container);
-            _menuActions = new Dictionary<string, Action>
-            {
-                {"Lista wszystkich produktów", GetAllFood},
-                {"Szczegóły produktu", GetFood},
-                {"Dodaj produkt", AddFood},
-                {"Usuń produkt", DeleteFood},
-                {"Szukaj wg filtru", GetFilteredFood}
-            };
+            _foodMenu = MenuCreator.Create()
+                .SetHeader("Dostępne opcje - Produkty:")
+                .AddOptionRange(new Dictionary<string, Action>
+                {
+                    {"Lista wszystkich produktów", GetAllFood},
+                    {"Szczegóły produktu", GetFood},
+                    {"Dodaj produkt", AddFood},
+                    {"Usuń produkt", DeleteFood},
+                    {"Szukaj wg filtru", GetFilteredFood}
+                })
+                .AddFooter("Powrót");
         }
-        public void FoodMenu()
-        {
-            ViewHelper.Menu("Dostępne opcje - Produkty:", _menuActions, "Powrót");
-        }
+
+        public void FoodMenu() => _foodMenu.Present();
         private List<string> ShowIngredients(Dictionary<string, double> ingredients)
         {
             var formatted = new List<string> { "Składniki: " };

@@ -14,38 +14,41 @@ namespace MarioPizzaOriginal.Controller
     {
         private readonly IUserRepository _userRepository;
         private readonly TinyIoCContainer _container;
-        private readonly Dictionary<string, Action> _menuActions;
-        private readonly Dictionary<string, Action> _preloginActions;
+        private readonly MenuCreator _userMenu;
+        private readonly MenuCreator _preloginMenu;
 
         public UserController(TinyIoCContainer container)
         {
             _container = container;
             _userRepository = container.Resolve<IUserRepository>();
-            _preloginActions = new Dictionary<string, Action>
-            {
-                {"Zaloguj się", Login}, // redirect do głównego menu
-                {"Zarejestruj", Register}
-            };
-            _menuActions = new Dictionary<string, Action>
-            {
-                {"Pokaż dane o zalogowanym użytkowniku", ShowCurrentUserInfo},
-                {"Pokaż wszystkie konta", ShowAllAccounts},
-                {"Pokaż szczegóły użytkownika", ShowAccountInfo},
-                {"Wyloguj", Logout}
-            };
+            _userMenu = MenuCreator.Create()
+                .SetHeader("Zaloguj się lub zarejestruj")
+                .AddOptionRange(new Dictionary<string, Action>
+                {
+                    {"Zaloguj się", Login}, // redirect do głównego menu
+                    {"Zarejestruj", Register}
+                })
+                .AddFooter("Wyjdź");
+            _preloginMenu = MenuCreator.Create()
+                .SetHeader("Dostępne opcje - użytkownik")
+                .AddOptionRange(new Dictionary<string, Action>
+                {
+                    {"Pokaż dane o zalogowanym użytkowniku", ShowCurrentUserInfo},
+                    {"Pokaż wszystkie konta", ShowAllAccounts},
+                    {"Pokaż szczegóły użytkownika", ShowAccountInfo},
+                    {"Wyloguj", Logout}
+                })
+                .AddFooter("Powrót");
         }
 
         public void UserAuthentication()
         {
-            ViewHelper.Menu("Zaloguj się lub zarejestruj", _preloginActions, "Wyjdź");
+            _userMenu.Present();
             var currentUser = _container.Resolve<User>("CurrentUser");
             if (!currentUser.IsLogged) Environment.Exit(0);
         }
 
-        public void UserMenu()
-        {
-            ViewHelper.Menu("Dostępne opcje - użytkownik", _menuActions, "Powrót");
-        }
+        public void UserMenu() => _userMenu.Present();
 
         public void Register()
         {
@@ -73,14 +76,13 @@ namespace MarioPizzaOriginal.Controller
             string username = ViewHelper.AskForStringNotBlank("Podaj nazwę użytkownika: ");
             var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ", null).ToUtf8Bytes());
             var passwordHash = ConvertSHAToString(hashBytes);
-            bool logged = _userRepository.Authenticate(username, passwordHash);
+            var user = _userRepository.Authenticate(username, passwordHash);
 
-            if (!logged)
+            if (!user.IsLogged)
             {
                 ViewHelper.WriteAndWait("Niepoprawne hasło lub użytkownik nie istnieje!");
                 return;
             }
-            var user = _userRepository.GetUser(username);
             user.Permissions = BaseRights.GetAccountPermissions(user);
 
             _container.Register(user, "CurrentUser");

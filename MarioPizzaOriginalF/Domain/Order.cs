@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MarioPizzaOriginal.Domain.Enums;
 using ServiceStack.DataAnnotations;
 
@@ -6,20 +7,20 @@ namespace MarioPizzaOriginal.Domain
 {
     public class Order
     {
-        [Index]
         [AutoIncrement]
         public int OrderId { get; set; }
-        [Required]
         public string ClientPhoneNumber { get; set; }
-        [Required]
         public string DeliveryAddress { get; set; }
-        [Required]
+        [Reference]
         public OrderPriority Priority { get; set; }
-        [Required]
+        [Reference]
         public OrderStatus Status { get; set; }
+        [Reference]
         public Payment Payment { get; set; }
+        [Reference]
         public PaymentMethod PaymentMethod { get; set; }
-        [Required]
         public DateTime OrderTime { get; set; }
+        [Reference]
+        public List<OrderElement> OrderElements { get; set; }
     }
 }

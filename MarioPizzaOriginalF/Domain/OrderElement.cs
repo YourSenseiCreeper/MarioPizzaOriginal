@@ -5,16 +5,12 @@ namespace MarioPizzaOriginal.Domain
 {
     public class OrderElement
     {
-        [Index]
         [AutoIncrement]
         public int OrderElementId { get; set; }
-        [Required]
         public int OrderId { get; set; }
-        [Required]
         public int FoodId { get; set; }
-        [Required]
         public double Amount { get; set; }
-        [Ignore]
+        [Reference]
         public List<OrderSubElement> SubOrderElements { get; set; }
     }
 }

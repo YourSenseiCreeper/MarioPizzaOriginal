@@ -11,25 +11,26 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IFoodRepository _foodRepository;
-        private readonly Dictionary<string, Action> _menuActions;
+        private readonly MenuCreator _orderElementMenu;
         public OrderElementController(TinyIoCContainer container)
         {
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderRepository = container.Resolve<IOrderRepository>();
             _foodRepository = container.Resolve<IFoodRepository>();
-            _menuActions = new Dictionary<string, Action>
-            {
-                {"Lista wszystkich elementów zamówień", GetAllOrderElements},
-                {"Lista elementów zamówienia", GetAllElementsForOrder},
-                {"Dodaj element do zamówienia", AddOrderElement},
-                {"Zmień ilość", ChangeAmount},
-                {"Usuń element", DeleteOrderElement}
-            };
+            _orderElementMenu = MenuCreator.Create()
+                .SetHeader("Dostępne opcje - Elementy zamówienia:")
+                .AddOptionRange(new Dictionary<string, Action>
+                {
+                    {"Lista wszystkich elementów zamówień", GetAllOrderElements},
+                    {"Lista elementów zamówienia", GetAllElementsForOrder},
+                    {"Dodaj element do zamówienia", AddOrderElement},
+                    {"Zmień ilość", ChangeAmount},
+                    {"Usuń element", DeleteOrderElement}
+                })
+                .AddFooter("Powrót");
         }
-        public void OrderElementsMenu()
-        {
-            ViewHelper.Menu("Dostępne opcje - Elementy zamówienia:", _menuActions, "Powrót");
-        }
+
+        public void OrderElementsMenu() => _orderElementMenu.Present();
 
         public void GetAllOrderElements()
         {
@@ -98,7 +99,7 @@ namespace MarioPizzaOriginal.Controller
                 }
                 orderElement.Amount = newAmount;
             }
-            _orderElementRepository.Edit(orderElement);
+            _orderElementRepository.Save(orderElement);
             ViewHelper.WriteAndWait($"Zmieniłeś ilość składnika {foodName} z {amount} na {newAmount}");
         }
 

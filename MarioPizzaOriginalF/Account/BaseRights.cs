@@ -21,6 +21,8 @@ namespace MarioPizzaOriginal.Account
             Permissions.AddRange(other);
         }
 
+        public bool HasPermission(string methodName) => Permissions.Contains(methodName);
+
         public static BaseRights GetAccountPermissions(User localUser)
         {
             switch (localUser.AccountType)

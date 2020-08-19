@@ -3,7 +3,7 @@
 namespace MarioPizzaOriginal.Domain.Enums
 {
     [EnumAsInt]
-    public enum PaymentMethod : int
+    public enum PaymentMethod
     {
         CASH,TRANSFER,PAYPAL,BLIK,NOT_DEFINED,NONE
     }

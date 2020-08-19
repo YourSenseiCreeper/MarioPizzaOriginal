@@ -11,13 +11,33 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public BaseRepository(OrmLiteConnectionFactory dbConnection) => db = dbConnection;
 
-        public void Add(T element) => db.Open().Insert(element);
+        public void Add(T element)
+        {
+            using (var dbConn = db.Open())
+            {
+                dbConn.Save(element, true);
+            }
+        }
         public int Count() => (int) db.Open().Count<T>();
-        public void Edit(T editedElement) => db.Open().Save(editedElement);
+
+        public void Save(T editedElement)
+        {
+            using (var dbConn = db.Open())
+            {
+                dbConn.Save(editedElement, true);
+            }
+        }
         public bool Exists(int elementId) => Get(elementId) != null;
         public T Get(int elementId) => db.Open().SingleById<T>(elementId);
         public List<T> GetAll() => db.Open().Select<T>();
-        public void Remove(int elementId) => db.Open().DeleteById<T>(elementId);
+        public void Remove(int elementId)
+        {
+            using (var dbConn = db.Open())
+            {
+                dbConn.DeleteById<T>(elementId);
+            }
+        }
+
         public List<T> Query(string queryString) => db.Open().Query<T>(queryString).ToList();
     }
 }

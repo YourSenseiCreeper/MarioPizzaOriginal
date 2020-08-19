@@ -33,6 +33,23 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             }
         }
 
+        public new void Add(Order order)
+        {
+            using (var dbConn = db.Open())
+            {
+                dbConn.Save(order);
+                if (order.OrderElements.Count != 0)
+                {
+                    dbConn.SaveReferences(order, order.OrderElements);
+                    foreach (var orderElement in order.OrderElements)
+                    {
+                        if (orderElement.SubOrderElements != null)
+                            dbConn.SaveReferences(orderElement, orderElement.SubOrderElements);
+                    }
+                }
+            }
+        }
+
         public List<Order> GetByStatus(OrderStatus status)
         {
             return db.Open().Select<Order>(x => x.Status == status);
