@@ -34,22 +34,6 @@ namespace MarioPizzaOriginal.Controller
         }
 
         public void FoodMenu() => _foodMenu.Present();
-        private List<string> ShowIngredients(Dictionary<string, double> ingredients)
-        {
-            var formatted = new List<string> { "Składniki: " };
-            formatted.AddRange(ingredients.Select((key, value) => $"* {key} {value}"));
-            return formatted;
-        }
-
-        private string ConvertProductionTime(int? time)
-        {
-            if (time != null)
-            {
-                int quoient = Math.DivRem((int)time, 60, out int remainder);
-                return $"{quoient}min {remainder}s";
-            }
-            else return "0min 0s";
-        }
         public void AddFood()
         {
             int step = 1;
@@ -121,13 +105,13 @@ namespace MarioPizzaOriginal.Controller
         public void GetFood()
         {
             var foodId = ViewHelper.AskForInt("Podaj id produktu: ");
-            var food = _foodRepository.Get(foodId);
-            var message = food != null ? "" : "Nie znaleziono produktu";
-            if(food == null)
+            var foodExists = _foodRepository.Exists(foodId);
+            if(!foodExists)
             {
-                ViewHelper.WriteAndWait(message);
+                ViewHelper.WriteAndWait("Nie znaleziono produktu");
                 return;
             }
+            var food = _foodRepository.GetFoodWithIngredients(foodId);
             List<string> entries = new List<string> {
                 $"=== {food.FoodName} ===",
                 $"Id produktu: {food.FoodId}",
@@ -135,21 +119,20 @@ namespace MarioPizzaOriginal.Controller
                 $"Czas produkcji: {ConvertProductionTime(food.ProductionTime)}",
                 $"Waga: {food.Weight}kg"
             };
-            var ingredients = _foodRepository.GetIngredients(foodId);
 
-            if (ingredients.Count == 0) entries.Add("Brak składników!");
-            else entries.AddRange(ShowIngredients(ingredients));
+            if (food.Ingredients.Count == 0) entries.Add("Brak składników!");
+            else entries.AddRange(ShowIngredients(food.Ingredients));
 
             entries.ForEach(x => Console.WriteLine(x));
             Console.ReadLine();
         }
-
-        public void CalculatePriceForOrder()
-        {
-            int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz policzyć cene: ");
-            double price = _foodRepository.CalculatePriceForFood(orderId);
-            ViewHelper.WriteAndWait($"Cena: {price} zł");
-        }
+        //
+        // public void CalculatePriceForOrder()
+        // {
+        //     int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz policzyć cene: ");
+        //     double price = _foodRepository.CalculatePriceForFood(orderId);
+        //     ViewHelper.WriteAndWait($"Cena: {price} zł");
+        // }
 
         public void DeleteFood()
         {
@@ -166,28 +149,16 @@ namespace MarioPizzaOriginal.Controller
             ViewHelper.WriteAndWait($"Usunięto produkt {foodName} o id {foodId}");
         }
 
-        private void ShowFood(List<Food> foodList)
-        {
-            var header = $"{"Id",5} | {"Nazwa",25}| {"Cena",5}|";
-            Console.WriteLine(header);
-            Console.WriteLine(new string('-', header.Length));
-            foodList.ForEach(x => {
-                Console.WriteLine($"{x.FoodId,5}| {x.FoodName,25}| {x.Price,5} zł");
-            });
-            ViewHelper.WriteAndWait($"Znaleziono {foodList.Count} pasujących produktów:");
-        }
-
         public void GetAllFood()
         {
-            Console.Clear();
             ShowFood(_foodRepository.GetAll());
         }
         
         public void GetFilteredFood()
         {
-            if (_foodFilter.FilterMenu()) ShowFood(_foodFilter.Query());
+            if (_foodFilter.FilterMenu())
+                ShowFood(_foodFilter.Query());
         }
-
 
         public void GetIngredients()
         {
@@ -197,8 +168,38 @@ namespace MarioPizzaOriginal.Controller
                 ViewHelper.WriteAndWait($"Nie znaleziono produktu o id {foodId}");
                 return;
             }
-            ShowIngredients(_foodRepository.GetIngredients(foodId));
-            return;
+            var food = _foodRepository.GetFoodWithIngredients(foodId);
+            ShowIngredients(food.Ingredients);
+        }
+
+        private void ShowFood(List<Food> foodList)
+        {
+            Console.Clear();
+            var header = $"{"Id",5} | {"Nazwa",25}| {"Cena",5}|";
+            Console.WriteLine(header);
+            Console.WriteLine(new string('-', header.Length));
+            foodList.ForEach(x => {
+                Console.WriteLine($"{x.FoodId,5}| {x.FoodName,25}| {x.Price,5} zł");
+            });
+            ViewHelper.WriteAndWait($"Znaleziono {foodList.Count} pasujących produktów:");
+            Console.ReadLine();
+        }
+
+        private List<string> ShowIngredients(List<FoodIngredient> ingredients)
+        {
+            var formatted = new List<string> { "Składniki: " };
+            formatted.AddRange(ingredients.Select(ingredient => $"* {ingredient.IngredientAmount} {ingredient.Ingredient.IngredientName}"));
+            return formatted;
+        }
+
+        private string ConvertProductionTime(int? time)
+        {
+            if (time != null)
+            {
+                int quoient = Math.DivRem((int)time, 60, out int remainder);
+                return $"{quoient}min {remainder}s";
+            }
+            return "0min 0s";
         }
     }
 }

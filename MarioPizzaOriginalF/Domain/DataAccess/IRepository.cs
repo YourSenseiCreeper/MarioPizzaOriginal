@@ -27,7 +27,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
     public interface IFoodRepository : IRepository<Food> 
     {
         string GetName(int foodId);
-        Dictionary<string, double> GetIngredients(int foodId);
+        Food GetFoodWithIngredients(int foodId);
         double CalculatePriceForFood(int foodId);
     }
     public interface IOrderRepository : IRepository<Order> 
@@ -56,5 +56,6 @@ namespace MarioPizzaOriginal.Domain.DataAccess
         void Register(string username, string passwordHash);
         User GetUser(string username);
         void Logout(string username);
+        bool IsPasswordCorrect(string username, string passwordHash);
     }
 }

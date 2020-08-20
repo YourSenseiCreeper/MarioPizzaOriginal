@@ -21,7 +21,7 @@ namespace MarioPizzaOriginal.Controller
         {
             _container = container;
             _userRepository = container.Resolve<IUserRepository>();
-            _userMenu = MenuCreator.Create()
+            _preloginMenu = MenuCreator.Create()
                 .SetHeader("Zaloguj się lub zarejestruj")
                 .AddOptionRange(new Dictionary<string, Action>
                 {
@@ -29,13 +29,14 @@ namespace MarioPizzaOriginal.Controller
                     {"Zarejestruj", Register}
                 })
                 .AddFooter("Wyjdź");
-            _preloginMenu = MenuCreator.Create()
+            _userMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - użytkownik")
                 .AddOptionRange(new Dictionary<string, Action>
                 {
                     {"Pokaż dane o zalogowanym użytkowniku", ShowCurrentUserInfo},
                     {"Pokaż wszystkie konta", ShowAllAccounts},
                     {"Pokaż szczegóły użytkownika", ShowAccountInfo},
+                    {"Zmień hasło", ResetPassword},
                     {"Wyloguj", Logout}
                 })
                 .AddFooter("Powrót");
@@ -43,7 +44,7 @@ namespace MarioPizzaOriginal.Controller
 
         public void UserAuthentication()
         {
-            _userMenu.Present();
+            _preloginMenu.Present();
             var currentUser = _container.Resolve<User>("CurrentUser");
             if (!currentUser.IsLogged) Environment.Exit(0);
         }
@@ -68,7 +69,30 @@ namespace MarioPizzaOriginal.Controller
 
         public void ResetPassword()
         {
+            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ", null).ToUtf8Bytes());
+            var passwordHash = ConvertSHAToString(hashBytes);
+            var currentUser = _container.Resolve<User>("CurrentUser");
+            ;
+            if (currentUser.PasswordHash != passwordHash)
+            {
+                ViewHelper.WriteAndWait("Wpisano niepoprawne hasło!");
+                return;
+            }
+            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj NOWE hasło dla konta: ", null).ToUtf8Bytes());
+            var firstPasswordHash = ConvertSHAToString(hashBytes);
 
+            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Powtórz NOWE hasło dla konta: ", null).ToUtf8Bytes());
+            var secondPasswordHash = ConvertSHAToString(hashBytes);
+
+            if (firstPasswordHash != secondPasswordHash)
+            {
+                ViewHelper.WriteAndWait("Wpisano dwa różne hasła!");
+                return;
+            }
+
+            currentUser.PasswordHash = firstPasswordHash;
+            _userRepository.Save(currentUser);
+            ViewHelper.WriteAndWait("Hasło zostało zmienione!");
         }
 
         public void Login()
@@ -92,7 +116,8 @@ namespace MarioPizzaOriginal.Controller
         public void Logout()
         {
             var user = _container.Resolve<User>("CurrentUser");
-            _userRepository.Logout(user.Username);
+            user.IsLogged = false;
+            _userRepository.Save(user);
             // redirect do menu z logowaniem?
             UserAuthentication();
         }
@@ -111,12 +136,43 @@ namespace MarioPizzaOriginal.Controller
 
         public void ShowAllAccounts()
         {
-
+            ShowAccounts(_userRepository.GetAll());
         }
 
         public void ShowAccountInfo()
         {
+            var userId = ViewHelper.AskForInt("Podaj id użytkownika: ");
+            if (!_userRepository.Exists(userId))
+            {
+                ViewHelper.WriteAndWait($"Użytkownik o id {userId} nie istnieje!");
+                return;
+            }
+            ShowOneUser(_userRepository.Get(userId));
+        }
 
+        private void ShowOneUser(User user)
+        {
+            var info = new List<string>
+            {
+                $"Id: #{user.UserId}", $"Nazwa użytkownika: {user.Username}", $"Typ konta: {user.AccountType}",
+                $"Konto utworzone dnia: {user.CreationTime}",  $"Ostatnie logowanie: {user.LastLogin}"
+            };
+            Console.Clear();
+            info.ForEach(Console.WriteLine);
+            Console.ReadLine();
+        }
+
+        private void ShowAccounts(List<User> userList)
+        {
+            Console.Clear();
+            var header = $"{"Id",5} | {"Username",15}| {"Typ konta",10}| {"Data utworzenia", 15}| {"Ostatnie logowanie", 15}";
+            Console.WriteLine(header);
+            Console.WriteLine(new string('-', header.Length));
+            userList.ForEach(x => {
+                Console.WriteLine($"{x.UserId,5}| {x.Username,15}| {x.AccountType,10} | {x.CreationTime, 15}| {x.LastLogin, 15}");
+            });
+            ViewHelper.WriteAndWait($"Znaleziono {userList.Count} pasujących produktów:");
+            Console.ReadLine();
         }
 
         private string ConvertSHAToString(byte[] array)

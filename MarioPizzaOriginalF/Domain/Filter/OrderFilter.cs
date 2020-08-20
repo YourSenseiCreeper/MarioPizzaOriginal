@@ -11,8 +11,8 @@ namespace MarioPizzaOriginal.Domain.Filter
         {
             FilterObjects = new List<FilterObject>
             {
-                new FilterObject("Minimalne Id zamówienia", "Podaj wartość dla Minimalne Id zamówienia: ", "OrderId >= {0}", typeof(int)),
-                new FilterObject("Maksymalne Id zamówienia", "Podaj wartość dla Maksymalne Id zamówienia: ", "OrderId <= {0}", typeof(int)),
+                new FilterObject ( "Minimalne Id zamówienia", "Podaj wartość dla Minimalne Id zamówienia: ", "OrderId >= {0}", typeof(int)),
+                new FilterObject ( "Maksymalne Id zamówienia", "Podaj wartość dla Maksymalne Id zamówienia: ", "OrderId <= {0}", typeof(int)),
                 new FilterObject ( "Numer telefonu klienta zawiera", "Podaj ciąg który znajduje się w nr tel klienta: ", "ClientPhoneNumber like '%{0}%'", typeof(string)),
                 new FilterObject ( "Adres dostawy zawiera", "Podaj ciąg który znajduje się w Adresie dostawy: ", "DeliveryAddress like '%{0}%'", typeof(string)),
                 new FilterObject ( "Priorytet zamówienia", "Wybierz priorytet zamówienia: ", "Priority = {0}", typeof(OrderPriority)),

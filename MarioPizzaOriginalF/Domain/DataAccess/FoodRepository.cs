@@ -55,13 +55,18 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             return 0;
         }
 
-        public Dictionary<string, double> GetIngredients(int foodId)
+        public Food GetFoodWithIngredients(int foodId)
         {
-            string query = $@"SELECT I.IngredientName, FI.IngredientAmount FROM Ingredient AS I
-                           JOIN FoodIngredient AS FI ON FI.IngredientId = I.IngredientId
-                           LEFT JOIN Food AS F ON F.FoodId = FI.FoodId
-                           WHERE F.FoodId = {foodId}";
-            return db.Open().Dictionary<string, double>(query) ?? new Dictionary<string, double>();
+            using (var dbConn = db.Open())
+            {
+                var food = dbConn.SingleById<Food>(foodId);
+                dbConn.LoadReferences(food);
+                foreach (var foodIngredient in food.Ingredients)
+                {
+                    dbConn.LoadReferences(foodIngredient);
+                }
+                return food;
+            }
         }
     }
 }

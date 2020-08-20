@@ -17,6 +17,10 @@ namespace MarioPizzaOriginal.Account
                 Rights.Ingredients.IngredientsMenu,
                 Rights.OrderElements.OrderElementsMenu,
                 Rights.Orders.OrdersMenu,
+                Rights.User.UserMenu,
+                Rights.User.ResetPassword,
+                Rights.User.ShowCurrentUserInfo,
+                Rights.User.Logout
             };
             Permissions.AddRange(other);
         }

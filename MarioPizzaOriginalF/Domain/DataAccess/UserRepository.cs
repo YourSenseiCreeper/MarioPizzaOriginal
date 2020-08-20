@@ -23,6 +23,11 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             return theUser;
         }
 
+        public bool IsPasswordCorrect(string username, string passwordHash)
+        {
+            return db.Open().Exists<User>(u => u.Username == username && u.PasswordHash == passwordHash);
+        }
+
         public bool UserExists(string username)
         {
             return db.Open().Exists<User>(user => user.Username == username);

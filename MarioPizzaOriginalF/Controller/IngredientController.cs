@@ -136,10 +136,12 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetFilteredIngredients()
         {
-            _ingredientFilter.FilterMenu();
-            var results = _ingredientFilter.Query();
-            Console.WriteLine($@"Znaleziono {results.Count} pasujących do filtra:");
-            ShowIngredients(results);
+            if (_ingredientFilter.FilterMenu())
+            {
+                var results = _ingredientFilter.Query();
+                Console.WriteLine($@"Znaleziono {results.Count} pasujących do filtra:");
+                ShowIngredients(results);
+            }
         }
     }
 }

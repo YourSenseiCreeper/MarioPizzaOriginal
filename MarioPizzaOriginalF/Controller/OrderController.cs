@@ -15,7 +15,7 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderElementRepository _orderElementRepository;
         private readonly IOrderSubElementRepository _orderSubElementRepository;
-        private readonly TinyIoCContainer _container;
+        private readonly OrderFilter _orderFilter;
         private readonly MenuCreator _orderMenu;
         public OrderController(TinyIoCContainer container)
         {
@@ -23,6 +23,7 @@ namespace MarioPizzaOriginal.Controller
             _orderRepository = container.Resolve<IOrderRepository>();
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderSubElementRepository = container.Resolve<IOrderSubElementRepository>();
+            _orderFilter = new OrderFilter(container);
             _orderMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - Zamówienia: ")
                 .AddOptionRange(new Dictionary<string, Action>
@@ -376,10 +377,9 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetFilteredOrders()
         {
-            var orderFilter = new OrderFilter(_container);
-            if (orderFilter.FilterMenu())
+            if (_orderFilter.FilterMenu())
             {
-                var results = orderFilter.Query();
+                var results = _orderFilter.Query();
                 ShowOrders(results);
             }
         }

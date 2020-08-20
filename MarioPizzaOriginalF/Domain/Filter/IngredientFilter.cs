@@ -12,7 +12,7 @@ namespace MarioPizzaOriginal.Domain.Filter
             {
                 new FilterObject ( "Minimalne Id składnika", "Podaj wartość dla Minimalne Id składnika: ", "IngredientId > {0}", typeof(int), new object[]{ -1 }),
                 new FilterObject ( "Maksymalne Id składnika", "Podaj wartość dla Maksymalne Id składnika: ", "IngredientId < {0}", typeof(int)),
-                new FilterObject ( "Nazwa składnika zawiera", "Podaj ciąg który znajduje się w Nazwie produktu: ", "IngredientName is like '%{0}%'", typeof(string)),
+                new FilterObject ( "Nazwa składnika zawiera", "Podaj ciąg który znajduje się w Nazwie produktu: ", "IngredientName like '%{0}%'", typeof(string)),
                 new FilterObject ( "Jednostka miary", "Wybierz jednostkę miary: ", "UnitOfMeasureType = {0}", typeof(UnitOfMeasure))
             };
         }

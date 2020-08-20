@@ -23,7 +23,6 @@ namespace MarioPizzaOriginal.Domain
             RegisterRepository<OrderSubElementRepository, IOrderSubElementRepository, IRepository<OrderSubElement>>
                 (repo => new OrderSubElementRepository(repo));
             RegisterRepository<UserRepository, IUserRepository, IRepository<User>>(repo => new UserRepository(repo));
-
         }
 
         private void RegisterRepository<T, K, V>(Func<OrmLiteConnectionFactory, T> repository) 

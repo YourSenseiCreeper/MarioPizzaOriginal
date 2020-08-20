@@ -79,14 +79,20 @@ namespace MarioPizzaOriginal.Account
             public const string UserMenu = "UserMenu";
             public const string Register = "Register";
             public const string Login = "Login";
+            public const string Logout = "Logout";
             public const string ShowCurrentUserInfo = "ShowCurrentUserInfo";
+            public const string ResetPassword = "ResetPassword";
+            public const string ShowAllAccounts = "ShowAllAccounts";
+            public const string ShowAccountInfo = "ShowAccountInfo";
+
             public static readonly IEnumerable<string> Basic = new[]
             {
                 UserMenu, Register, Login
             };
             public static readonly IEnumerable<string> Global = new[]
             {
-                UserMenu, Register, Login, ShowCurrentUserInfo
+                UserMenu, Register, Login, ShowCurrentUserInfo, ResetPassword, ShowAllAccounts,
+                ShowAccountInfo, Logout
             };
         }
     }

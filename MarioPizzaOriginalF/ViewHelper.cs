@@ -128,6 +128,7 @@ namespace MarioPizzaOriginal
                     pass += keyInfo.KeyChar;
                 }
             } while (key != ConsoleKey.Enter);
+            Console.Write("\n");
             return pass;
         }
 

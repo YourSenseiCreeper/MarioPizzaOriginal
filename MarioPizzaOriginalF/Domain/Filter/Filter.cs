@@ -43,7 +43,7 @@ namespace MarioPizzaOriginal.Domain.Filter
         public List<T> Query()
         {
             var queryBuilder = new StringBuilder();
-            queryBuilder.Append($"select * from {typeof(T).Name}");
+            queryBuilder.Append($"select * from \"{typeof(T).Name}\"");
             //int activeFilters = FilterObjects.Aggregate(0, (active, next) => next.Value != null ? active++ : active, result => result);
             int activeFil = 0;
             foreach(var filter in FilterObjects)
