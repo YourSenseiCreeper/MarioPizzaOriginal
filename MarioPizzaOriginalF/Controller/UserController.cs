@@ -25,9 +25,10 @@ namespace MarioPizzaOriginal.Controller
                 .SetHeader("Zaloguj się lub zarejestruj")
                 .AddOptionRange(new Dictionary<string, Action>
                 {
-                    {"Zaloguj się", Login}, // redirect do głównego menu
+                    {"Zaloguj się", Login},
                     {"Zarejestruj", Register}
                 })
+                .AddGoBackAction(Login)
                 .AddFooter("Wyjdź");
             _userMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - użytkownik")
@@ -61,7 +62,7 @@ namespace MarioPizzaOriginal.Controller
                 return;
             }
 
-            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ", null).ToUtf8Bytes());
+            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ").ToUtf8Bytes());
             var passwordHash = ConvertSHAToString(hashBytes);
             _userRepository.Register(username, passwordHash);
             ViewHelper.WriteAndWait("\nRejestracja zakończona pomyślnie!");
@@ -69,7 +70,7 @@ namespace MarioPizzaOriginal.Controller
 
         public void ResetPassword()
         {
-            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ", null).ToUtf8Bytes());
+            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ").ToUtf8Bytes());
             var passwordHash = ConvertSHAToString(hashBytes);
             var currentUser = _container.Resolve<User>("CurrentUser");
             ;
@@ -78,10 +79,10 @@ namespace MarioPizzaOriginal.Controller
                 ViewHelper.WriteAndWait("Wpisano niepoprawne hasło!");
                 return;
             }
-            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj NOWE hasło dla konta: ", null).ToUtf8Bytes());
+            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj NOWE hasło dla konta: ").ToUtf8Bytes());
             var firstPasswordHash = ConvertSHAToString(hashBytes);
 
-            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Powtórz NOWE hasło dla konta: ", null).ToUtf8Bytes());
+            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Powtórz NOWE hasło dla konta: ").ToUtf8Bytes());
             var secondPasswordHash = ConvertSHAToString(hashBytes);
 
             if (firstPasswordHash != secondPasswordHash)
@@ -97,14 +98,19 @@ namespace MarioPizzaOriginal.Controller
 
         public void Login()
         {
-            string username = ViewHelper.AskForStringNotBlank("Podaj nazwę użytkownika: ");
-            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ", null).ToUtf8Bytes());
+            var username = ViewHelper.AskForStringNotBlank("Podaj nazwę użytkownika: ");
+            if (!_userRepository.UserExists(username))
+            {
+                ViewHelper.WriteAndWait("Użytkownik nie istnieje!");
+                return;
+            }
+            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ").ToUtf8Bytes());
             var passwordHash = ConvertSHAToString(hashBytes);
             var user = _userRepository.Authenticate(username, passwordHash);
 
             if (!user.IsLogged)
             {
-                ViewHelper.WriteAndWait("Niepoprawne hasło lub użytkownik nie istnieje!");
+                ViewHelper.WriteAndWait("Niepoprawne hasło!");
                 return;
             }
             user.Permissions = BaseRights.GetAccountPermissions(user);

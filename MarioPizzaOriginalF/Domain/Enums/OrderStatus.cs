@@ -8,8 +8,7 @@ namespace MarioPizzaOriginal.Domain.Enums
         WAITING,
         IN_PROGRESS,
         DELIVERY,
-        DONE,
-        NONE
+        DONE
     }
 
 }

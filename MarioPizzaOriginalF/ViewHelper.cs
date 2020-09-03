@@ -1,17 +1,17 @@
-﻿using MarioPizzaOriginal.Controller;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using MarioPizzaOriginal.Account;
-using TinyIoC;
+using MarioPizzaOriginal.Domain.Enums;
+using Pastel;
+using DColor = System.Drawing.Color;
 
 namespace MarioPizzaOriginal
 {
     public static class ViewHelper
     {
-        public static int AskForInt(string message, int? min = null, int? max = null, int? current = null, bool inline = true, bool clear=true)
+        private const string exitSequence = "/";
+
+        public static int AskForInt(string message, int? min = null, int? max = null, int? current = null, bool exit = true, bool clear=true)
         {
             string answer;
             bool answerOk;
@@ -21,8 +21,7 @@ namespace MarioPizzaOriginal
                 answerOk = false;
                 var formatedMessage = current != null ? $"{message.Replace(":", "")} ({current}): " : message;
                 if (clear) Console.Clear();
-                if (inline) Console.Write(formatedMessage);
-                else Console.WriteLine(formatedMessage);
+                Console.Write(formatedMessage);
                 answer = Console.ReadLine();
                 // Check if answer is Int, then 
                 // if min is not null check wheater Int is above and 
@@ -50,7 +49,7 @@ namespace MarioPizzaOriginal
         public static double AskForDouble(string message, bool inline = true, bool clear = true)
         {
             string answer;
-            bool answerOk = false;
+            var answerOk = false;
             double result = 0;
             do
             {
@@ -58,7 +57,7 @@ namespace MarioPizzaOriginal
                 if (inline) Console.Write(message);
                 else Console.WriteLine(message);
                 answer = Console.ReadLine().Replace(".", ",");
-                if (double.TryParse(answer, out double innerResult))
+                if (double.TryParse(answer, out var innerResult))
                 {
                     answerOk = true; 
                     result = innerResult;
@@ -74,19 +73,6 @@ namespace MarioPizzaOriginal
             if (inline) Console.Write(message);
             else Console.WriteLine(message);
             return Console.ReadLine();
-        }
-
-        public static string AskForString(string mes, object[] args) 
-        {
-            int argIndex = 0;
-            string message = Resource.ResourceManager.GetString(mes); 
-            //Resource.FoodController_NewFood_step1
-            
-            foreach (object arg in args)
-            {
-                message = message.Replace($"{argIndex}", arg.ToString());
-            }
-            return AskForString(message);
         }
 
         public static string AskForStringNotBlank(string message, bool inline = true, bool clear = true)
@@ -107,9 +93,10 @@ namespace MarioPizzaOriginal
         /// <summary>
         /// Method asking for password replacing writed letters with asterisks. By CraigTP
         /// </summary>
-        public static string AskForPassword(string message, object[] args)
+        public static string AskForPassword(string message)
         {
             Console.Write(message);
+            Console.ForegroundColor = ConsoleColor.Cyan;
             var pass = string.Empty;
             ConsoleKey key;
             do
@@ -129,6 +116,7 @@ namespace MarioPizzaOriginal
                 }
             } while (key != ConsoleKey.Enter);
             Console.Write("\n");
+            Console.ForegroundColor = ConsoleColor.White;
             return pass;
         }
 
@@ -189,38 +177,17 @@ namespace MarioPizzaOriginal
             Console.ReadLine();
         }
 
-        public static void Menu(string header, Dictionary<string, Action> keyValues, string footer)
+        public static string StatusColor(OrderStatus status)
         {
-            bool exit = false;
-            int input;
-            int index = 1;
-
-            keyValues.Add(footer, null); // Last option - return
-            List<string> keys = new List<string>();
-            List<Action> values = new List<Action>();
-            var user = TinyIoCContainer.Current.Resolve<BaseRights>("CurrentUser");
-            foreach (var entry in keyValues)
+            switch (status)
             {
-                if (entry.Value == null || user.Permissions.Contains(entry.Value.Method.Name))
-                {
-                    keys.Add($"{index++}. {entry.Key}");
-                    values.Add(entry.Value);
-                }
+                case OrderStatus.WAITING: return status.ToString().Pastel(DColor.Gold);
+                case OrderStatus.IN_PROGRESS: return status.ToString().Pastel(DColor.Green);
+                case OrderStatus.DELIVERY: return status.ToString().Pastel(DColor.Blue);
+                case OrderStatus.DONE: return status.ToString().Pastel(DColor.Gray);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
             }
-            do
-            {
-                Console.Clear();
-                Console.WriteLine(header);
-                Console.WriteLine(new string('-', header.Length));
-                keys.ForEach(Console.WriteLine);
-                input = AskForInt("", clear: false); //Waiting for answer
-                if (input > 0 && input <= values.Count)
-                {
-                    if (input == values.Count) exit = true;
-                    else values[input - 1]();
-                }
-                else WriteAndWait($"Nie ma opcji: {input}!");
-            } while (!exit);
         }
     }
 }

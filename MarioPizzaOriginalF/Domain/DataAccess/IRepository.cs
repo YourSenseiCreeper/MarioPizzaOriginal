@@ -32,9 +32,10 @@ namespace MarioPizzaOriginal.Domain.DataAccess
     }
     public interface IOrderRepository : IRepository<Order> 
     {
-        int OrderNextId();
         List<Order> GetByStatus(OrderStatus status);
         double CalculatePriceForOrder(int orderId);
+        Order GetOrderWithAllElements(int orderId);
+        void DeleteOrderWithAllElements(int orderId);
     }
     public interface IOrderElementRepository : IRepository<OrderElement> 
     {

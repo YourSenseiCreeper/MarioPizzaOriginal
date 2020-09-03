@@ -19,8 +19,9 @@ namespace MarioPizzaOriginal
             var ingredientC = new IngredientController(container);
             var foodC = new FoodController(container);
             var orderElemC = new OrderElementController(container);
-            
+
             userC.UserAuthentication();
+
             MenuCreator.Create()
                 .SetHeader("Dostępne opcje: ")
                 .AddOptionRange(new Dictionary<string, Action>

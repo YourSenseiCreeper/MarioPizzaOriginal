@@ -7,11 +7,10 @@ namespace MarioPizzaOriginal.Domain
         [Index]
         [AutoIncrement]
         public int SubOrderElementId { get; set; }
-        [Required]
         public int OrderElementId { get; set; }
-        [Required]
         public int FoodId { get; set; }
-        [Required]
+        [Reference]
+        public Food Food { get; set; }
         public double Amount { get; set; }
     }
 }

@@ -1,8 +1,8 @@
-﻿using MarioPizzaOriginal.Domain;
-using MarioPizzaOriginal.Domain.Enums;
+﻿using MarioPizzaOriginal.Domain.Enums;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MarioPizzaOriginal.Domain.DataAccess
 {
@@ -55,24 +55,67 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             return db.Open().Select<Order>(x => x.Status == status);
         }
 
-        public int OrderNextId()
-        {
-            return db.Open().Scalar<Order, int>(x => Sql.Max(x.OrderId)) + 1;
-        }
-
         public double CalculatePriceForOrder(int orderId)
         {
-            var sql = $@"SELECT
-                        SUM(F.Price * O.Amount) +
-                        IFNULL((SELECT SUM(F2.Price * OE.Amount) 
-                                FROM OrderSubElement AS OSE 
-                                INNER JOIN OrderElement OE ON OE.OrderElementId = OSE.OrderElementId
-                                LEFT JOIN Food F2 ON F2.FoodId = OSE.FoodId
-                                WHERE OE.OrderElementId = O.OrderElementId), 0) AS Cena
-                        FROM Food F
-                        JOIN OrderElement O ON O.FoodId = F.FoodId
-                        WHERE O.OrderId = {orderId}";
-            return db.Open().Single<double>(sql);
+            var selectedOrder = GetOrderWithAllElements(orderId);
+            if (selectedOrder == null)
+                return 0;
+            
+            var price = 0d;
+            foreach (var orderElement in selectedOrder.OrderElements)
+            {
+                price += orderElement.Amount * orderElement.Food.Price;
+                if (orderElement.SubOrderElements != null)
+                {
+                    price += orderElement.SubOrderElements.Sum(subOrderElement => subOrderElement.Amount * subOrderElement.Food.Price);
+                }
+            }
+            return price;
+        }
+
+        public Order GetOrderWithAllElements(int orderId)
+        {
+            using (var dbConn = db.Open())
+            {
+                var selectedOrder = dbConn.SingleById<Order>(orderId);
+                if (selectedOrder == null)
+                    return new Order();
+
+                dbConn.LoadReferences(selectedOrder);
+                foreach (var orderElement in selectedOrder.OrderElements)
+                {
+                    dbConn.LoadReferences(orderElement);
+                    foreach (var subOrderElement in orderElement.SubOrderElements)
+                    {
+                        dbConn.LoadReferences(subOrderElement);
+                    }
+                }
+                return selectedOrder;
+            }
+        }
+
+        public void DeleteOrderWithAllElements(int orderId)
+        {
+            using (var dbConn = db.Open())
+            {
+                var selectedOrder = GetOrderWithAllElements(orderId);
+                if (selectedOrder == null)
+                    return;
+
+                foreach (var orderElement in selectedOrder.OrderElements)
+                {
+                    if (orderElement.SubOrderElements == null)
+                        continue;
+
+                    foreach (var orderSubElement in orderElement.SubOrderElements)
+                    {
+                        dbConn.Delete(orderSubElement);
+                    }
+
+                    dbConn.Delete(orderElement);
+                }
+                dbConn.Delete(selectedOrder);
+            }
         }
     }
 }

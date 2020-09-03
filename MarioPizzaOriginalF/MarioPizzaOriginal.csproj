@@ -202,16 +202,11 @@
     <Compile Include="Domain\OrderElement.cs" />
     <Compile Include="Domain\OrderSubElement.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="FilterHelper.cs" />
+    <Compile Include="Domain\Filter\FilterHelper.cs" />
     <Compile Include="MenuCreator.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controller\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Compile Include="Tests\Controller\IngredientControllerTest.cs" />
     <Compile Include="Tests\Controller\OrderControllerTests.cs" />
     <Compile Include="Tests\Domain\DataAccess\DaoTestHelper.cs" />
@@ -231,10 +226,6 @@
     <Content Include="MarioPizza.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Controller\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="System.Runtime.CompilerServices.Unsafe">

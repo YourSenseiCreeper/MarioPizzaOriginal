@@ -41,7 +41,7 @@ namespace MarioPizzaOriginal.Controller
             
             var food = new Food
             {
-                FoodName = ViewHelper.AskForStringNotBlank(string.Format(Resource.FoodController_NewFood_step1, step++, maxStep)),
+                FoodName = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Podaj nazwę produktu: "),
                 Ingredients = new List<FoodIngredient>()
             };
             

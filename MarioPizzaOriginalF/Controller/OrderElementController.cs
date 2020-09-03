@@ -45,24 +45,18 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetAllElementsForOrder()
         {
-            var orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz sprawdzić elementy: ");
-            if (!_orderRepository.Exists(orderId))
-            {
-                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+            if (!CheckIfOrderExists("Podaj id zamówienia dla którego chcesz sprawdzić elementy: ", out var orderId))
                 return;
-            }
             ShowOrderElementsForOrder(orderId);
         }
 
         public void AddOrderElement()
         {
-            int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz dodać element: ");
-            if (!_orderRepository.Exists(orderId))
-            {
-                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+            if (!CheckIfOrderExists("Podaj id zamówienia dla którego chcesz dodać element: ", out var orderId))
                 return;
-            }
+
             int foodId = ViewHelper.AskForInt("Podaj id produktu, który chcesz dodać: ");
+            //TODO: Check if food exists
             double amount = ViewHelper.AskForDouble("Podaj ilość: ");
             _orderElementRepository.Add(new OrderElement { OrderId = orderId, FoodId = foodId, Amount = amount });
             string foodName = _foodRepository.GetName(foodId);
@@ -71,12 +65,9 @@ namespace MarioPizzaOriginal.Controller
 
         public void ChangeAmount()
         {
-            int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz zmienić ilość produktu: ");
-            if (!_orderRepository.Exists(orderId))
-            {
-                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+            if (!CheckIfOrderExists("Podaj id zamówienia dla którego chcesz zmienić ilość produktu: ", out var orderId))
                 return;
-            }
+
             ShowOrderElementsForOrder(orderId);
             int orderElementId = ViewHelper.AskForInt("Podaj id elementu którego chcesz zmienić ilość: ", clear: false);
             if(!_orderElementRepository.IsElementInOrder(orderId, orderElementId))
@@ -105,12 +96,9 @@ namespace MarioPizzaOriginal.Controller
 
         public void DeleteOrderElement()
         {
-            int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz sprawdzić elementy: ");
-            if (!_orderRepository.Exists(orderId))
-            {
-                ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+            if (!CheckIfOrderExists("Podaj id zamówienia dla którego chcesz sprawdzić elementy: ", out var orderId))
                 return;
-            }
+
             ShowOrderElementsForOrder(orderId);
             int orderElementId = ViewHelper.AskForInt("Podaj id elementu który chcesz usunąć: ", clear: false);
             if (!_orderElementRepository.IsElementInOrder(orderId, orderElementId))
@@ -134,6 +122,15 @@ namespace MarioPizzaOriginal.Controller
                 Console.WriteLine($"*id#{element.OrderElementId}* {food.FoodName} (x{element.Amount}) = {food.Price * element.Amount} zł");
             }
             ViewHelper.WriteAndWait($"Wszystkie elementy dla zamówienia nr {orderId}");
+        }
+
+        private bool CheckIfOrderExists(string message, out int orderId)
+        {
+            orderId = ViewHelper.AskForInt(message);
+            if (_orderRepository.Exists(orderId)) 
+                return true;
+            ViewHelper.WriteAndWait($"Zamówienie o id {orderId} nie istnieje!");
+            return false;
         }
 
     }
