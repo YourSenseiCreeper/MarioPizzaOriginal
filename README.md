@@ -18,25 +18,26 @@ Welcome on the main page of the MarioPizzaOriginal project! There were few goals
  - Design patterns: MVC, DI, IoC, Repository
  - travis-ci build server
 ### Screenshots
-Login screen
+##### Login screen
 ![Login screen](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-1.png)
-Main menu of the programme
+##### Main menu of the programme
 ![Main menu of the programme](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-2.png)
-Ingredients menu
+##### Ingredients menu
 ![Ingredients menu](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-3.png)
-Orders menu
+##### Orders menu
 ![Orders menu](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-4.png)
-Order list
+##### Order list
 ![Order list](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-5.png)
-Order details
+##### Order details
 ![Order details](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-6.png)
-Orders filtering menu
+##### Orders filtering menu
 ![Orders filtering menu](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-7.png)
-Products menu
+##### Products menu
 ![Products menu](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-8.png)
-User menu
+##### User menu
 ![User menu](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-9.png)
-Current user details
+##### Current user details
 ![Current user details](https://github.com/YourSenseiCreeper/MarioPizzaOriginal/blob/FilterCancelation/resources/screen-10.png)
+
 *Project for Usages of OOP in Technology of University at Koszalin, 3rd semester, 2019*
 *© 2019-2020 Piotr Wereszczyński All Rights Reserved*
