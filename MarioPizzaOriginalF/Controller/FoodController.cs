@@ -45,32 +45,20 @@ namespace MarioPizzaOriginal.Controller
                 Ingredients = new List<FoodIngredient>()
             };
             
-            bool addAnother = true;
-            string input;
             if(ViewHelper.AskForYesNo($"(krok {step++} z {maxStep}) Chcesz dodać składniki produktu"))
             {
-                while (addAnother)
+                new MenuCreator("Możliwe opcje:", "Zakończ dodawanie", new Dictionary<string, Action>
                 {
-                    Console.Clear();
-                    Console.WriteLine("Możliwe opcje:");
-                    Console.WriteLine("1. Dodaj składnik");
-                    Console.WriteLine("2. Zakończ dodawanie");
-                    input = Console.ReadLine();
-                    if (input.Equals("1"))
-                    {
-                        food.Ingredients.Add(new FoodIngredient
+                    {"Dodaj składnik", () =>
                         {
-                            IngredientId = ViewHelper.AskForInt("Podaj id składnika który chcesz dodać: "),
-                            IngredientAmount = ViewHelper.AskForDouble("Podaj ilość: ")
-                        });
+                            food.Ingredients.Add(new FoodIngredient
+                            {
+                                IngredientId = ViewHelper.AskForInt("Podaj id składnika który chcesz dodać: "),
+                                IngredientAmount = ViewHelper.AskForDouble("Podaj ilość: ")
+                            });
+                        }
                     }
-                    else if (input.Equals("2"))
-                    {
-                        addAnother = false;
-                        ViewHelper.WriteAndWait("Dodawanie składników zakończone!");
-                    }
-                    else Console.WriteLine($"Nie ma opcji: {input}!");
-                }
+                }).PresentRightless();
             }
 
             
@@ -126,13 +114,6 @@ namespace MarioPizzaOriginal.Controller
             entries.ForEach(x => Console.WriteLine(x));
             Console.ReadLine();
         }
-        //
-        // public void CalculatePriceForOrder()
-        // {
-        //     int orderId = ViewHelper.AskForInt("Podaj id zamówienia dla którego chcesz policzyć cene: ");
-        //     double price = _foodRepository.CalculatePriceForFood(orderId);
-        //     ViewHelper.WriteAndWait($"Cena: {price} zł");
-        // }
 
         public void DeleteFood()
         {

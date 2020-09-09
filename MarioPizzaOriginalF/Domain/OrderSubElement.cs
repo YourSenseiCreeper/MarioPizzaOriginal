@@ -4,9 +4,8 @@ namespace MarioPizzaOriginal.Domain
 {
     public class OrderSubElement
     {
-        [Index]
         [AutoIncrement]
-        public int SubOrderElementId { get; set; }
+        public int OrderSubElementId { get; set; }
         public int OrderElementId { get; set; }
         public int FoodId { get; set; }
         [Reference]

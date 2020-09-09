@@ -1,5 +1,6 @@
 ﻿using MarioPizzaOriginal.Domain.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace MarioPizzaOriginal.Domain.Filter
 {
@@ -30,33 +31,47 @@ namespace MarioPizzaOriginal.Domain.Filter
             return $"{Message} ({Convert.ChangeType(Value, FilterType)})";
         }
 
-        private object FunctionSelector()
-        {
-            switch (FilterType.Name.ToLower())
-            {
-                case "int32": return FilterHelper.FilterInt(FilterMessage, Value, Args);
-                case "double": return FilterHelper.FilterDouble(FilterMessage, Args);
-                case "string": return FilterHelper.FilterString(FilterMessage, Args);
-                case "datetime": return FilterHelper.FilterDateTime(FilterMessage, Args);
-                case "unitofmeasure": return FilterHelper.FilterOption<UnitOfMeasure>(FilterMessage, Args);
-                case "orderpriority": return FilterHelper.FilterOption<OrderPriority>(FilterMessage, Args);
-                case "orderstatus": return FilterHelper.FilterOption<OrderStatus>(FilterMessage, Args);
-                default: return FilterHelper.FilterString(FilterMessage, Args);
-            }
-        }
         /// <summary>
         /// Null value check is above in implementation
         /// </summary>
         /// <returns></returns>
         public string ToQueryString()
         {
+            var parameter = string.Empty;
             if (typeof(Enum).IsAssignableFrom(FilterType))
             {
-                var enumValue = Enum.Parse(FilterType, Value.ToString());
-                return string.Format(QueryString, (int) enumValue);
+                var enumValue = (int) Enum.Parse(FilterType, Value.ToString());
+                parameter = enumValue.ToString();
             }
-            else if (FilterType == typeof(double)) return string.Format(QueryString, Value.ToString().Replace(",", "."));
-            else return string.Format(QueryString, Value);
+            else if (FilterType == typeof(double)) parameter = Value.ToString().Replace(",", ".");
+            else if (FilterType == typeof(DateTime)) parameter = ((DateTime)Value).ToString("s");
+            else if (FilterType == typeof(int)) parameter = Value.ToString();
+            else parameter = (string)Value;
+            return string.Format(QueryString, parameter);
         }
+
+
+        private object FunctionSelector()
+        {
+            var filterType = FilterType.Name.ToLower();
+            var args = new[] { Value };
+            if (filterTypeActionMapper.ContainsKey(filterType))
+            {
+                return filterTypeActionMapper[filterType](FilterMessage, args);
+            }
+            return filterTypeActionMapper["string"](FilterMessage, args);
+        }
+
+        private readonly Dictionary<string, Func<string, object[], object>> filterTypeActionMapper =
+            new Dictionary<string, Func<string, object[], object>>
+            {
+                {"int32", FilterHelper.FilterInt},
+                {"double", FilterHelper.FilterDouble},
+                {"string", FilterHelper.FilterString},
+                {"datetime", FilterHelper.FilterDateTime},
+                {"unitofmeasure", FilterHelper.FilterOption<UnitOfMeasure>},
+                {"orderpriority", FilterHelper.FilterOption<OrderPriority>},
+                {"orderstatus", FilterHelper.FilterOption<OrderStatus>}
+            };
     }
 }

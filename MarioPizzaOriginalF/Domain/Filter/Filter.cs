@@ -59,6 +59,15 @@ namespace MarioPizzaOriginal.Domain.Filter
             var results = _repository.Query(queryBuilder.ToString());
             return results;
         }
+
+        public void Clear()
+        {
+            foreach (var filterObject in FilterObjects)
+            {
+                filterObject.Value = null;
+            }
+        }
+
         private void PrepareMenu()
         {
             var index = 0;

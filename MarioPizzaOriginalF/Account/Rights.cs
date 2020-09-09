@@ -50,12 +50,13 @@ namespace MarioPizzaOriginal.Account
             public const string CalculatePriceForOrder = "CalculatePriceForOrder";
             public const string ShowAllSubOrderElements = "ShowAllSubOrderElements";
             public const string GetFilteredOrders = "GetFilteredOrders";
+            public const string AddOrderElement = "AddOrderElement";
             public static readonly IEnumerable<string> Global = new[]
             {
                 OrdersMenu, GetAllOrders, GetOrder, GetOrdersWaiting, GetOrdersInProgress,
                 GetOrdersReadyForDelivery, AddOrder, EditOrder, DeleteOrder,
                 ChangeOrderStatus, MoveToNextStatus, ChangePriority,
-                CalculatePriceForOrder, ShowAllSubOrderElements, GetFilteredOrders
+                CalculatePriceForOrder, ShowAllSubOrderElements, GetFilteredOrders, AddOrderElement
             };
         }
 

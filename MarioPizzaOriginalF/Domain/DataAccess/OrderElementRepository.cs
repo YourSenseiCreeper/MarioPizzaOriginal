@@ -40,11 +40,6 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             return db.Open().Select<OrderElement>($"SELECT * FROM OrderElement WHERE OrderId = {orderId}");
         }
 
-        public int OrderElementNextId()
-        {
-            return db.Open().Scalar<OrderElement, int>(x => Sql.Max(x.OrderId)) + 1;
-        }
-
         public void RemoveFromOrder(int orderId, int foodId)
         {
             db.Open().Delete<OrderElement>(x => x.OrderId == orderId && x.FoodId == foodId);

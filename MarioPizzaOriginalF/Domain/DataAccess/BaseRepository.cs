@@ -11,6 +11,16 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public BaseRepository(OrmLiteConnectionFactory dbConnection) => db = dbConnection;
 
+        public T GetWithReferences(int id)
+        {
+            using (var dbConn = db.Open())
+            {
+                var element = dbConn.SingleById<T>(id);
+                dbConn.LoadReferences(element);
+                return element;
+            }
+        }
+
         public void Add(T element)
         {
             using (var dbConn = db.Open())

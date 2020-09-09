@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MarioPizzaOriginal.Domain.DataAccess;
 using MarioPizzaOriginal.Domain.Enums;
 using Pastel;
 using DColor = System.Drawing.Color;
@@ -120,6 +121,32 @@ namespace MarioPizzaOriginal
             return pass;
         }
 
+        public static string EditableValue(string value)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write(value);
+            ConsoleKey key;
+            do
+            {
+                var keyInfo = Console.ReadKey(intercept: true);
+                key = keyInfo.Key;
+
+                if (key == ConsoleKey.Backspace && value.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    value = value.Substring(0, value.Length - 1);
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    Console.Write(keyInfo.KeyChar);
+                    value += keyInfo.KeyChar;
+                }
+            } while (key != ConsoleKey.Enter);
+            Console.Write("\n");
+            Console.ForegroundColor = ConsoleColor.White;
+            return value;
+        }
+
         /// <summary>
         /// Allows to pick a value from Enum
         /// </summary>
@@ -186,8 +213,16 @@ namespace MarioPizzaOriginal
                 case OrderStatus.DELIVERY: return status.ToString().Pastel(DColor.Blue);
                 case OrderStatus.DONE: return status.ToString().Pastel(DColor.Gray);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
+                    throw new ArgumentOutOfRangeException(nameof(status), status, "Nie ma takiego koloru!");
             }
+        }
+        public static bool CheckIfElementNotExists(IOrderRepository repository, string message, string missing, out int elementId)
+        {
+            elementId = AskForInt(message);
+            if (repository.Exists(elementId))
+                return false;
+            WriteAndWait(string.Format(missing, elementId));
+            return true;
         }
     }
 }

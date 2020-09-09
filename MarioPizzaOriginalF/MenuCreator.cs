@@ -12,14 +12,12 @@ namespace MarioPizzaOriginal
         private Dictionary<string, Action> menuActions;
         private List<Action> gobackActions;
         private string header;
-        private string footer;
 
         public MenuCreator()
         {
             menuActions = new Dictionary<string, Action>();
             gobackActions = new List<Action>();
             header = "Dostępne opcje: ";
-            footer = "Wyjście";
         }
 
         public MenuCreator(string header, string footer, Dictionary<string, Action> actions)
@@ -35,8 +33,7 @@ namespace MarioPizzaOriginal
             {
                 menuActions = new Dictionary<string, Action>(),
                 gobackActions = new List<Action>(),
-                header = "Dostępne opcje: ",
-                footer = "Wyjście"
+                header = "Dostępne opcje: "
             };
         }
 

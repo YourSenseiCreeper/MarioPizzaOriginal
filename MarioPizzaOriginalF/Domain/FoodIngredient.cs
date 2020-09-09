@@ -7,7 +7,8 @@ namespace MarioPizzaOriginal.Domain
         [AutoIncrement]
         public int FoodIngredientId { get; set; }
         public int FoodId { get; set; }
-        [References(typeof(Ingredient))]
+        [Reference]
+        public Food Food { get; set; }
         public int IngredientId { get; set; }
         [Reference]
         public Ingredient Ingredient { get; set; }

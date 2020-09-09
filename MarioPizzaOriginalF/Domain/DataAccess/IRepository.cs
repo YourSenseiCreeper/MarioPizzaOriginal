@@ -7,6 +7,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
     public interface IRepository<T>
     {
         T Get(int id);
+        T GetWithReferences(int id);
         void Add(T newOne);
         void Save(T editOne);
         void Remove(int id);
@@ -39,7 +40,6 @@ namespace MarioPizzaOriginal.Domain.DataAccess
     }
     public interface IOrderElementRepository : IRepository<OrderElement> 
     {
-        int OrderElementNextId();
         void AddToOrder(int orderId, int foodId, double quantity);
         void RemoveFromOrder(int orderId, int foodId);
         List<OrderElement> GetElements(int orderId);

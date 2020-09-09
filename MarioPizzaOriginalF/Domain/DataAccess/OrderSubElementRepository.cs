@@ -16,7 +16,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
                     conn.Insert(
                         new OrderSubElement
                         {
-                            SubOrderElementId = 1,
+                            OrderSubElementId = 1,
                             OrderElementId = 1,
                             FoodId = 1,
                             Amount = 1

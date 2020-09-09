@@ -40,18 +40,6 @@ namespace MarioPizzaOriginal.Domain.DataAccess
                 Console.WriteLine($"{result.Item3.IngredientName} - {result.Item2.IngredientAmount} {result.Item3.UnitOfMeasureType}");
             }
             Console.ReadLine();
-            /*
-            using (IDbConnection con = new SQLiteConnection(ConnectionString))
-            {
-                var query = $"SELECT F.FoodId,F.Price,I.IngredientId,FI.IngredientAmount,I.PriceSmall,I.PriceMedium,I.PriceLarge " +
-                            "FROM Food AS F " +
-                            "JOIN FoodIngredient AS FI ON FI.FoodId = F.FoodId " +
-                            "JOIN Ingredients AS I ON I.IngredientId = FI.IngredientId" +
-                            $"WHERE F.FoodId = {foodId}";
-                //Define type and return values for the query
-                var output = con.Query(query);
-            }
-            */
             return 0;
         }
 

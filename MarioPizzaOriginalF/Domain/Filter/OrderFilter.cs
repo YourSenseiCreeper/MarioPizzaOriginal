@@ -17,8 +17,8 @@ namespace MarioPizzaOriginal.Domain.Filter
                 new FilterObject ( "Adres dostawy zawiera", "Podaj ciąg który znajduje się w Adresie dostawy: ", "DeliveryAddress like '%{0}%'", typeof(string)),
                 new FilterObject ( "Priorytet zamówienia", "Wybierz priorytet zamówienia: ", "Priority = {0}", typeof(OrderPriority)),
                 new FilterObject ( "Status zamówienia", "Wybierz status zamówienia: ", "Status = {0}", typeof(OrderStatus)),
-                new FilterObject ( "Dolna granica czasu zamówienia", "Podaj dolną granicę czasu zamówienia zamówienia np. 01/01/2000 06:15: ", "OrderTime >= '{0}'", typeof(DateTime)),
-                new FilterObject ( "Górna granica czasu zamówienia", "Podaj górną granicę czasu zamówienia zamówienia np. 01/01/2000 06:15: ", "OrderTime <= '{0}'", typeof(DateTime)),
+                new FilterObject ( "Dolna granica czasu zamówienia", "Podaj dolną granicę czasu zamówienia zamówienia np. 01/01/2000 06:15: ", "OrderTime >= date('{0}')", typeof(DateTime)),
+                new FilterObject ( "Górna granica czasu zamówienia", "Podaj górną granicę czasu zamówienia zamówienia np. 01/01/2000 06:15: ", "OrderTime <= date('{0}')", typeof(DateTime)),
             };
         }
     }
