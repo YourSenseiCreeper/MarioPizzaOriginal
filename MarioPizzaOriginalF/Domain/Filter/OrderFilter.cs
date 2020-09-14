@@ -7,7 +7,7 @@ namespace MarioPizzaOriginal.Domain.Filter
 {
     public class OrderFilter : Filter<Order>
     {
-        public OrderFilter(TinyIoCContainer container) : base(container)
+        public OrderFilter()
         {
             FilterObjects = new List<FilterObject>
             {
@@ -19,6 +19,7 @@ namespace MarioPizzaOriginal.Domain.Filter
                 new FilterObject ( "Status zamówienia", "Wybierz status zamówienia: ", "Status = {0}", typeof(OrderStatus)),
                 new FilterObject ( "Dolna granica czasu zamówienia", "Podaj dolną granicę czasu zamówienia zamówienia np. 01/01/2000 06:15: ", "OrderTime >= date('{0}')", typeof(DateTime)),
                 new FilterObject ( "Górna granica czasu zamówienia", "Podaj górną granicę czasu zamówienia zamówienia np. 01/01/2000 06:15: ", "OrderTime <= date('{0}')", typeof(DateTime)),
+                new FilterObject ( "Uwagi", "Podaj ciąg który znajduje się w Uwagach: ", "Comments like '%{0}%'", typeof(string))
             };
         }
     }

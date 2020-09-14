@@ -10,9 +10,9 @@ namespace MarioPizzaOriginal.Domain.Filter
     public class Filter<T>
     {
         public List<FilterObject> FilterObjects { get; set; }
-        public Filter(TinyIoCContainer container)
+        public Filter()
         {
-            _repository = container.Resolve<IRepository<T>>();
+            _repository = TinyIoCContainer.Current.Resolve<IRepository<T>>();
         }
 
         public bool FilterMenu()

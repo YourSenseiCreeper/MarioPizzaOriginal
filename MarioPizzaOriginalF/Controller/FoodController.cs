@@ -15,11 +15,12 @@ namespace MarioPizzaOriginal.Controller
         private readonly IFoodIngredientRepository _foodIngredientRepository;
         private readonly FoodFilter _foodFilter;
         private readonly MenuCreator _foodMenu;
-        public FoodController(TinyIoCContainer container)
+        public FoodController()
         {
+            var container = TinyIoCContainer.Current;
             _foodRepository = container.Resolve<IFoodRepository>();
             _foodIngredientRepository = container.Resolve<IFoodIngredientRepository>();
-            _foodFilter = new FoodFilter(container);
+            _foodFilter = new FoodFilter();
             _foodMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - Produkty:")
                 .AddOptionRange(new Dictionary<string, Action>
@@ -92,15 +93,11 @@ namespace MarioPizzaOriginal.Controller
         
         public void GetFood()
         {
-            var foodId = ViewHelper.AskForInt("Podaj id produktu: ");
-            var foodExists = _foodRepository.Exists(foodId);
-            if(!foodExists)
-            {
-                ViewHelper.WriteAndWait("Nie znaleziono produktu");
+            if (FoodNotExists("Podaj id produktu: ", out var foodId))
                 return;
-            }
+
             var food = _foodRepository.GetFoodWithIngredients(foodId);
-            List<string> entries = new List<string> {
+            var entries = new List<string> {
                 $"=== {food.FoodName} ===",
                 $"Id produktu: {food.FoodId}",
                 $"Cena: {food.Price}zł ({food.NettPrice} zł netto)",
@@ -111,19 +108,15 @@ namespace MarioPizzaOriginal.Controller
             if (food.Ingredients.Count == 0) entries.Add("Brak składników!");
             else entries.AddRange(ShowIngredients(food.Ingredients));
 
-            entries.ForEach(x => Console.WriteLine(x));
+            entries.ForEach(Console.WriteLine);
             Console.ReadLine();
         }
 
         public void DeleteFood()
         {
-            int foodId = ViewHelper.AskForInt("Podaj id produktu, który chcesz usunąć: ");
-            var food = _foodRepository.Get(foodId);
-            if (food == null)
-            {
-                ViewHelper.WriteAndWait($"Nie znaleziono produktu o id {foodId}");
+            if (FoodNotExists("Podaj id produktu, który chcesz usunąć: ", out var foodId))
                 return;
-            }
+
             string foodName = _foodRepository.GetName(foodId);
             _foodIngredientRepository.DeleteFoodIngredients(foodId);
             _foodRepository.Remove(foodId);
@@ -143,12 +136,9 @@ namespace MarioPizzaOriginal.Controller
 
         public void GetIngredients()
         {
-            var foodId = ViewHelper.AskForInt("Podaj id produktu dla którego chcesz sprawdzić składniki:");
-            if (_foodRepository.Exists(foodId))
-            {
-                ViewHelper.WriteAndWait($"Nie znaleziono produktu o id {foodId}");
+            if (FoodNotExists("Podaj id produktu dla którego chcesz sprawdzić składniki: ", out var foodId))
                 return;
-            }
+
             var food = _foodRepository.GetFoodWithIngredients(foodId);
             ShowIngredients(food.Ingredients);
         }
@@ -181,6 +171,13 @@ namespace MarioPizzaOriginal.Controller
                 return $"{quoient}min {remainder}s";
             }
             return "0min 0s";
+        }
+
+        private bool FoodNotExists(string message, out int foodId)
+        {
+            var result = ViewHelper.CheckIfElementNotExists(_foodRepository, message, "Produkt o id {0} nie istnieje!", out var elementId);
+            foodId = elementId;
+            return result;
         }
     }
 }

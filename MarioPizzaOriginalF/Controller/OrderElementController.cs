@@ -12,8 +12,9 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderRepository _orderRepository;
         private readonly IFoodRepository _foodRepository;
         private readonly MenuCreator _orderElementMenu;
-        public OrderElementController(TinyIoCContainer container)
+        public OrderElementController()
         {
+            var container = TinyIoCContainer.Current;
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderRepository = container.Resolve<IOrderRepository>();
             _foodRepository = container.Resolve<IFoodRepository>();
@@ -55,8 +56,12 @@ namespace MarioPizzaOriginal.Controller
             if (!CheckIfOrderExists("Podaj id zamówienia dla którego chcesz dodać element: ", out var orderId))
                 return;
 
-            int foodId = ViewHelper.AskForInt("Podaj id produktu, który chcesz dodać: ");
-            //TODO: Check if food exists
+            var foodId = ViewHelper.AskForInt("Podaj id produktu, który chcesz dodać: ");
+            if (!_foodRepository.Exists(foodId))
+            {
+                ViewHelper.WriteAndWait($"Produkt o id {foodId} nie istnieje!");
+                return;
+            }
             double amount = ViewHelper.AskForDouble("Podaj ilość: ");
             _orderElementRepository.Add(new OrderElement { OrderId = orderId, FoodId = foodId, Amount = amount });
             string foodName = _foodRepository.GetName(foodId);

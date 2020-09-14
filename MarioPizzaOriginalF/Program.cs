@@ -11,14 +11,13 @@ namespace MarioPizzaOriginal
     {
         public static void Main(string[] args)
         {
-            var container = TinyIoCContainer.Current;
-            new DomainStartup(container); // registering repositories to IoC
-            container.Register(new User{Permissions = new BaseRights()}, "CurrentUser");
-            var userC = new UserController(container);
-            var orderC = new OrderController(container);
-            var ingredientC = new IngredientController(container);
-            var foodC = new FoodController(container);
-            var orderElemC = new OrderElementController(container);
+            new DomainStartup(); // registering repositories to IoC
+            TinyIoCContainer.Current.Register(new User{Permissions = new BaseRights()}, "CurrentUser");
+            var userC = new UserController();
+            var orderC = new OrderController();
+            var ingredientC = new IngredientController();
+            var foodC = new FoodController();
+            var orderElemC = new OrderElementController();
 
             userC.UserAuthentication();
 

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using MarioPizzaOriginal.Domain.Enums;
-using TinyIoC;
 
 namespace MarioPizzaOriginal.Domain.Filter
 {
     public class IngredientFilter : Filter<Ingredient>
     {
-        public IngredientFilter(TinyIoCContainer container) : base(container)
+        public IngredientFilter()
         {
             FilterObjects = new List<FilterObject>
             {

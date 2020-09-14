@@ -10,8 +10,6 @@ namespace MarioPizzaOriginal
 {
     public static class ViewHelper
     {
-        private const string exitSequence = "/";
-
         public static int AskForInt(string message, int? min = null, int? max = null, int? current = null, bool exit = true, bool clear=true)
         {
             string answer;
@@ -147,15 +145,7 @@ namespace MarioPizzaOriginal
             return value;
         }
 
-        /// <summary>
-        /// Allows to pick a value from Enum
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="messageAllElements"></param>
-        /// <param name="messageNewValue"></param>
-        /// <param name="currentValue"></param>
-        /// <param name="inline">Answer in the same line as question?</param>
-        /// <returns></returns>
+
         public static T AskForOption<T>(string messageAllElements, string messageNewValue, string currentValue = "", 
             bool inline = true) where T : Enum
         {
@@ -164,7 +154,6 @@ namespace MarioPizzaOriginal
 
         public static T UnsafeAskForOption<T>(string messageAllElements, string messageNewValue, bool inline = true)
         {
-            string answer;
             T result = default;
             bool answerOk = false;
             do
@@ -175,7 +164,7 @@ namespace MarioPizzaOriginal
                 Console.WriteLine(messageAllElements);
                 Enum.GetNames(typeof(T)).ToList().ForEach(element => Console.WriteLine($"{index++}. {element}"));
                 Console.Write(messageNewValue);
-                answer = Console.ReadLine();
+                var answer = Console.ReadLine();
 
                 try
                 {
@@ -216,7 +205,7 @@ namespace MarioPizzaOriginal
                     throw new ArgumentOutOfRangeException(nameof(status), status, "Nie ma takiego koloru!");
             }
         }
-        public static bool CheckIfElementNotExists(IOrderRepository repository, string message, string missing, out int elementId)
+        public static bool CheckIfElementNotExists<T>(IRepository<T> repository, string message, string missing, out int elementId)
         {
             elementId = AskForInt(message);
             if (repository.Exists(elementId))

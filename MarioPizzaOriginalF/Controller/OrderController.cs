@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MarioPizzaOriginal.Domain.DataAccess;
-using Pastel;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -18,13 +17,14 @@ namespace MarioPizzaOriginal.Controller
         private readonly IOrderSubElementRepository _orderSubElementRepository;
         private readonly OrderFilter _orderFilter;
         private readonly MenuCreator _orderMenu;
-        public OrderController(TinyIoCContainer container)
+        public OrderController()
         {
+            var container = TinyIoCContainer.Current;
             _foodRepository = container.Resolve<IFoodRepository>();
             _orderRepository = container.Resolve<IOrderRepository>();
             _orderElementRepository = container.Resolve<IOrderElementRepository>();
             _orderSubElementRepository = container.Resolve<IOrderSubElementRepository>();
-            _orderFilter = new OrderFilter(container);
+            _orderFilter = new OrderFilter();
             _orderMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - Zamówienia: ")
                 .AddOptionRange(new Dictionary<string, Action>
@@ -59,7 +59,7 @@ namespace MarioPizzaOriginal.Controller
                 OrderElements = new List<OrderElement>()
             };
             var step = 1;
-            var maxStep = 7;
+            var maxStep = 8;
 
             newOrder.ClientPhoneNumber = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Numer telefonu klienta: ");
             if (newOrder.ClientPhoneNumber.Length != 9)
@@ -102,6 +102,7 @@ namespace MarioPizzaOriginal.Controller
 
             newOrder.Payment = ViewHelper.AskForOption<Payment>("Dostępne opcje: ", $"({step++} z {maxStep}) Wybierz gdzie chcesz zapłacić: ");
             newOrder.PaymentMethod = ViewHelper.AskForOption<PaymentMethod>("Dostępne opcje: ", $"({step++} z {maxStep}) Wybierz w jaki sposób chcesz zapłacić: ");
+            newOrder.Comments = ViewHelper.AskForString($"(krok {step++} z {maxStep}) Uwagi do zamówienia: ");
 
             if (ViewHelper.AskForYesNo($"({step} z {maxStep}) Czy chcesz dodać to zamówienie?"))
                 _orderRepository.Add(newOrder);
@@ -236,6 +237,7 @@ namespace MarioPizzaOriginal.Controller
             Console.WriteLine($"{"Numer tel. klienta:",-20} {selectedOrder.ClientPhoneNumber}");
             Console.WriteLine($"{"Priorytet:",-20} {selectedOrder.Priority}");
             Console.WriteLine($"{"Status:",-20} {selectedOrder.Status}");
+            Console.WriteLine($"{"Uwagi:",-20} {selectedOrder.Comments}");
             var price = 0d;
             if (selectedOrder.OrderElements != null)
             {
@@ -317,17 +319,6 @@ namespace MarioPizzaOriginal.Controller
                     Console.WriteLine($"\t* {subOrderElement.Food.FoodName} x{subOrderElement.Amount} = " +
                                       $"{subOrderElement.Food.Price * subOrderElement.Amount} zł");
                 }
-            }
-        }
-
-        private void ShowSubOrderElements(List<OrderSubElement> subOrderElements)
-        {
-            Console.WriteLine("Elementy dodatkowe dla elementu zamówienia:");
-            string subOrderSpace = " * ";
-            foreach (var subOrderElement in subOrderElements)
-            {
-                string foodName = _foodRepository.GetName(subOrderElement.FoodId);
-                Console.WriteLine($"{subOrderSpace}{foodName} (x{subOrderElement.Amount})");
             }
         }
     }

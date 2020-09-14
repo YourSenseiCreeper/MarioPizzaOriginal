@@ -5,7 +5,7 @@ namespace MarioPizzaOriginal.Domain.Filter
 {
     public class FoodFilter : Filter<Food>
     {
-        public FoodFilter(TinyIoCContainer container) : base(container)
+        public FoodFilter()
         {
             FilterObjects = new List<FilterObject>
             {

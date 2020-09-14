@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
+using ServiceStack.Data;
 using ServiceStack.OrmLite;
 
 namespace MarioPizzaOriginal.Tests.Domain.DataAccess
 {
     public class DaoTestHelper<TRepository> where TRepository : class
     {
-        private readonly OrmLiteConnectionFactory _db;
+        private readonly IDbConnectionFactory _db;
         private readonly TRepository _repository;
 
-        public DaoTestHelper(Func<OrmLiteConnectionFactory, TRepository> begin)
+        public DaoTestHelper(Func<IDbConnectionFactory, TRepository> begin)
         {
             var currentPath = Directory.GetCurrentDirectory();
             _db = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["TestSqlLite"].ConnectionString, SqliteDialect.Provider);

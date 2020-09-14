@@ -8,12 +8,9 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {
-        private readonly OrmLiteConnectionFactory db;
-
-        public OrderRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
+        public OrderRepository()
         {
-            db = dbConnection;
-            using (var conn = dbConnection.Open())
+            using (var conn = connection.Open())
             {
                 if (conn.CreateTableIfNotExists<Order>())
                 {
@@ -35,7 +32,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public new void Add(Order order)
         {
-            using (var dbConn = db.Open())
+            using (var dbConn = connection.Open())
             {
                 dbConn.Save(order);
                 if (order.OrderElements.Count != 0)
@@ -52,7 +49,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public List<Order> GetByStatus(OrderStatus status)
         {
-            return db.Open().Select<Order>(x => x.Status == status);
+            return connection.Open().Select<Order>(x => x.Status == status);
         }
 
         public double CalculatePriceForOrder(int orderId)
@@ -75,7 +72,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public Order GetOrderWithAllElements(int orderId)
         {
-            using (var dbConn = db.Open())
+            using (var dbConn = connection.Open())
             {
                 var selectedOrder = dbConn.SingleById<Order>(orderId);
                 if (selectedOrder == null)
@@ -96,7 +93,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public void DeleteOrderWithAllElements(int orderId)
         {
-            using (var dbConn = db.Open())
+            using (var dbConn = connection.Open())
             {
                 var selectedOrder = GetOrderWithAllElements(orderId);
                 if (selectedOrder == null)

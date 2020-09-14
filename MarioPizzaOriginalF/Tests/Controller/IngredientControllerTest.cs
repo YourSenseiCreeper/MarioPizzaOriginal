@@ -22,8 +22,7 @@ namespace MarioPizzaOriginal.Tests.Domain
             var factory = new MockRepository(MockBehavior.Loose);
             var mockIngredientRepository = factory.Create<IIngredientRepository>();
             mockIngredientRepository.Setup(t => t);
-            var mockController = new IngredientController(TinyIoCContainer.Current);
-
+            var mockController = new IngredientController();
         }
 
         [Test]

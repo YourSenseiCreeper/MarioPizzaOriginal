@@ -22,5 +22,6 @@ namespace MarioPizzaOriginal.Domain
         public DateTime OrderTime { get; set; }
         [Reference]
         public List<OrderElement> OrderElements { get; set; }
+        public string Comments { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace MarioPizzaOriginal.Controller.Tests
             _mockOrderElementRepository = factory.Create<IOrderElementRepository>();
             _mockOrderSubElementRepository = factory.Create<IOrderSubElementRepository>();
             
-            _orderController = new OrderController(null);
+            _orderController = new OrderController();
             _sampleOrder = new Order
             {
                 OrderId = 0,

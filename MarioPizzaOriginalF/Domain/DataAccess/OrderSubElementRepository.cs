@@ -5,11 +5,9 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class OrderSubElementRepository : BaseRepository<OrderSubElement>, IOrderSubElementRepository
     {
-        private readonly OrmLiteConnectionFactory db;
-        public OrderSubElementRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
+        public OrderSubElementRepository()
         {
-            db = dbConnection;
-            using (var conn = dbConnection.Open())
+            using (var conn = connection.Open())
             {
                 if (conn.CreateTableIfNotExists<OrderSubElement>())
                 {
@@ -27,7 +25,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public List<OrderSubElement> GetSubElements(int orderElementId)
         {
-            return db.Open().Select<OrderSubElement>($"SELECT * FROM OrderSubElement Where OrderElementId = {orderElementId}");
+            return connection.Open().Select<OrderSubElement>($"SELECT * FROM OrderSubElement Where OrderElementId = {orderElementId}");
         }
     }
 }

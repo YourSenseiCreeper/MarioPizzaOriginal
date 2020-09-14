@@ -13,10 +13,10 @@ namespace MarioPizzaOriginal.Controller
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IngredientFilter _ingredientFilter;
         private readonly MenuCreator _ingredientMenu;
-        public IngredientController(TinyIoCContainer container)
+        public IngredientController()
         {
-            _ingredientRepository = container.Resolve<IIngredientRepository>();
-            _ingredientFilter = new IngredientFilter(container);
+            _ingredientRepository = TinyIoCContainer.Current.Resolve<IIngredientRepository>();
+            _ingredientFilter = new IngredientFilter();
             _ingredientMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - składniki: ")
                 .AddOptionRange(new Dictionary<string, Action>
@@ -35,7 +35,7 @@ namespace MarioPizzaOriginal.Controller
 
         public void AddIngredient()
         {
-            Ingredient newIngredient = new Ingredient
+            var newIngredient = new Ingredient
             {
                 IngredientName = ViewHelper.AskForStringNotBlank("Podaj nazwę nowego składnika: "),
                 UnitOfMeasureType = ViewHelper.AskForOption<UnitOfMeasure>("Dostępne jednostki miary:", "Podaj numer jednostki miary: ")
@@ -104,29 +104,6 @@ namespace MarioPizzaOriginal.Controller
             ViewHelper.WriteAndWait($"Usunięto składnik o id {ingredientId}");
         }
 
-
-        private void ShowIngredients(List<Ingredient> ingredients)
-        {
-            string header = $"{"Id",5}|{"Nazwa składnika",30}|{"Jednostka miary",15}|";
-            Console.WriteLine(new string('=', header.Length));
-            ingredients.ForEach(x =>
-            {
-                Console.WriteLine($"{x.IngredientId,5}|{x.IngredientName,30}|{x.UnitOfMeasureType,15}|");
-            });
-        }
-
-        private void DescribeIngredient(Ingredient ingredient)
-        {
-            List<string> text = new List<string> { 
-                $"Nazwa składnika: {ingredient.IngredientName}",
-                $"Numer porządkowy: {ingredient.IngredientId}",
-                $"Jednostka miary: {ingredient.UnitOfMeasureType}",
-                $"Cena (Mała): {ingredient.PriceSmall}",
-                $"Cena (Średnia): {ingredient.PriceMedium}",
-                $"Cena (Duża): {ingredient.PriceLarge}"};
-            text.ForEach(Console.WriteLine);
-        }
-
         public void GetIngredient()
         {
             if (CheckIfIngredientNotExists("Podaj id składnika: ", out var ingredientId)) 
@@ -147,6 +124,28 @@ namespace MarioPizzaOriginal.Controller
         }
 
 
+        private void ShowIngredients(List<Ingredient> ingredients)
+        {
+            string header = $"{"Id",5}|{"Nazwa składnika",30}|{"Jednostka miary",15}|";
+            Console.WriteLine(new string('=', header.Length));
+            ingredients.ForEach(x =>
+            {
+                Console.WriteLine($"{x.IngredientId,5}|{x.IngredientName,30}|{x.UnitOfMeasureType,15}|");
+            });
+        }
+
+        private void DescribeIngredient(Ingredient ingredient)
+        {
+            var text = new List<string> {
+                $"Nazwa składnika: {ingredient.IngredientName}",
+                $"Numer porządkowy: {ingredient.IngredientId}",
+                $"Jednostka miary: {ingredient.UnitOfMeasureType}",
+                $"Cena (Mała): {ingredient.PriceSmall}",
+                $"Cena (Średnia): {ingredient.PriceMedium}",
+                $"Cena (Duża): {ingredient.PriceLarge}"};
+            text.ForEach(Console.WriteLine);
+            Console.ReadLine();
+        }
         private bool CheckIfIngredientNotExists(string message, out int ingredientId)
         {
             ingredientId = ViewHelper.AskForInt(message);

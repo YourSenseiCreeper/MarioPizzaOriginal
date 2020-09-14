@@ -17,10 +17,10 @@ namespace MarioPizzaOriginal.Controller
         private readonly MenuCreator _userMenu;
         private readonly MenuCreator _preloginMenu;
 
-        public UserController(TinyIoCContainer container)
+        public UserController()
         {
-            _container = container;
-            _userRepository = container.Resolve<IUserRepository>();
+            _container = TinyIoCContainer.Current;
+            _userRepository = _container.Resolve<IUserRepository>();
             _preloginMenu = MenuCreator.Create()
                 .SetHeader("Zaloguj się lub zarejestruj")
                 .AddOptionRange(new Dictionary<string, Action>

@@ -6,9 +6,9 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class IngredientRepository : BaseRepository<Ingredient>, IIngredientRepository
     {
-        public IngredientRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
+        public IngredientRepository()
         {
-            using (var conn = dbConnection.Open())
+            using (var conn = connection.Open())
             {
                 if (conn.CreateTableIfNotExists<Ingredient>())
                 {

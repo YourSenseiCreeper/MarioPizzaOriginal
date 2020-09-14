@@ -9,7 +9,7 @@ namespace MarioPizzaOriginal.Tests.Domain.DataAccess
     [TestFixture]
     public class IngredientRepositoryTests : DaoTestHelper<IngredientRepository>
     {
-        public IngredientRepositoryTests() : base(conn => new IngredientRepository(conn))
+        public IngredientRepositoryTests() : base(conn => new IngredientRepository())
         {
         }
 

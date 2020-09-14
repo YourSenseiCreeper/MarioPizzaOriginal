@@ -1,17 +1,12 @@
-﻿using MarioPizzaOriginal.Domain;
-using ServiceStack.OrmLite;
+﻿using ServiceStack.OrmLite;
 using System;
-using System.Collections.Generic;
 namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class FoodRepository : BaseRepository<Food>, IFoodRepository
     {
-        private readonly OrmLiteConnectionFactory db;
-
-        public FoodRepository(OrmLiteConnectionFactory dbConnection) : base(dbConnection)
+        public FoodRepository()
         {
-            db = dbConnection;
-            using (var conn = dbConnection.Open())
+            using (var conn = connection.Open())
             {
                 if (!conn.TableExists<Food>())
                 {
@@ -33,8 +28,8 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public double CalculatePriceForFood(int foodId)
         {
-            var q = db.Open().From<Food>().Join<Food, FoodIngredient>().Join<FoodIngredient, Ingredient>().Where(x => x.FoodId == foodId).Select("*");
-            var results = db.Open().SelectMulti<Food, FoodIngredient, Ingredient>(q);
+            var q = connection.Open().From<Food>().Join<Food, FoodIngredient>().Join<FoodIngredient, Ingredient>().Where(x => x.FoodId == foodId).Select("*");
+            var results = connection.Open().SelectMulti<Food, FoodIngredient, Ingredient>(q);
             foreach(var result in results)
             {
                 Console.WriteLine($"{result.Item3.IngredientName} - {result.Item2.IngredientAmount} {result.Item3.UnitOfMeasureType}");
@@ -45,7 +40,7 @@ namespace MarioPizzaOriginal.Domain.DataAccess
 
         public Food GetFoodWithIngredients(int foodId)
         {
-            using (var dbConn = db.Open())
+            using (var dbConn = connection.Open())
             {
                 var food = dbConn.SingleById<Food>(foodId);
                 dbConn.LoadReferences(food);
