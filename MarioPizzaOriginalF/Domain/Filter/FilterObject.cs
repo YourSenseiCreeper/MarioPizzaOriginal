@@ -1,34 +1,30 @@
-﻿using MarioPizzaOriginal.Domain.Enums;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace MarioPizzaOriginal.Domain.Filter
 {
     public class FilterObject
     {
-        public string Message { get; set; }
+        public string MenuMessage { get; set; }
         public string FilterMessage { get; set; }
         public string QueryString { get; set; }
         public object Value { get; set; }
         public Type FilterType { get; set; }
         public object[] Args { get; set; }
 
-        public FilterObject(string filterMenuMessage, string filterMessage, string queryString,
+        public FilterObject(string menuMessage, string filterMessage, string queryString,
             Type filterType, object[] args = null)
         {
-            Message = filterMenuMessage;
+            MenuMessage = menuMessage;
             FilterMessage = filterMessage;
             QueryString = queryString;
             FilterType = filterType;
             Args = args;
         }
 
-        public void Filter() => Value = FunctionSelector();
-
         public string ToMenuString()
         {
-            if (Value == null) return Message;
-            return $"{Message} ({Convert.ChangeType(Value, FilterType)})";
+            if (Value == null) return MenuMessage;
+            return $"{MenuMessage} ({Convert.ChangeType(Value, FilterType)})";
         }
 
         /// <summary>
@@ -37,7 +33,7 @@ namespace MarioPizzaOriginal.Domain.Filter
         /// <returns></returns>
         public string ToQueryString()
         {
-            var parameter = string.Empty;
+            string parameter;
             if (typeof(Enum).IsAssignableFrom(FilterType))
             {
                 var enumValue = (int) Enum.Parse(FilterType, Value.ToString());
@@ -49,29 +45,5 @@ namespace MarioPizzaOriginal.Domain.Filter
             else parameter = (string)Value;
             return string.Format(QueryString, parameter);
         }
-
-
-        private object FunctionSelector()
-        {
-            var filterType = FilterType.Name.ToLower();
-            var args = new[] { Value };
-            if (filterTypeActionMapper.ContainsKey(filterType))
-            {
-                return filterTypeActionMapper[filterType](FilterMessage, args);
-            }
-            return filterTypeActionMapper["string"](FilterMessage, args);
-        }
-
-        private readonly Dictionary<string, Func<string, object[], object>> filterTypeActionMapper =
-            new Dictionary<string, Func<string, object[], object>>
-            {
-                {"int32", FilterHelper.FilterInt},
-                {"double", FilterHelper.FilterDouble},
-                {"string", FilterHelper.FilterString},
-                {"datetime", FilterHelper.FilterDateTime},
-                {"unitofmeasure", FilterHelper.FilterOption<UnitOfMeasure>},
-                {"orderpriority", FilterHelper.FilterOption<OrderPriority>},
-                {"orderstatus", FilterHelper.FilterOption<OrderStatus>}
-            };
     }
 }

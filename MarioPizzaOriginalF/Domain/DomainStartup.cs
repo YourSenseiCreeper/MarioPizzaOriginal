@@ -2,7 +2,6 @@
 using System.Configuration;
 using MarioPizzaOriginal.Domain.DataAccess;
 using TinyIoC;
-using System;
 using ServiceStack.Data;
 
 namespace MarioPizzaOriginal.Domain
@@ -23,6 +22,7 @@ namespace MarioPizzaOriginal.Domain
             RegisterRepository<OrderElementRepository, IOrderElementRepository, IRepository<OrderElement>>();
             RegisterRepository<OrderSubElementRepository, IOrderSubElementRepository, IRepository<OrderSubElement>>();
             RegisterRepository<UserRepository, IUserRepository, IRepository<User>>();
+            RegisterRepository<RoleRepository, IRoleRepository, IRepository<Role>>();
         }
 
         private void RegisterRepository<T, TK, TV>() 

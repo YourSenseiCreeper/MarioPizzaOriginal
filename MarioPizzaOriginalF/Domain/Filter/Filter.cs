@@ -3,16 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MarioPizzaOriginal.Domain.DataAccess;
+using MarioPizzaOriginal.Domain.Enums;
+using MarioPizzaOriginal.Tools;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Domain.Filter
 {
     public class Filter<T>
     {
-        public List<FilterObject> FilterObjects { get; set; }
-        public Filter()
+        public List<FilterObject> FilterObjects { get; }
+        public Filter(IConsole console, List<FilterObject> filterObjects)
         {
+            var filterHelper = new FilterHelper(console);
             _repository = TinyIoCContainer.Current.Resolve<IRepository<T>>();
+            FilterObjects = filterObjects;
+            _filterTypeAction = new Dictionary<string, Func<string, object[], object>>
+            {
+                {"int32", filterHelper.FilterInt},
+                {"double", filterHelper.FilterDouble},
+                {"string", filterHelper.FilterString},
+                {"datetime", filterHelper.FilterDateTime},
+                {"unitofmeasure", filterHelper.FilterOption<UnitOfMeasure>},
+                {"orderpriority", filterHelper.FilterOption<OrderPriority>},
+                {"orderstatus", filterHelper.FilterOption<OrderStatus>}
+            };
         }
 
         public bool FilterMenu()
@@ -35,21 +49,21 @@ namespace MarioPizzaOriginal.Domain.Filter
                 }
                 else if (selection == FilterObjects.Count + 1) return false;
                 else if (selection == FilterObjects.Count) return true;
-                else FilterObjects[selection].Filter();
+                else FilterExecutor(FilterObjects[selection]);
             } while (selection != FilterObjects.Count);
             return true;
         }
         
+        /// <summary>
+        /// <typeparamref name="T"/> is strictly related to table name!
+        /// </summary>
+        /// <returns></returns>
         public List<T> Query()
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append($"select * from \"{typeof(T).Name}\"");
             //int activeFilters = FilterObjects.Aggregate(0, (active, next) => next.Value != null ? active++ : active, result => result);
-            int activeFil = 0;
-            foreach(var filter in FilterObjects)
-            {
-                if (filter.Value != null) activeFil++;
-            }
+            int activeFil = FilterObjects.Count(filter => filter.Value != null);
             if (activeFil > 0)
             {
                 queryBuilder.Append(" WHERE ");
@@ -60,12 +74,16 @@ namespace MarioPizzaOriginal.Domain.Filter
             return results;
         }
 
-        public void Clear()
+        public void Clear() => FilterObjects.ForEach(filter => filter.Value = null);
+
+
+        private void FilterExecutor(FilterObject filterObject)
         {
-            foreach (var filterObject in FilterObjects)
-            {
-                filterObject.Value = null;
-            }
+            var filterType = filterObject.FilterType.Name.ToLower();
+            var args = new[] { filterObject.Value };
+            filterObject.Value = _filterTypeAction.ContainsKey(filterType) ? 
+                _filterTypeAction[filterType](filterObject.FilterMessage, args) : 
+                _filterTypeAction["string"](filterObject.FilterMessage, args);
         }
 
         private void PrepareMenu()
@@ -77,5 +95,6 @@ namespace MarioPizzaOriginal.Domain.Filter
         }
 
         private readonly IRepository<T> _repository;
+        private readonly Dictionary<string, Func<string, object[], object>> _filterTypeAction;
     }
 }

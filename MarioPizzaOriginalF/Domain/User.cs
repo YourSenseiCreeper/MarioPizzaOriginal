@@ -10,15 +10,13 @@ namespace MarioPizzaOriginal.Domain
         public int UserId { get; set; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }
-        [Reference]
-        public AccountType AccountType { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsLogged { get; set; }
         public DateTime LastLogin { get; set; }
-        [Ignore]
-        public BaseRights Permissions { get; set; }
-
-        public bool HasPermission(string methodName) => Permissions.HasPermission(methodName);
+        public int RoleId { get; set; }
+        [Reference]
+        public Role Role { get; set; }
+        public bool HasPermission(string methodName) => Role.Privileges.Contains(methodName);
 
     }
 }

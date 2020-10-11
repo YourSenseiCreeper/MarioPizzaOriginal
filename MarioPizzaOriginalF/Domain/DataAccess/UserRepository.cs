@@ -9,14 +9,16 @@ namespace MarioPizzaOriginal.Domain.DataAccess
         public User Authenticate(string username, string passwordHash)
         {
             var dbConn = connection.Open();
-            var theUser = dbConn.Single<User>(u => u.Username == username);
+            var theUser = Get(u => u.Username == username, true);
             theUser.IsLogged = theUser.PasswordHash == passwordHash;
             theUser.LastLogin = theUser.IsLogged ? DateTime.Now : theUser.LastLogin;
             dbConn.Update(theUser);
             dbConn.Close();
+            theUser.PasswordHash = "";
             return theUser;
         }
 
+        // TODO: do usunięcia jeżeli nie będzie użyte
         public bool IsPasswordCorrect(string username, string passwordHash)
         {
             return connection.Open().Exists<User>(u => u.Username == username && u.PasswordHash == passwordHash);
@@ -33,11 +35,6 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             var freshUser = new User {Username = username, PasswordHash = passwordHash, CreationTime = DateTime.Now};
             dbConn.Insert(freshUser);
             dbConn.Close();
-        }
-
-        public User GetUser(string username)
-        {
-            return connection.Open().Single<User>(u => u.Username == username);
         }
 
         public void Logout(string username)

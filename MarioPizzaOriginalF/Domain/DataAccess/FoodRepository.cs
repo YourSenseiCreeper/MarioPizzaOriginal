@@ -1,5 +1,7 @@
 ﻿using ServiceStack.OrmLite;
 using System;
+using System.Linq.Expressions;
+
 namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public class FoodRepository : BaseRepository<Food>, IFoodRepository
@@ -38,11 +40,11 @@ namespace MarioPizzaOriginal.Domain.DataAccess
             return 0;
         }
 
-        public Food GetFoodWithIngredients(int foodId)
+        public Food GetFoodWithIngredients(int id)
         {
             using (var dbConn = connection.Open())
             {
-                var food = dbConn.SingleById<Food>(foodId);
+                var food = dbConn.SingleById<Food>(id);
                 dbConn.LoadReferences(food);
                 foreach (var foodIngredient in food.Ingredients)
                 {

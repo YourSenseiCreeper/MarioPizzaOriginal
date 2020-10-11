@@ -1,10 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MarioPizzaOriginal.Account
 {
     public static class Rights
     {
+        public static readonly IEnumerable<string> All = Ingredients.Global
+            .Concat(Foods.Global)
+            .Concat(Orders.Global)
+            .Concat(OrderElements.Global)
+            .Concat(User.Global)
+            .Concat(Role.Global);
+
+        public static readonly IEnumerable<string> Basic = User.Basic
+            .Concat(new []
+            {
+                Ingredients.IngredientsMenu,
+                Foods.FoodMenu,
+                Orders.OrdersMenu,
+                OrderElements.OrderElementsMenu
+            });
+
         internal static class Ingredients
         {
             public static readonly string IngredientsMenu = "IngredientsMenu";
@@ -13,20 +30,20 @@ namespace MarioPizzaOriginal.Account
             public static readonly string EditIngredient = "EditIngredient";
             public static readonly string GetIngredient = "GetIngredient";
             public static readonly string GetFilteredIngredients = "GetFilteredIngredients";
-            public static readonly IEnumerable<string> Global = new[] {
+            public static readonly string[] Global = {
                 IngredientsMenu, AddIngredient, GetAllIngredients,
                 EditIngredient, GetIngredient, GetFilteredIngredients};
         }
 
-        internal class Foods
+        internal static class Foods
         {
-            public static readonly string FoodMenu = "FoodMenu";
-            public static readonly string GetFood = "GetFood";
-            public static readonly string GetAllFood = "GetAllFood";
-            public static readonly string AddFood = "AddFood";
-            public static readonly string DeleteFood = "DeleteFood";
-            public static readonly string GetFilteredFood = "GetFilteredFood";
-            public static readonly IEnumerable<string> Global = new[]
+            public const string FoodMenu = "FoodMenu";
+            public const string GetFood = "GetFood";
+            public const string GetAllFood = "GetAllFood";
+            public const string AddFood = "AddFood";
+            public const string DeleteFood = "DeleteFood";
+            public const string GetFilteredFood = "GetFilteredFood";
+            public static readonly string[] Global =
             {
                 FoodMenu, GetFood, GetAllFood,
                 AddFood, DeleteFood, GetFilteredFood
@@ -51,7 +68,7 @@ namespace MarioPizzaOriginal.Account
             public const string ShowAllSubOrderElements = "ShowAllSubOrderElements";
             public const string GetFilteredOrders = "GetFilteredOrders";
             public const string AddOrderElement = "AddOrderElement";
-            public static readonly IEnumerable<string> Global = new[]
+            public static readonly string[] Global =
             {
                 OrdersMenu, GetAllOrders, GetOrder, GetOrdersWaiting, GetOrdersInProgress,
                 GetOrdersReadyForDelivery, AddOrder, EditOrder, DeleteOrder,
@@ -68,7 +85,7 @@ namespace MarioPizzaOriginal.Account
             public const string AddOrderElement = "AddOrderElement";
             public const string ChangeAmount = "ChangeAmount";
             public const string DeleteOrderElement = "DeleteOrderElement";
-            public static readonly IEnumerable<string> Global = new[]
+            public static readonly string[] Global =
             {
                 OrderElementsMenu, GetAllOrderElements, GetAllElementsForOrder,
                 AddOrderElement, ChangeAmount, DeleteOrderElement
@@ -86,14 +103,25 @@ namespace MarioPizzaOriginal.Account
             public const string ShowAllAccounts = "ShowAllAccounts";
             public const string ShowAccountInfo = "ShowAccountInfo";
 
-            public static readonly IEnumerable<string> Basic = new[]
-            {
-                UserMenu, Register, Login
-            };
-            public static readonly IEnumerable<string> Global = new[]
+            public static readonly string[] Basic = { UserMenu, Register, Login };
+            public static readonly string[] Global =
             {
                 UserMenu, Register, Login, ShowCurrentUserInfo, ResetPassword, ShowAllAccounts,
                 ShowAccountInfo, Logout
+            };
+        }
+
+        internal static class Role
+        {
+            public const string RoleMenu = "RoleMenu";
+            public const string GetAllRoles = "GetAllRoles";
+            public const string GetRolePrivileges = "GetRolePrivileges";
+            public const string AddNewRole = "AddNewRole";
+            public const string ManagePrivileges = "ManagePrivileges";
+            public const string SaveCurrentPrivileges = "SaveCurrentPrivileges";
+            public static readonly string[] Global =
+            {
+                RoleMenu, GetAllRoles, GetRolePrivileges, AddNewRole, ManagePrivileges, SaveCurrentPrivileges
             };
         }
     }

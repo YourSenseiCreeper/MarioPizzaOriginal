@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-using MarioPizzaOriginal.Account;
 using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.DataAccess;
-using ServiceStack;
+using MarioPizzaOriginal.Tools;
+using NLog;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -16,10 +14,14 @@ namespace MarioPizzaOriginal.Controller
         private readonly TinyIoCContainer _container;
         private readonly MenuCreator _userMenu;
         private readonly MenuCreator _preloginMenu;
+        private readonly ViewHelper _viewHelper;
+        private readonly IConsole _console;
 
         public UserController()
         {
             _container = TinyIoCContainer.Current;
+            _console = _container.Resolve<IConsole>();
+            _viewHelper = new ViewHelper(_console);
             _userRepository = _container.Resolve<IUserRepository>();
             _preloginMenu = MenuCreator.Create()
                 .SetHeader("Zaloguj się lub zarejestruj")
@@ -46,82 +48,75 @@ namespace MarioPizzaOriginal.Controller
         public void UserAuthentication()
         {
             _preloginMenu.Present();
-            var currentUser = _container.Resolve<User>("CurrentUser");
-            if (!currentUser.IsLogged) Environment.Exit(0);
+            if (!GetCurrentUser().IsLogged) Environment.Exit(0);
         }
 
         public void UserMenu() => _userMenu.Present();
 
         public void Register()
         {
-            string username = ViewHelper.AskForStringNotBlank("Podaj nazwę użytkownika (nie może być pusta!): ");
-            bool notUnique = _userRepository.UserExists(username);
+            var username = _viewHelper.AskForStringNotBlank("Podaj nazwę użytkownika (nie może być pusta!): ");
+            var notUnique = _userRepository.UserExists(username);
             if (notUnique)
             {
-                ViewHelper.WriteAndWait($"Użytkownik '{username}' już istnieje. Wybierz inną nazwę użytkownika!");
+                _viewHelper.WriteAndWait($"Użytkownik '{username}' już istnieje. Wybierz inną nazwę użytkownika!");
                 return;
             }
 
-            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ").ToUtf8Bytes());
-            var passwordHash = ConvertSHAToString(hashBytes);
+            var passwordHash = Util.ToSHA256String(_viewHelper.AskForPassword("Podaj hasło dla konta: "));
             _userRepository.Register(username, passwordHash);
-            ViewHelper.WriteAndWait("\nRejestracja zakończona pomyślnie!");
+            _viewHelper.WriteAndWait("\nRejestracja zakończona pomyślnie!");
         }
 
         public void ResetPassword()
         {
-            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ").ToUtf8Bytes());
-            var passwordHash = ConvertSHAToString(hashBytes);
-            var currentUser = _container.Resolve<User>("CurrentUser");
+            var passwordHash = Util.ToSHA256String(_viewHelper.AskForPassword("Podaj hasło dla konta: "));
+            var currentUser = GetCurrentUser();
             ;
             if (currentUser.PasswordHash != passwordHash)
             {
-                ViewHelper.WriteAndWait("Wpisano niepoprawne hasło!");
+                _viewHelper.WriteAndWait("Wpisano niepoprawne hasło!");
                 return;
             }
-            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj NOWE hasło dla konta: ").ToUtf8Bytes());
-            var firstPasswordHash = ConvertSHAToString(hashBytes);
-
-            hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Powtórz NOWE hasło dla konta: ").ToUtf8Bytes());
-            var secondPasswordHash = ConvertSHAToString(hashBytes);
+            var firstPasswordHash = Util.ToSHA256String(_viewHelper.AskForPassword("Podaj NOWE hasło dla konta: "));
+            var secondPasswordHash = Util.ToSHA256String(_viewHelper.AskForPassword("Powtórz NOWE hasło dla konta: "));
 
             if (firstPasswordHash != secondPasswordHash)
             {
-                ViewHelper.WriteAndWait("Wpisano dwa różne hasła!");
+                _viewHelper.WriteAndWait("Wpisano dwa różne hasła!");
                 return;
             }
 
             currentUser.PasswordHash = firstPasswordHash;
             _userRepository.Save(currentUser);
-            ViewHelper.WriteAndWait("Hasło zostało zmienione!");
+            _viewHelper.WriteAndWait("Hasło zostało zmienione!");
         }
 
         public void Login()
         {
-            var username = ViewHelper.AskForStringNotBlank("Podaj nazwę użytkownika: ");
-            if (!_userRepository.UserExists(username))
+            var username = _viewHelper.AskForStringNotBlank("Podaj nazwę użytkownika: ");
+            if (!_userRepository.Exists(u => u.Username == username))
             {
-                ViewHelper.WriteAndWait("Użytkownik nie istnieje!");
+                _viewHelper.WriteAndWait("Użytkownik nie istnieje!");
                 return;
             }
-            var hashBytes = SHA256.Create().ComputeHash(ViewHelper.AskForPassword("Podaj hasło dla konta: ").ToUtf8Bytes());
-            var passwordHash = ConvertSHAToString(hashBytes);
+            var passwordHash = Util.ToSHA256String(_viewHelper.AskForPassword("Podaj hasło dla konta: "));
             var user = _userRepository.Authenticate(username, passwordHash);
 
             if (!user.IsLogged)
             {
-                ViewHelper.WriteAndWait("Niepoprawne hasło!");
+                _viewHelper.WriteAndWait("Niepoprawne hasło!");
                 return;
             }
-            user.Permissions = BaseRights.GetAccountPermissions(user);
+            // wczytywanie roli dla użytkownika - lub zrobienie tego na poziomie autoryzacji
 
             _container.Register(user, "CurrentUser");
-            ViewHelper.WriteAndWait($"\nPomyślnie zalogowałeś się na konto '{username}'!");
+            _viewHelper.WriteAndWait($"\nPomyślnie zalogowałeś się na konto '{username}'!");
         }
 
         public void Logout()
         {
-            var user = _container.Resolve<User>("CurrentUser");
+            var user = GetCurrentUser();
             user.IsLogged = false;
             _userRepository.Save(user);
             // redirect do menu z logowaniem?
@@ -130,14 +125,14 @@ namespace MarioPizzaOriginal.Controller
 
         public void ShowCurrentUserInfo()
         {
-            var user = _container.Resolve<User>("CurrentUser");
+            var user = GetCurrentUser();
             var info = new List<string>
             {
-                $"Id: #{user.UserId}", $"Nazwa użytkownika: {user.Username}", $"Typ konta: {user.AccountType}",
+                $"Id: #{user.UserId}", $"Nazwa użytkownika: {user.Username}", $"Typ konta: {user.Role.Name}",
                 $"Konto utworzone dnia: {user.CreationTime}",  $"Ostatnie logowanie: {user.LastLogin}"
             };
-            info.ForEach(Console.WriteLine);
-            Console.ReadLine();
+            info.ForEach(_console.WriteLine);
+            _console.ReadLine();
         }
 
         public void ShowAllAccounts()
@@ -147,49 +142,59 @@ namespace MarioPizzaOriginal.Controller
 
         public void ShowAccountInfo()
         {
-            var userId = ViewHelper.AskForInt("Podaj id użytkownika: ");
-            if (!_userRepository.Exists(userId))
-            {
-                ViewHelper.WriteAndWait($"Użytkownik o id {userId} nie istnieje!");
+            logger.Info("Show Account Info - test");
+            if (UserNotExistsElseOut("Podaj id lub nazwę użytkownika: ", out var user))
                 return;
-            }
-            ShowOneUser(_userRepository.Get(userId));
+
+            ShowOneUser(user);
         }
 
         private void ShowOneUser(User user)
         {
             var info = new List<string>
             {
-                $"Id: #{user.UserId}", $"Nazwa użytkownika: {user.Username}", $"Typ konta: {user.AccountType}",
+                $"Id: #{user.UserId}", $"Nazwa użytkownika: {user.Username}", $"Typ konta: {user.Role.Name}",
                 $"Konto utworzone dnia: {user.CreationTime}",  $"Ostatnie logowanie: {user.LastLogin}"
             };
-            Console.Clear();
-            info.ForEach(Console.WriteLine);
-            Console.ReadLine();
+            _console.Clear();
+            info.ForEach(_console.WriteLine);
+            _console.ReadLine();
         }
 
         private void ShowAccounts(List<User> userList)
         {
-            Console.Clear();
+            _console.Clear();
             var header = $"{"Id",5} | {"Username",15}| {"Typ konta",10}| {"Data utworzenia", 15}| {"Ostatnie logowanie", 15}";
-            Console.WriteLine(header);
-            Console.WriteLine(new string('-', header.Length));
+            _console.WriteLine(header);
+            _console.WriteLine(new string('-', header.Length));
             userList.ForEach(x => {
-                Console.WriteLine($"{x.UserId,5}| {x.Username,15}| {x.AccountType,10} | {x.CreationTime, 15}| {x.LastLogin, 15}");
+                _console.WriteLine($"{x.UserId,5}| {x.Username,15}| {x.Role.Name,10} | {x.CreationTime, 15}| {x.LastLogin, 15}");
             });
-            ViewHelper.WriteAndWait($"Znaleziono {userList.Count} pasujących produktów:");
-            Console.ReadLine();
+            _viewHelper.WriteAndWait($"Znaleziono {userList.Count} pasujących produktów:");
         }
 
-        private string ConvertSHAToString(byte[] array)
+        private bool UserNotExistsElseOut(string message, out User user)
         {
-            var builder = new StringBuilder();
-            foreach (var t in array)
+            var idOrName = _viewHelper.AskForStringNotBlank(message);
+            if (int.TryParse(idOrName, out var userId))
             {
-                builder.Append($"{t:X2}");
+                user = _userRepository.Get(userId);
+                if (user != null) 
+                    return false;
+                _viewHelper.WriteAndWait($"Użytkownik o id {userId} nie istnieje!");
+                return true;
             }
-
-            return builder.ToString().ToLower();
+            else
+            {
+                user = _userRepository.Get(u => u.Username == idOrName);
+                if (user != null) 
+                    return false;
+                _viewHelper.WriteAndWait($"Użytkownik o nazwie '{idOrName}' nie istnieje!");
+                return true;
+            }
         }
+
+        private User GetCurrentUser() => _container.Resolve<User>("CurrentUser");
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
     }
 }

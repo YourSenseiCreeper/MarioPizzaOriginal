@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MarioPizzaOriginal.Domain.DataAccess;
+using MarioPizzaOriginal.Tools;
 using TinyIoC;
 
 namespace MarioPizzaOriginal.Controller
@@ -15,12 +16,16 @@ namespace MarioPizzaOriginal.Controller
         private readonly IFoodIngredientRepository _foodIngredientRepository;
         private readonly FoodFilter _foodFilter;
         private readonly MenuCreator _foodMenu;
+        private readonly ViewHelper _viewHelper;
+        private readonly IConsole _console;
         public FoodController()
         {
             var container = TinyIoCContainer.Current;
+            _console = container.Resolve<IConsole>();
+            _viewHelper = new ViewHelper(_console);
+            _foodFilter = new FoodFilter(_console);
             _foodRepository = container.Resolve<IFoodRepository>();
             _foodIngredientRepository = container.Resolve<IFoodIngredientRepository>();
-            _foodFilter = new FoodFilter();
             _foodMenu = MenuCreator.Create()
                 .SetHeader("Dostępne opcje - Produkty:")
                 .AddOptionRange(new Dictionary<string, Action>
@@ -37,16 +42,16 @@ namespace MarioPizzaOriginal.Controller
         public void FoodMenu() => _foodMenu.Present();
         public void AddFood()
         {
-            int step = 1;
-            int maxStep = 6;
+            var step = 1;
+            var maxStep = 6;
             
             var food = new Food
             {
-                FoodName = ViewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Podaj nazwę produktu: "),
+                FoodName = _viewHelper.AskForStringNotBlank($"(krok {step++} z {maxStep}) Podaj nazwę produktu: "),
                 Ingredients = new List<FoodIngredient>()
             };
             
-            if(ViewHelper.AskForYesNo($"(krok {step++} z {maxStep}) Chcesz dodać składniki produktu"))
+            if(_viewHelper.AskForYesNo($"(krok {step++} z {maxStep}) Chcesz dodać składniki produktu"))
             {
                 new MenuCreator("Możliwe opcje:", "Zakończ dodawanie", new Dictionary<string, Action>
                 {
@@ -54,8 +59,8 @@ namespace MarioPizzaOriginal.Controller
                         {
                             food.Ingredients.Add(new FoodIngredient
                             {
-                                IngredientId = ViewHelper.AskForInt("Podaj id składnika który chcesz dodać: "),
-                                IngredientAmount = ViewHelper.AskForDouble("Podaj ilość: ")
+                                IngredientId = _viewHelper.AskForInt("Podaj id składnika który chcesz dodać: "),
+                                IngredientAmount = _viewHelper.AskForDouble("Podaj ilość: ")
                             });
                         }
                     }
@@ -63,15 +68,15 @@ namespace MarioPizzaOriginal.Controller
             }
 
             
-            food.NettPrice = ViewHelper.AskForDouble($"(krok {step++} z { maxStep}) Podaj cenę netto: ");
-            food.Price = ViewHelper.AskForDouble($"(krok {step++} z { maxStep}) Podaj cenę: ");
+            food.NettPrice = _viewHelper.AskForDouble($"(krok {step++} z { maxStep}) Podaj cenę netto: ");
+            food.Price = _viewHelper.AskForDouble($"(krok {step++} z { maxStep}) Podaj cenę: ");
 
-            ViewHelper.WriteAndWait("Wpisz -1 by ustawić wartość NULL");
-            string weight = ViewHelper.AskForString($"(krok {step++} z { maxStep}) Podaj wagę produktu: ");
+            _viewHelper.WriteAndWait("Wpisz -1 by ustawić wartość NULL");
+            string weight = _viewHelper.AskForString($"(krok {step++} z { maxStep}) Podaj wagę produktu: ");
             if (weight.Equals("-1")) { food.Weight = null; }
             else if (!weight.Equals("")) { food.Weight = Convert.ToDouble(weight.Replace(".", ",")); }
 
-            string productionTime = ViewHelper.AskForString($"(krok {step++} z { maxStep}) Podaj czas produkcji w sekundach: ");
+            string productionTime = _viewHelper.AskForString($"(krok {step++} z { maxStep}) Podaj czas produkcji w sekundach: ");
             if (productionTime.Equals("-1")) { food.ProductionTime = null; }
             else if (!productionTime.Equals("")) { food.ProductionTime = Convert.ToInt32(productionTime); }
             /*
@@ -88,7 +93,7 @@ namespace MarioPizzaOriginal.Controller
             else if (!priceLarge.Equals("")) { food.PriceLarge = Convert.ToDouble(priceLarge.Replace(",", ".")); }
             */
             _foodRepository.Add(food);
-            ViewHelper.WriteAndWait($"Dodano produkt o nazwie {food.FoodName} i cenie {food.Price} zł");
+            _viewHelper.WriteAndWait($"Dodano produkt o nazwie {food.FoodName} i cenie {food.Price} zł");
         }
         
         public void GetFood()
@@ -120,7 +125,7 @@ namespace MarioPizzaOriginal.Controller
             string foodName = _foodRepository.GetName(foodId);
             _foodIngredientRepository.DeleteFoodIngredients(foodId);
             _foodRepository.Remove(foodId);
-            ViewHelper.WriteAndWait($"Usunięto produkt {foodName} o id {foodId}");
+            _viewHelper.WriteAndWait($"Usunięto produkt {foodName} o id {foodId}");
         }
 
         public void GetAllFood()
@@ -152,8 +157,7 @@ namespace MarioPizzaOriginal.Controller
             foodList.ForEach(x => {
                 Console.WriteLine($"{x.FoodId,5}| {x.FoodName,25}| {x.Price,5} zł");
             });
-            ViewHelper.WriteAndWait($"Znaleziono {foodList.Count} pasujących produktów:");
-            Console.ReadLine();
+            _viewHelper.WriteAndWait($"Znaleziono {foodList.Count} pasujących produktów:");
         }
 
         private List<string> ShowIngredients(List<FoodIngredient> ingredients)
@@ -175,7 +179,7 @@ namespace MarioPizzaOriginal.Controller
 
         private bool FoodNotExists(string message, out int foodId)
         {
-            var result = ViewHelper.CheckIfElementNotExists(_foodRepository, message, "Produkt o id {0} nie istnieje!", out var elementId);
+            var result = _viewHelper.CheckIfElementNotExists(_foodRepository, message, "Produkt o id {0} nie istnieje!", out var elementId);
             foodId = elementId;
             return result;
         }

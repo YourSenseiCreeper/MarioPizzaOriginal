@@ -1,18 +1,23 @@
-﻿using MarioPizzaOriginal.Domain;
+﻿using System;
+using MarioPizzaOriginal.Domain;
 using MarioPizzaOriginal.Domain.Enums;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace MarioPizzaOriginal.Domain.DataAccess
 {
     public interface IRepository<T>
     {
         T Get(int id);
-        T GetWithReferences(int id);
+        T Get(Expression<Func<T, bool>> condition, bool references=false);
+        List<T> GetAll();
+        List<T> GetAll(Expression<Func<T, bool>> condition, bool references=false);
         void Add(T newOne);
         void Save(T editOne);
         void Remove(int id);
-        List<T> GetAll();
+        void Remove(Expression<Func<T, bool>> condition);
         bool Exists(int id);
+        bool Exists(Expression<Func<T, bool>> condition);
         int Count();
         List<T> Query(string queryString);
     }
@@ -55,8 +60,13 @@ namespace MarioPizzaOriginal.Domain.DataAccess
         User Authenticate(string username, string passwordHash);
         bool UserExists(string username);
         void Register(string username, string passwordHash);
-        User GetUser(string username);
         void Logout(string username);
         bool IsPasswordCorrect(string username, string passwordHash);
+    }
+
+    public interface IRoleRepository : IRepository<Role>
+    {
+        List<string> GetPrivileges(int roleId);
+        void UpdateDefaultRoles();
     }
 }

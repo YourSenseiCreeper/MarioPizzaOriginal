@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MarioPizzaOriginal.Domain;
+using MarioPizzaOriginal.Tools;
 using Pastel;
 using TinyIoC;
 using DColor = System.Drawing.Color;
@@ -11,10 +12,12 @@ namespace MarioPizzaOriginal
     {
         private Dictionary<string, Action> menuActions;
         private List<Action> gobackActions;
+        private ViewHelper _viewHelper;
         private string header;
 
         public MenuCreator()
         {
+            _viewHelper = TinyIoCContainer.Current.Resolve<ViewHelper>();
             menuActions = new Dictionary<string, Action>();
             gobackActions = new List<Action>();
             header = "Dostępne opcje: ";
@@ -96,7 +99,7 @@ namespace MarioPizzaOriginal
                 Console.WriteLine(header);
                 Console.WriteLine(new string('-', header.Length));
                 keys.ForEach(Console.WriteLine);
-                var input = ViewHelper.AskForInt("", clear: false); //Waiting for answer
+                var input = _viewHelper.AskForInt("", clear: false); //Waiting for answer
                 if (input > 0 && input <= values.Count)
                 {
                     if (input == values.Count) exit = true;
@@ -107,7 +110,7 @@ namespace MarioPizzaOriginal
                             exit = true;
                     }
                 }
-                else ViewHelper.WriteAndWait($"Nie ma opcji: {input.ToString().Pastel(DColor.Red)}!");
+                else _viewHelper.WriteAndWait($"Nie ma opcji: {input.ToString().Pastel(DColor.Red)}!");
             } while (!exit);
         }
     }

@@ -1,82 +1,85 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MarioPizzaOriginal.Tools;
+using TinyIoC;
 
-namespace MarioPizzaOriginal
+namespace MarioPizzaOriginal.Domain.Filter
 {
     public class FilterHelper
     {
-        public static object FilterDouble(string message, object[] args)
+        private readonly ViewHelper _viewHelper;
+        private readonly IConsole _console;
+
+        public FilterHelper(IConsole console)
         {
-            var answerOk = false;
+            _console = console;
+            _viewHelper = new ViewHelper(console);
+        }
+
+        public object FilterDouble(string message, object[] args)
+        {
+            bool answerOk;
             double result = 0;
             do
             {
                 answerOk = false;
-                Console.Clear();
-                Console.Write(message);
+                _console.Clear();
                 var currentValue = args?[0] != null ? args[0].ToString() : string.Empty;
-                var answer = ViewHelper.EditableValue(currentValue);
+                var answer = _viewHelper.EditableString(message, currentValue);
                 if (string.IsNullOrEmpty(answer)) return null;
                 if (double.TryParse(answer, out var innerResult))
                 {
                     answerOk = true;
                     result = innerResult;
                 }
-                else ViewHelper.WriteAndWait($"'{answer}' nie jest liczbą!");
+                else _viewHelper.WriteAndWait($"'{answer}' nie jest liczbą!");
             } while (!answerOk);
             return result;
         }
 
-        public static object FilterInt(string message, object[] args)
+        public object FilterInt(string message, object[] args)
         {
             bool answerOk;
             var result = 0;
             do
             {
                 answerOk = false;
-                Console.Write(message);
                 var currentValue = args?[0] != null ? args[0].ToString() : string.Empty;
-                var answer = ViewHelper.EditableValue(currentValue);
+                var answer = _viewHelper.EditableString(message, currentValue);
                 if (string.IsNullOrEmpty(answer)) return null;
                 if (int.TryParse(answer, out var innerResult))
                 {
                     result = innerResult;
                     answerOk = true;
                 }
-                else ViewHelper.WriteAndWait($"'{answer}' nie jest liczbą!");
+                else _viewHelper.WriteAndWait($"'{answer}' nie jest liczbą!");
             } while (!answerOk);
 
             return result;
         }
 
-        public static object FilterString(string message, object[] args)
+        public object FilterString(string message, object[] args)
         {
-            Console.Clear();
-            Console.Write(message);
+            _console.Clear();
             var currentValue = args?[0] != null ? args[0].ToString() : string.Empty;
-            var answer = ViewHelper.EditableValue(currentValue);
+            var answer = _viewHelper.EditableString(message, currentValue);
             return string.IsNullOrEmpty(answer) ? null : answer;
         }
 
-        public static object FilterDateTime(string message, object[] args)
+        public object FilterDateTime(string message, object[] args)
         {
-            bool answerOk = false;
-            DateTime result = new DateTime();
+            var answerOk = false;
+            var result = new DateTime();
             do
             {
-                Console.Clear();
-                Console.Write(message);
+                _console.Clear();
                 var currentValue = string.Empty;
                 if (args?[0] != null)
                 {
                     var argument = (DateTime) args[0];
                     currentValue = argument.ToShortDateString();
                 }
-                var answer = ViewHelper.EditableValue(currentValue);
+                var answer = _viewHelper.EditableString(message, currentValue);
                 if (string.IsNullOrEmpty(answer)) return null;
                 try
                 {
@@ -86,31 +89,30 @@ namespace MarioPizzaOriginal
                 }
                 catch (FormatException)
                 {
-                    ViewHelper.WriteAndWait($"'{answer}' zły format daty! Przykład: 01/01/2000 06:15");
+                    _viewHelper.WriteAndWait($"'{answer}' zły format daty! Przykład: 01/01/2000 06:15");
                 }
             } while (!answerOk);
             return result;
         }
 
-        public static object FilterOption<T>(string message, object[] args) where T : Enum
+        public object FilterOption<T>(string message, object[] args) where T : Enum
         {
             T result = default;
-            bool answerOk = false;
+            var answerOk = false;
             do
             {
-                Console.Clear();
+                _console.Clear();
                 var index = 0;
 
-                Console.WriteLine("Dostępne opcje: ");
-                Enum.GetNames(typeof(T)).ToList().ForEach(element => Console.WriteLine($"{index++}. {element}"));
-                Console.Write(message);
+                _console.WriteLine("Dostępne opcje: ");
+                Enum.GetNames(typeof(T)).ToList().ForEach(element => _console.WriteLine($"{index++}. {element}"));
                 var currentValue = string.Empty;
                 if (args?[0] != null)
                 {
                     var argument = (int) args[0];
                     currentValue = argument.ToString();
                 }
-                var answer = ViewHelper.EditableValue(currentValue);
+                var answer = _viewHelper.EditableString(message, currentValue);
                 if (string.IsNullOrEmpty(answer)) return null;
                 try
                 {
@@ -119,7 +121,7 @@ namespace MarioPizzaOriginal
                     result = (T)Enum.Parse(typeof(T), answer.ToUpper());
                     answerOk = true;
                 }
-                catch (ArgumentException) { ViewHelper.WriteAndWait($"'{answer}' nie jest jedną z możliwych wartości!"); }
+                catch (ArgumentException) { _viewHelper.WriteAndWait($"'{answer}' nie jest jedną z możliwych wartości!"); }
             } while (!answerOk);
             return result;
         }
